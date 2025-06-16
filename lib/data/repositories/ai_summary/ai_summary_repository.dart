@@ -1,8 +1,7 @@
 import 'dart:developer';
 
-import 'package:prontu_ai/data/common/tables.dart';
-import 'package:prontu_ai/data/services/database/database_service.dart';
-
+import '/data/common/tables.dart';
+import '/data/services/database/database_service.dart';
 import '/data/repositories/ai_summary/i_ai_summary_repository.dart';
 import '/utils/result.dart';
 
