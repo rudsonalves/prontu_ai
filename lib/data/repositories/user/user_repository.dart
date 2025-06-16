@@ -24,6 +24,8 @@ class UserRepository implements IUserRepository {
 
       _started = true;
 
+      await fetchAll();
+
       return const Result.success(null);
     } on Exception catch (err, stack) {
       log('UserRepository.initialize', error: err, stackTrace: stack);
@@ -38,6 +40,9 @@ class UserRepository implements IUserRepository {
 
       final result = await _databaseService.insert(Tables.users, user.toMap());
 
+      if (result.isFailure) return result;
+      _cache[user.id!] = user.copyWith(id: result.value!);
+
       return result;
     } on Exception catch (err, stack) {
       log('UserRepository.insert', error: err, stackTrace: stack);
@@ -50,11 +55,16 @@ class UserRepository implements IUserRepository {
     try {
       if (!_started) throw Exception('Repository not initialized');
 
+      if (_cache.containsKey(uid)) return Result.success(_cache[uid]!);
+
       final result = await _databaseService.fetch<UserModel>(
         Tables.users,
         id: uid,
         fromMap: UserModel.fromMap,
       );
+
+      if (result.isFailure) return result;
+      _cache[uid] = result.value!;
 
       return result;
     } on Exception catch (err, stack) {
@@ -72,6 +82,10 @@ class UserRepository implements IUserRepository {
         Tables.users,
         fromMap: UserModel.fromMap,
       );
+
+      if (result.isFailure) return result;
+      _cache.clear();
+      _cache.addAll({for (final user in result.value!) user.id!: user});
 
       return result;
     } on Exception catch (err, stack) {
@@ -92,8 +106,10 @@ class UserRepository implements IUserRepository {
       final result = await _databaseService.update<UserModel>(
         Tables.users,
         map: user.toMap(),
-        id: user.id!,
       );
+
+      if (result.isFailure) return result;
+      _cache[user.id!] = user;
 
       return result;
     } on Exception catch (err, stack) {
@@ -108,6 +124,9 @@ class UserRepository implements IUserRepository {
       if (!_started) throw Exception('Repository not initialized');
 
       final result = await _databaseService.delete(Tables.users, id: uid);
+
+      if (result.isFailure) return result;
+      _cache.remove(uid);
 
       return result;
     } on Exception catch (err, stack) {
