@@ -1,9 +1,10 @@
 import 'dart:developer';
 
 import 'package:path/path.dart';
-import 'package:prontu_ai/utils/result.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
+
+import '/utils/result.dart';
 
 class DatabaseService {
   DatabaseService();
@@ -14,7 +15,12 @@ class DatabaseService {
 
   Database? _db;
 
+  bool _started = false;
+
   Future<void> initialize(String dbFileName) async {
+    if (_started) return;
+    _started = true;
+
     String dbPath = await getDatabasesPath();
     String dbFilePath = join(dbPath, dbFileName);
 
@@ -131,10 +137,10 @@ class DatabaseService {
   }
 
   Future<Result<void>> update<T>(
-    String table,
-    String id,
-    Map<String, dynamic> map,
-  ) async {
+    String table, {
+    required String id,
+    required Map<String, dynamic> map,
+  }) async {
     if (_db == null) {
       return Result.failure(Exception('Database is not initialized'));
     }
@@ -151,7 +157,7 @@ class DatabaseService {
         return Result.failure(Exception('No record found with id: $id'));
       }
 
-      return Result.success(null);
+      return const Result.success(null);
     } on Exception catch (err, stack) {
       log(
         'Error updating record in $table with id $id: $err',
@@ -163,9 +169,9 @@ class DatabaseService {
   }
 
   Future<Result<void>> delete<T>(
-    String table,
-    String id,
-  ) async {
+    String table, {
+    required String id,
+  }) async {
     if (_db == null) {
       return Result.failure(Exception('Database is not initialized'));
     }
@@ -181,7 +187,7 @@ class DatabaseService {
         return Result.failure(Exception('No record found with id: $id'));
       }
 
-      return Result.success(null);
+      return const Result.success(null);
     } on Exception catch (err, stack) {
       log(
         'Error deleting record from $table with id $id: $err',
