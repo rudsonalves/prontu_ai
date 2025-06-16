@@ -1,0 +1,56 @@
+enum Sex {
+  male('Masculino'),
+  female('Feminino'),
+  other('Outro');
+
+  final String label;
+  const Sex(this.label);
+}
+
+class UserModel {
+  final String? id;
+  final String name;
+  final DateTime birthDate;
+  final Sex sex;
+
+  UserModel({
+    this.id,
+    required this.name,
+    required this.birthDate,
+    required this.sex,
+  });
+
+  UserModel copyWith({
+    String? id,
+    String? name,
+    DateTime? birthDate,
+    Sex? sex,
+  }) => UserModel(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    birthDate: birthDate ?? this.birthDate,
+    sex: sex ?? this.sex,
+  );
+
+  Map<String, dynamic> toMap() {
+    final map = <String, dynamic>{};
+
+    if (id != null) {
+      map['id'] = id;
+    }
+    map['name'] = name;
+    map['birthDate'] = birthDate.toIso8601String();
+    map['sex'] = sex.name;
+
+    return map;
+  }
+
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      id: map['id'] as String?,
+      name: map['name'] as String,
+      birthDate: DateTime.parse(map['birthDate'] as String),
+      sex: Sex.values.byName(map['sex'] as String),
+    );
+  }
+}
