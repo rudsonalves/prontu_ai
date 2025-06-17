@@ -2,7 +2,7 @@ class EpisodeModel {
   final String? id; // pode ser nulo pois nao teremos essa info logo de cara
   final String userId;
   final String title;
-  final int wieght; //gramas
+  final int weight; //gramas
   final int height; //cm
   final String mainComplaint; //motivo da consulta
   final String history; //histórico atual
@@ -14,7 +14,7 @@ class EpisodeModel {
     this.id,
     required this.userId,
     required this.title,
-    required this.wieght,
+    required this.weight,
     required this.height,
     required this.mainComplaint,
     required this.history,
@@ -27,7 +27,7 @@ class EpisodeModel {
   EpisodeModel copyWith({
     String? id,
     String? title,
-    int? wieght,
+    int? weight,
     int? height,
     String? mainComplaint,
     String? history,
@@ -39,7 +39,7 @@ class EpisodeModel {
       id: id ?? this.id,
       userId: userId,
       title: title ?? this.title,
-      wieght: wieght ?? this.wieght,
+      weight: weight ?? this.weight,
       height: height ?? this.height,
       mainComplaint: mainComplaint ?? this.mainComplaint,
       history: history ?? this.history,
@@ -56,7 +56,7 @@ class EpisodeModel {
 
     map['user_id'] = userId;
     map['title'] = title;
-    map['wieght'] = wieght;
+    map['weight'] = weight;
     map['height'] = height;
     map['main_complaint'] = mainComplaint;
     map['history'] = history;
@@ -73,7 +73,7 @@ class EpisodeModel {
       id: map['id'] as String?,
       userId: map['user_id'] as String,
       title: map['title'] as String,
-      wieght: map['wieght']?.toInt() as int,
+      weight: map['weight']?.toInt() as int,
       height: map['height']?.toInt() as int,
       mainComplaint: map['main_complaint'] as String,
       history: map['history'] as String,

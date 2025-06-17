@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import '/domain/models/ai_summary_model.dart';
-import '/data/common/tables.dart';
+import '../../common/table_names.dart';
 import '/data/services/database/database_service.dart';
 import '/data/repositories/ai_summary/i_ai_summary_repository.dart';
 import '/utils/result.dart';
@@ -38,7 +38,7 @@ class AiSummaryRepository implements IAiSummaryRepository {
       if (!_started) return throw Exception('Repository not initialized');
 
       final result = await _databaseService.insert(
-        Tables.users,
+        TableNames.users,
         aiSummary.toMap(),
       );
 
@@ -65,7 +65,7 @@ class AiSummaryRepository implements IAiSummaryRepository {
       }
 
       final result = await _databaseService.fetch<AiSummaryModel>(
-        Tables.users,
+        TableNames.users,
         id: uid,
         fromMap: AiSummaryModel.fromMap,
       );
@@ -86,7 +86,7 @@ class AiSummaryRepository implements IAiSummaryRepository {
       if (!_started) throw Exception('Repository not initialized');
 
       final result = await _databaseService.fetchAll<AiSummaryModel>(
-        Tables.users,
+        TableNames.users,
         fromMap: AiSummaryModel.fromMap,
       );
 
@@ -111,7 +111,7 @@ class AiSummaryRepository implements IAiSummaryRepository {
       }
 
       final result = await _databaseService.update<AiSummaryModel>(
-        Tables.users,
+        TableNames.users,
         map: aiSummary.toMap(),
       );
 
@@ -130,7 +130,10 @@ class AiSummaryRepository implements IAiSummaryRepository {
     try {
       if (!_started) throw Exception('Repository not initialized');
 
-      final result = await _databaseService.delete(Tables.aiSummaries, id: uid);
+      final result = await _databaseService.delete(
+        TableNames.aiSummaries,
+        id: uid,
+      );
 
       return result;
     } on Exception catch (err, stack) {
