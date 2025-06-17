@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import '/domain/models/session_model.dart';
-import '/data/common/tables.dart';
+import '../../common/table_names.dart';
 import '/data/services/database/database_service.dart';
 import '/data/repositories/session/i_session_repository.dart';
 import '/utils/result.dart';
@@ -38,7 +38,7 @@ class SessionRepository implements ISessionRepository {
       if (!_started) throw Exception('Repository not initialized');
 
       final result = await _databaseService.insert(
-        Tables.sessions,
+        TableNames.sessions,
         session.toMap(),
       );
 
@@ -65,7 +65,7 @@ class SessionRepository implements ISessionRepository {
       }
 
       final result = await _databaseService.fetch<SessionModel>(
-        Tables.sessions,
+        TableNames.sessions,
         id: uid,
         fromMap: SessionModel.fromMap,
       );
@@ -86,7 +86,7 @@ class SessionRepository implements ISessionRepository {
       if (!_started) throw Exception('Repository not initialized');
 
       final result = await _databaseService.fetchAll<SessionModel>(
-        Tables.sessions,
+        TableNames.sessions,
         fromMap: SessionModel.fromMap,
       );
 
@@ -113,7 +113,7 @@ class SessionRepository implements ISessionRepository {
       }
 
       final result = await _databaseService.update<SessionModel>(
-        Tables.sessions,
+        TableNames.sessions,
         map: session.toMap(),
       );
 
@@ -132,7 +132,10 @@ class SessionRepository implements ISessionRepository {
     try {
       if (!_started) throw Exception('Repository not initialized');
 
-      final result = await _databaseService.delete(Tables.sessions, id: uid);
+      final result = await _databaseService.delete(
+        TableNames.sessions,
+        id: uid,
+      );
 
       return result;
     } on Exception catch (err, stack) {

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import '/data/common/tables.dart';
+import '../../common/table_names.dart';
 import '/data/services/database/database_service.dart';
 import '/domain/models/attachment_model.dart';
 import '/data/repositories/attachment/i_attachment_repository.dart';
@@ -38,7 +38,7 @@ class AttachmentRepository implements IAttachmentRepository {
       if (!_started) return throw Exception('Repository not initialized');
 
       final result = await _databaseService.insert(
-        Tables.attachments,
+        TableNames.attachments,
         attachment.toMap(),
       );
 
@@ -65,7 +65,7 @@ class AttachmentRepository implements IAttachmentRepository {
       }
 
       final result = await _databaseService.fetch<AttachmentModel>(
-        Tables.users,
+        TableNames.users,
         id: uid,
         fromMap: AttachmentModel.fromMap,
       );
@@ -86,7 +86,7 @@ class AttachmentRepository implements IAttachmentRepository {
       if (!_started) throw Exception('Repository not initialized');
 
       final result = await _databaseService.fetchAll<AttachmentModel>(
-        Tables.users,
+        TableNames.users,
         fromMap: AttachmentModel.fromMap,
       );
 
@@ -111,7 +111,7 @@ class AttachmentRepository implements IAttachmentRepository {
       }
 
       final result = await _databaseService.update<AttachmentModel>(
-        Tables.users,
+        TableNames.users,
         map: user.toMap(),
       );
 
@@ -130,7 +130,10 @@ class AttachmentRepository implements IAttachmentRepository {
     try {
       if (!_started) throw Exception('Repository not initialized');
 
-      final result = await _databaseService.delete(Tables.attachments, id: uid);
+      final result = await _databaseService.delete(
+        TableNames.attachments,
+        id: uid,
+      );
 
       return result;
     } on Exception catch (err, stack) {

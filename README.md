@@ -4,6 +4,76 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/17 repository-02 - by rudsonalves
+
+### Rename Tables to TableNames and Propagate Across Repositories
+
+This commit renames the central `Tables` class to `TableNames` to better align with its purpose and updates all repository implementations, imports, and tests accordingly. It also fixes a typo in the `EpisodeModel` (`wieght` → `weight`), ensures theming widgets rebuild on mode changes, and tidies up SQL table definitions.
+
+### Modified Files
+
+* **lib/data/common/table\_names.dart**
+
+  * renamed from `tables.dart` and changed class `Tables` → `TableNames`
+
+* **lib/data/repositories/ai\_summary/ai\_summary\_repository.dart**
+
+  * updated import from `…/common/tables.dart` → `…/common/table_names.dart`
+  * replaced all `Tables.*` references with `TableNames.*`
+
+* **lib/data/repositories/attachment/attachment\_repository.dart**
+
+  * updated import path to `../../common/table_names.dart`
+  * replaced `Tables.attachments` and `Tables.users` with `TableNames.attachments` / `TableNames.users`
+
+* **lib/data/repositories/episode/episode\_repository.dart**
+
+  * updated import to `../../common/table_names.dart`
+  * switched all `Tables.episodes` and `Tables.sessions` calls to `TableNames.episodes` / `TableNames.sessions`
+  * fixed deletion to call `TableNames.sessions` per existing logic
+
+* **lib/data/repositories/session/session\_repository.dart**
+
+  * updated import to `../../common/table_names.dart`
+  * replaced `Tables.sessions` references with `TableNames.sessions`
+
+* **lib/data/repositories/user/user\_repository.dart**
+
+  * updated import to `../../common/table_names.dart`
+  * replaced all `Tables.users` with `TableNames.users`
+
+* **lib/data/services/database/database\_service.dart**
+
+  * corrected batch execution from `SqlTables.user` → `SqlTables.users`
+
+* **lib/data/services/database/tables/sql\_tables.dart**
+
+  * renamed SQL constant `user` → `users` to match table name
+  * added multi‐table definitions (`sessions`, `episodes`, `attachments`, `aiSummaries`)
+
+* **lib/domain/models/episode\_model.dart**
+
+  * fixed property and map key spelling: `wieght` → `weight`
+
+* **lib/ui/core/theme/theme.dart**
+
+  * standardized import quotation marks
+  * trimmed trailing blank lines and ensured `List<ExtendedColor>` is an empty list
+
+* **lib/ui/view/home/home\_view\.dart**
+
+  * replaced raw `Icon` in the AppBar action with a `ListenableBuilder` around `widget.themeMode` so the icon updates when theme changes
+
+* **test/data/services/database/database\_service\_test.dart**
+
+  * updated import to `package:prontu_ai/data/common/table_names.dart`
+  * replaced `Tables.users` with `TableNames.users` in all test calls
+
+### Conclusion
+
+All table references have been consolidated under `TableNames`, domain typos corrected, and UI theming behaviors improved—ensuring consistency and correctness across the codebase.
+
+
 ## 2025/06/17 repository-01 - by rudsonalves
 
 ### Scaffold Core Architecture with DI, Theming, Routing, and Data Repositories

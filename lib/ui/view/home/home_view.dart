@@ -26,8 +26,11 @@ class _HomeViewState extends State<HomeView> {
         title: const Text('ProntuAI'),
         actions: [
           IconButton(
-            icon: Icon(
-              widget.themeMode.isDark ? Icons.light_mode : Icons.dark_mode,
+            icon: ListenableBuilder(
+              listenable: widget.themeMode,
+              builder: (_, __) => Icon(
+                widget.themeMode.isDark ? Icons.dark_mode : Icons.light_mode,
+              ),
             ),
             onPressed: widget.themeMode.toggle,
           ),

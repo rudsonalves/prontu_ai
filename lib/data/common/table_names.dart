@@ -1,5 +1,5 @@
-class Tables {
-  Tables._();
+class TableNames {
+  TableNames._();
 
   static const String users = 'users';
   static const String sessions = 'sessions';

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import '/data/common/tables.dart';
+import '../../common/table_names.dart';
 import '/data/services/database/database_service.dart';
 import '/domain/models/episode_model.dart';
 import '/data/repositories/episode/i_episode_repository.dart';
@@ -38,7 +38,7 @@ class EpisodeRepository implements IEpisodeRepository {
       if (!_started) return throw Exception('Repository not initialized');
 
       final result = await _databaseService.insert(
-        Tables.episodes,
+        TableNames.episodes,
         episode.toMap(),
       );
 
@@ -65,7 +65,7 @@ class EpisodeRepository implements IEpisodeRepository {
       }
 
       final result = await _databaseService.fetch<EpisodeModel>(
-        Tables.episodes,
+        TableNames.episodes,
         id: uid,
         fromMap: EpisodeModel.fromMap,
       );
@@ -86,7 +86,7 @@ class EpisodeRepository implements IEpisodeRepository {
       if (!_started) throw Exception('Repository not initialized');
 
       final result = await _databaseService.fetchAll<EpisodeModel>(
-        Tables.episodes,
+        TableNames.episodes,
         fromMap: EpisodeModel.fromMap,
       );
 
@@ -113,7 +113,7 @@ class EpisodeRepository implements IEpisodeRepository {
       }
 
       final result = await _databaseService.update<EpisodeModel>(
-        Tables.episodes,
+        TableNames.episodes,
         map: episode.toMap(),
       );
 
@@ -132,7 +132,10 @@ class EpisodeRepository implements IEpisodeRepository {
     try {
       if (!_started) throw Exception('Repository not initialized');
 
-      final result = await _databaseService.delete(Tables.sessions, id: uid);
+      final result = await _databaseService.delete(
+        TableNames.sessions,
+        id: uid,
+      );
 
       return result;
     } on Exception catch (err, stack) {

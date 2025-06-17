@@ -41,7 +41,7 @@ class DatabaseService {
 
     final batch = db.batch();
 
-    batch.execute(SqlTables.user);
+    batch.execute(SqlTables.users);
 
     await batch.commit();
   }
