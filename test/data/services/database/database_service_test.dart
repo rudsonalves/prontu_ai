@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prontu_ai/data/common/tables.dart';
+import 'package:prontu_ai/data/common/table_names.dart';
 import 'package:prontu_ai/data/services/database/database_service.dart';
 import 'package:prontu_ai/domain/models/user_model.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -36,14 +36,14 @@ void main() {
     );
 
     // Inserindo o usuário
-    final insertResult = await service.insert(Tables.users, user.toMap());
+    final insertResult = await service.insert(TableNames.users, user.toMap());
 
     expect(insertResult.isSuccess, true);
     final insertedId = insertResult.value!;
 
     // Buscando o usuário no cache
     final fetchedResult = await service.fetch<UserModel>(
-      Tables.users,
+      TableNames.users,
       id: insertedId,
       fromMap: UserModel.fromMap,
     );
@@ -56,14 +56,14 @@ void main() {
     // Atualizando o usuário
     final updateUser = user.copyWith(id: insertedId, name: 'Bob');
     final updateResult = await service.update(
-      Tables.users,
+      TableNames.users,
       map: updateUser.toMap(),
     );
     expect(updateResult.isSuccess, true);
 
     // Load updeted user
     final updatedFetchedResult = await service.fetch<UserModel>(
-      Tables.users,
+      TableNames.users,
       id: insertedId,
       fromMap: UserModel.fromMap,
     );
@@ -74,12 +74,12 @@ void main() {
     expect(updatedUser.sex, updateUser.sex);
 
     // Deletando o usuário
-    final deleteResult = await service.delete(Tables.users, id: insertedId);
+    final deleteResult = await service.delete(TableNames.users, id: insertedId);
     expect(deleteResult.isSuccess, true);
 
     // Buscando o usuário
     final deletedFetchedResult = await service.fetch<UserModel>(
-      Tables.users,
+      TableNames.users,
       id: insertedId,
       fromMap: UserModel.fromMap,
     );
