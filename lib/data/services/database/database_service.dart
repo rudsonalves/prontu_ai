@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:path/path.dart';
-import 'package:prontu_ai/utils/result.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
+
+import '/data/services/database/tables/sql_tables.dart';
+import '/utils/result.dart';
 
 class DatabaseService {
   DatabaseService();
@@ -14,7 +16,12 @@ class DatabaseService {
 
   Database? _db;
 
+  bool _started = false;
+
   Future<void> initialize(String dbFileName) async {
+    if (_started) return;
+    _started = true;
+
     String dbPath = await getDatabasesPath();
     String dbFilePath = join(dbPath, dbFileName);
 
@@ -29,8 +36,14 @@ class DatabaseService {
     );
   }
 
-  void _createTables(Database db, int version) {
+  Future<void> _createTables(Database db, int version) async {
     log('Creating tables');
+
+    final batch = db.batch();
+
+    batch.execute(SqlTables.user);
+
+    await batch.commit();
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
@@ -53,25 +66,23 @@ class DatabaseService {
     String table, {
     required String id,
     required T Function(Map<String, dynamic>) fromMap,
+    bool forceRemote = false,
   }) async {
-    if (_db == null) {
-      return Result.failure(Exception('Database is not initialized'));
-    }
     try {
+      if (_db == null) throw Exception('Database is not initialized');
+
       final List<Map<String, dynamic>> results = await _db!.query(
         table,
         where: 'id = ?',
         whereArgs: [id],
       );
 
-      if (results.isEmpty) {
-        return Result.failure(Exception('No record found with id: $id'));
-      }
+      if (results.isEmpty) throw Exception('No record found with id: $id');
 
       return Result.success(fromMap(results.first));
     } on Exception catch (err, stack) {
       log(
-        'Error fetching record from $table with id $id: $err',
+        'DatabeseService.fetch: $err',
         error: err,
         stackTrace: stack,
       );
@@ -83,17 +94,15 @@ class DatabaseService {
     String table, {
     required T Function(Map<String, dynamic>) fromMap,
   }) async {
-    if (_db == null) {
-      return Result.failure(Exception('Database is not initialized'));
-    }
-
     try {
+      if (_db == null) throw Exception('Database is not initialized');
+
       final List<Map<String, dynamic>> results = await _db!.query(table);
       final List<T> items = results.map(fromMap).toList();
       return Result.success(items);
     } on Exception catch (err, stack) {
       log(
-        'Error fetching all records from $table: $err',
+        'DatabeseService.fetchAll: $err',
         error: err,
         stackTrace: stack,
       );
@@ -105,15 +114,13 @@ class DatabaseService {
     String table,
     Map<String, dynamic> map,
   ) async {
-    if (_db == null) {
-      return Result.failure(Exception('Database is not initialized'));
-    }
-
-    if (map['id'] != null) {
-      return Result.failure(Exception('ID should not be provided for insert'));
-    }
-
     try {
+      if (_db == null) throw Exception('Database is not initialized');
+
+      if (map['id'] != null) {
+        throw Exception('ID should not be provided for insert');
+      }
+
       final id = generateUid();
       final newData = Map<String, dynamic>.from(map);
       newData['id'] = id;
@@ -122,7 +129,7 @@ class DatabaseService {
       return Result.success(id);
     } on Exception catch (err, stack) {
       log(
-        'Error inserting record into $table: $err',
+        'DatabeseService.insert: $err',
         error: err,
         stackTrace: stack,
       );
@@ -131,15 +138,15 @@ class DatabaseService {
   }
 
   Future<Result<void>> update<T>(
-    String table,
-    String id,
-    Map<String, dynamic> map,
-  ) async {
-    if (_db == null) {
-      return Result.failure(Exception('Database is not initialized'));
-    }
-
+    String table, {
+    required Map<String, dynamic> map,
+  }) async {
     try {
+      if (_db == null) throw Exception('Database is not initialized');
+
+      final id = map['id'] as String?;
+      if (id == null) throw Exception('ID must not be null for update');
+
       final int count = await _db!.update(
         table,
         map,
@@ -147,14 +154,12 @@ class DatabaseService {
         whereArgs: [id],
       );
 
-      if (count == 0) {
-        return Result.failure(Exception('No record found with id: $id'));
-      }
+      if (count == 0) throw Exception('No record found with id: $id');
 
-      return Result.success(null);
+      return const Result.success(null);
     } on Exception catch (err, stack) {
       log(
-        'Error updating record in $table with id $id: $err',
+        'DatabeseService.update: $err',
         error: err,
         stackTrace: stack,
       );
@@ -163,28 +168,24 @@ class DatabaseService {
   }
 
   Future<Result<void>> delete<T>(
-    String table,
-    String id,
-  ) async {
-    if (_db == null) {
-      return Result.failure(Exception('Database is not initialized'));
-    }
-
+    String table, {
+    required String id,
+  }) async {
     try {
+      if (_db == null) throw Exception('Database is not initialized');
+
       final int count = await _db!.delete(
         table,
         where: 'id = ?',
         whereArgs: [id],
       );
 
-      if (count == 0) {
-        return Result.failure(Exception('No record found with id: $id'));
-      }
+      if (count == 0) throw Exception('No record found with id: $id');
 
-      return Result.success(null);
+      return const Result.success(null);
     } on Exception catch (err, stack) {
       log(
-        'Error deleting record from $table with id $id: $err',
+        'DatabaseService.delete: $err',
         error: err,
         stackTrace: stack,
       );
