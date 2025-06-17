@@ -66,6 +66,7 @@ class DatabaseService {
     String table, {
     required String id,
     required T Function(Map<String, dynamic>) fromMap,
+    bool forceRemote = false,
   }) async {
     try {
       if (_db == null) throw Exception('Database is not initialized');

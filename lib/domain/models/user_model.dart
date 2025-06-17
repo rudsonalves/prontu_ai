@@ -5,6 +5,8 @@ enum Sex {
 
   final String label;
   const Sex(this.label);
+
+  static Sex byName(String name) => byName(name);
 }
 
 class UserModel {
@@ -25,19 +27,20 @@ class UserModel {
     String? name,
     DateTime? birthDate,
     Sex? sex,
-  }) => UserModel(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    birthDate: birthDate ?? this.birthDate,
-    sex: sex ?? this.sex,
-  );
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      birthDate: birthDate ?? this.birthDate,
+      sex: sex ?? this.sex,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{};
 
-    if (id != null) {
-      map['id'] = id;
-    }
+    if (id != null) map['id'] = id;
+
     map['name'] = name;
     map['birth_date'] = birthDate.toIso8601String();
     map['sex'] = sex.name;
@@ -50,7 +53,7 @@ class UserModel {
       id: map['id'] as String?,
       name: map['name'] as String,
       birthDate: DateTime.parse(map['birth_date'] as String),
-      sex: Sex.values.byName(map['sex'] as String),
+      sex: Sex.byName(map['sex'] as String),
     );
   }
 }

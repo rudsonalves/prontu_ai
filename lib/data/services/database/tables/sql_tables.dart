@@ -9,4 +9,6 @@ class SqlTables {
     sex TEXT NOT NULL
   )
   ''';
+
+  // static const
 }
