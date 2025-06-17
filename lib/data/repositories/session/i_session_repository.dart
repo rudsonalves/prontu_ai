@@ -1,15 +1,18 @@
-import 'package:prontu_ai/utils/result.dart';
+import '/domain/models/session_model.dart';
+import '/utils/result.dart';
 
 abstract interface class ISessionRepository {
+  List<SessionModel> get sessions;
+
   Future<Result<void>> initialize();
 
-  // Future<Result<String>> insert(SessionModel user);
+  Future<Result<SessionModel>> insert(SessionModel session);
 
-  // Future<Result<SessionModel>> fetch(String uid);
+  Future<Result<SessionModel>> fetch(String uid, [bool forceRemote = false]);
 
-  // Future<Result<List<SessionModel>>> fetchAll();
+  Future<Result<List<SessionModel>>> fetchAll();
 
-  // Future<Result<void>> update(SessionModel user);
+  Future<Result<void>> update(SessionModel session);
 
   Future<Result<void>> delete(String uid);
 }

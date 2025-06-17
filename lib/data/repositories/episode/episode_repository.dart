@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:prontu_ai/data/common/tables.dart';
-import 'package:prontu_ai/data/services/database/database_service.dart';
-
+import '/data/common/tables.dart';
+import '/data/services/database/database_service.dart';
+import '/domain/models/episode_model.dart';
 import '/data/repositories/episode/i_episode_repository.dart';
 import '/utils/result.dart';
 
@@ -13,6 +13,11 @@ class EpisodeRepository implements IEpisodeRepository {
 
   bool _started = false;
 
+  final Map<String, EpisodeModel> _cache = {};
+
+  @override
+  List<EpisodeModel> get episodes => List.unmodifiable(_cache.values);
+
   @override
   Future<Result<void>> initialize() async {
     try {
@@ -22,7 +27,102 @@ class EpisodeRepository implements IEpisodeRepository {
 
       return const Result.success(null);
     } on Exception catch (err, stack) {
-      log('SessionRepository.initialize', error: err, stackTrace: stack);
+      log('EpisodeRepository.initialize', error: err, stackTrace: stack);
+      return Result.failure(err);
+    }
+  }
+
+  @override
+  Future<Result<EpisodeModel>> insert(EpisodeModel episode) async {
+    try {
+      if (!_started) return throw Exception('Repository not initialized');
+
+      final result = await _databaseService.insert(
+        Tables.episodes,
+        episode.toMap(),
+      );
+
+      if (result.isFailure) throw Exception('Insert failed');
+      _cache[episode.id!] = episode.copyWith(id: result.value!);
+
+      return Result.success(_cache[episode.id!]!);
+    } on Exception catch (err, stack) {
+      log('EpisodeRepository.insert', error: err, stackTrace: stack);
+      return Result.failure(err);
+    }
+  }
+
+  @override
+  Future<Result<EpisodeModel>> fetch(
+    String uid, [
+    bool forceRemote = false,
+  ]) async {
+    try {
+      if (!_started) throw Exception('Repository not initialized');
+
+      if (_cache.containsKey(uid) && !forceRemote) {
+        return Result.success(_cache[uid]!);
+      }
+
+      final result = await _databaseService.fetch<EpisodeModel>(
+        Tables.episodes,
+        id: uid,
+        fromMap: EpisodeModel.fromMap,
+      );
+
+      if (result.isFailure) return result;
+      _cache[uid] = result.value!;
+
+      return result;
+    } on Exception catch (err, stack) {
+      log('EpisodeRepository.fetch', error: err, stackTrace: stack);
+      return Result.failure(err);
+    }
+  }
+
+  @override
+  Future<Result<List<EpisodeModel>>> fetchAll() async {
+    try {
+      if (!_started) throw Exception('Repository not initialized');
+
+      final result = await _databaseService.fetchAll<EpisodeModel>(
+        Tables.episodes,
+        fromMap: EpisodeModel.fromMap,
+      );
+
+      if (result.isFailure) return result;
+      _cache.clear();
+      _cache.addAll({
+        for (final episode in result.value!) episode.id!: episode,
+      });
+
+      return result;
+    } on Exception catch (err, stack) {
+      log('EpisodeRepository.fetchAll', error: err, stackTrace: stack);
+      return Result.failure(err);
+    }
+  }
+
+  @override
+  Future<Result<void>> update(EpisodeModel episode) async {
+    try {
+      if (!_started) throw Exception('Repository not initialized');
+
+      if (episode.id == null) {
+        throw Exception('episode ID must not be null for update');
+      }
+
+      final result = await _databaseService.update<EpisodeModel>(
+        Tables.episodes,
+        map: episode.toMap(),
+      );
+
+      if (result.isFailure) return result;
+      _cache[episode.id!] = episode;
+
+      return result;
+    } on Exception catch (err, stack) {
+      log('EpisodeRepository.update', error: err, stackTrace: stack);
       return Result.failure(err);
     }
   }
@@ -36,7 +136,7 @@ class EpisodeRepository implements IEpisodeRepository {
 
       return result;
     } on Exception catch (err, stack) {
-      log('SessionRepository.delete', error: err, stackTrace: stack);
+      log('EpisodeRepository.delete', error: err, stackTrace: stack);
       return Result.failure(err);
     }
   }

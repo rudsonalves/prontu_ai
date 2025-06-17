@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import '/domain/models/session_model.dart';
 import '/data/common/tables.dart';
 import '/data/services/database/database_service.dart';
 import '/data/repositories/session/i_session_repository.dart';
@@ -12,6 +13,11 @@ class SessionRepository implements ISessionRepository {
 
   bool _started = false;
 
+  final Map<String, SessionModel> _cache = {};
+
+  @override
+  List<SessionModel> get sessions => _cache.values.toList();
+
   @override
   Future<Result<void>> initialize() async {
     try {
@@ -22,6 +28,101 @@ class SessionRepository implements ISessionRepository {
       return const Result.success(null);
     } on Exception catch (err, stack) {
       log('SessionRepository.initialize', error: err, stackTrace: stack);
+      return Result.failure(err);
+    }
+  }
+
+  @override
+  Future<Result<SessionModel>> insert(SessionModel session) async {
+    try {
+      if (!_started) throw Exception('Repository not initialized');
+
+      final result = await _databaseService.insert(
+        Tables.sessions,
+        session.toMap(),
+      );
+
+      if (result.isFailure) throw Exception('Insert failed');
+      _cache[session.id!] = session.copyWith(id: result.value!);
+
+      return Result.success(_cache[session.id!]!);
+    } on Exception catch (err, stack) {
+      log('SessionRepository.insert', error: err, stackTrace: stack);
+      return Result.failure(err);
+    }
+  }
+
+  @override
+  Future<Result<SessionModel>> fetch(
+    String uid, [
+    bool forceRemote = false,
+  ]) async {
+    try {
+      if (!_started) throw Exception('Repository not initialized');
+
+      if (_cache.containsKey(uid) && !forceRemote) {
+        return Result.success(_cache[uid]!);
+      }
+
+      final result = await _databaseService.fetch<SessionModel>(
+        Tables.sessions,
+        id: uid,
+        fromMap: SessionModel.fromMap,
+      );
+
+      if (result.isFailure) return result;
+      _cache[uid] = result.value!;
+
+      return result;
+    } on Exception catch (err, stack) {
+      log('SessionRepository.fetch', error: err, stackTrace: stack);
+      return Result.failure(err);
+    }
+  }
+
+  @override
+  Future<Result<List<SessionModel>>> fetchAll() async {
+    try {
+      if (!_started) throw Exception('Repository not initialized');
+
+      final result = await _databaseService.fetchAll<SessionModel>(
+        Tables.sessions,
+        fromMap: SessionModel.fromMap,
+      );
+
+      if (result.isFailure) return result;
+      _cache.clear();
+      _cache.addAll({
+        for (final session in result.value!) session.id!: session,
+      });
+
+      return result;
+    } on Exception catch (err, stack) {
+      log('SessionRepository.fetchAll', error: err, stackTrace: stack);
+      return Result.failure(err);
+    }
+  }
+
+  @override
+  Future<Result<void>> update(SessionModel session) async {
+    try {
+      if (!_started) throw Exception('Repository not initialized');
+
+      if (session.id == null) {
+        throw Exception('session ID must not be null for update');
+      }
+
+      final result = await _databaseService.update<SessionModel>(
+        Tables.sessions,
+        map: session.toMap(),
+      );
+
+      if (result.isFailure) return result;
+      _cache[session.id!] = session;
+
+      return result;
+    } on Exception catch (err, stack) {
+      log('SessionRepository.update', error: err, stackTrace: stack);
       return Result.failure(err);
     }
   }

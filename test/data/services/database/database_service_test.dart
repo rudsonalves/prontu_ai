@@ -4,7 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:prontu_ai/data/common/tables.dart';
 import 'package:prontu_ai/data/services/database/database_service.dart';
-import 'package:prontu_ai/domain/user_model.dart';
+import 'package:prontu_ai/domain/models/user_model.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
@@ -41,7 +41,7 @@ void main() {
     expect(insertResult.isSuccess, true);
     final insertedId = insertResult.value!;
 
-    // Buscando o usuário
+    // Buscando o usuário no cache
     final fetchedResult = await service.fetch<UserModel>(
       Tables.users,
       id: insertedId,

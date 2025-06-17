@@ -3,7 +3,7 @@ import 'dart:developer';
 import '/data/common/tables.dart';
 import '/data/repositories/user/i_user_repository.dart';
 import '/data/services/database/database_service.dart';
-import '/domain/user_model.dart';
+import '/domain/models/user_model.dart';
 import '/utils/result.dart';
 
 class UserRepository implements IUserRepository {
@@ -15,7 +15,8 @@ class UserRepository implements IUserRepository {
 
   final Map<String, UserModel> _cache = {};
 
-  List<UserModel> get cachedUsers => List.unmodifiable(_cache.values);
+  @override
+  List<UserModel> get users => List.unmodifiable(_cache.values);
 
   @override
   Future<Result<void>> initialize() async {
@@ -34,16 +35,16 @@ class UserRepository implements IUserRepository {
   }
 
   @override
-  Future<Result<String>> insert(UserModel user) async {
+  Future<Result<UserModel>> insert(UserModel user) async {
     try {
       if (!_started) return throw Exception('Repository not initialized');
 
       final result = await _databaseService.insert(Tables.users, user.toMap());
 
-      if (result.isFailure) return result;
+      if (result.isFailure) throw Exception('Insert failed');
       _cache[user.id!] = user.copyWith(id: result.value!);
 
-      return result;
+      return Result.success(_cache[user.id!]!);
     } on Exception catch (err, stack) {
       log('UserRepository.insert', error: err, stackTrace: stack);
       return Result.failure(err);
@@ -51,11 +52,16 @@ class UserRepository implements IUserRepository {
   }
 
   @override
-  Future<Result<UserModel>> fetch(String uid) async {
+  Future<Result<UserModel>> fetch(
+    String uid, [
+    bool forceRemote = false,
+  ]) async {
     try {
       if (!_started) throw Exception('Repository not initialized');
 
-      if (_cache.containsKey(uid)) return Result.success(_cache[uid]!);
+      if (_cache.containsKey(uid) && !forceRemote) {
+        return Result.success(_cache[uid]!);
+      }
 
       final result = await _databaseService.fetch<UserModel>(
         Tables.users,

@@ -1,15 +1,18 @@
+import 'package:prontu_ai/domain/models/attachment_model.dart';
 import 'package:prontu_ai/utils/result.dart';
 
 abstract interface class IAttachmentRepository {
+  List<AttachmentModel> get attachments;
+
   Future<Result<void>> initialize();
 
-  // Future<Result<String>> insert(attachmentModel user);
+  Future<Result<AttachmentModel>> insert(AttachmentModel user);
 
-  // Future<Result<attachmentModel>> fetch(String uid);
+  Future<Result<AttachmentModel>> fetch(String uid, [bool forceRemote = false]);
 
-  // Future<Result<List<attachmentModel>>> fetchAll();
+  Future<Result<List<AttachmentModel>>> fetchAll();
 
-  // Future<Result<void>> update(attachmentModel user);
+  Future<Result<void>> update(AttachmentModel user);
 
   Future<Result<void>> delete(String uid);
 }
