@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import '/data/common/tables.dart';
+import '../../common/table_names.dart';
 import '/data/repositories/user/i_user_repository.dart';
 import '/data/services/database/database_service.dart';
 import '/domain/models/user_model.dart';
@@ -39,7 +39,10 @@ class UserRepository implements IUserRepository {
     try {
       if (!_started) return throw Exception('Repository not initialized');
 
-      final result = await _databaseService.insert(Tables.users, user.toMap());
+      final result = await _databaseService.insert(
+        TableNames.users,
+        user.toMap(),
+      );
 
       if (result.isFailure) throw Exception('Insert failed');
       _cache[user.id!] = user.copyWith(id: result.value!);
@@ -64,7 +67,7 @@ class UserRepository implements IUserRepository {
       }
 
       final result = await _databaseService.fetch<UserModel>(
-        Tables.users,
+        TableNames.users,
         id: uid,
         fromMap: UserModel.fromMap,
       );
@@ -85,7 +88,7 @@ class UserRepository implements IUserRepository {
       if (!_started) throw Exception('Repository not initialized');
 
       final result = await _databaseService.fetchAll<UserModel>(
-        Tables.users,
+        TableNames.users,
         fromMap: UserModel.fromMap,
       );
 
@@ -110,7 +113,7 @@ class UserRepository implements IUserRepository {
       }
 
       final result = await _databaseService.update<UserModel>(
-        Tables.users,
+        TableNames.users,
         map: user.toMap(),
       );
 
@@ -129,7 +132,7 @@ class UserRepository implements IUserRepository {
     try {
       if (!_started) throw Exception('Repository not initialized');
 
-      final result = await _databaseService.delete(Tables.users, id: uid);
+      final result = await _databaseService.delete(TableNames.users, id: uid);
 
       if (result.isFailure) return result;
       _cache.remove(uid);
