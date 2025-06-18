@@ -45,9 +45,10 @@ class UserRepository implements IUserRepository {
       );
 
       if (result.isFailure) throw Exception('Insert failed');
-      _cache[user.id!] = user.copyWith(id: result.value!);
+      final newUser = user.copyWith(id: result.value!);
+      _cache[newUser.id!] = newUser;
 
-      return Result.success(_cache[user.id!]!);
+      return Result.success(newUser);
     } on Exception catch (err, stack) {
       log('UserRepository.insert', error: err, stackTrace: stack);
       return Result.failure(err);

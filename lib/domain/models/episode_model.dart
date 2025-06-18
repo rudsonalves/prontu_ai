@@ -2,11 +2,11 @@ class EpisodeModel {
   final String? id; // pode ser nulo pois nao teremos essa info logo de cara
   final String userId;
   final String title;
-  final int weight; //gramas
-  final int height; //cm
-  final String mainComplaint; //motivo da consulta
-  final String history; //histórico atual
-  final String anamnesis; //histórico clínico geral
+  final int weight; // gramas
+  final int height; // cm
+  final String mainComplaint; // motivo da consulta
+  final String history; // histórico atual
+  final String anamnesis; // histórico clínico geral
   final DateTime createdAt;
   final DateTime updatedAt;
 

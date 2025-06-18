@@ -43,9 +43,10 @@ class SessionRepository implements ISessionRepository {
       );
 
       if (result.isFailure) throw Exception('Insert failed');
-      _cache[session.id!] = session.copyWith(id: result.value!);
+      final newSession = session.copyWith(id: result.value!);
+      _cache[newSession.id!] = newSession;
 
-      return Result.success(_cache[session.id!]!);
+      return Result.success(newSession);
     } on Exception catch (err, stack) {
       log('SessionRepository.insert', error: err, stackTrace: stack);
       return Result.failure(err);
