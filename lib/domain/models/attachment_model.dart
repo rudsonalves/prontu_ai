@@ -1,14 +1,4 @@
-enum AttachmentType {
-  pdf('pdf'),
-  text('texto'),
-  image('imagem'),
-  other('outro');
-
-  final String label;
-  const AttachmentType(this.label);
-
-  static AttachmentType byName(String name) => byName(name);
-}
+import '/domain/enums/enums_declarations.dart';
 
 class AttachmentModel {
   final String? id;

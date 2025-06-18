@@ -4,6 +4,61 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/18 small_adjustments - by rudsonalves
+
+### Refactor Enums, Route Naming, and Validation Identifiers
+
+This commit streamlines enum declarations, unifies route naming for the user form, and renames the Brazilian date validator for clarity. It also corrects import paths for extensions and updates navigation calls in the home view to reflect the new `formUser` route identifier.
+
+### Modified Files
+
+* **docs/Diagrama de Classes.drawio**
+
+  * refreshed file index to reflect the latest Draw\.io export (no structural changes)
+
+* **lib/domain/enums/enums\_declarations.dart**
+
+  * commented out unused `EnumLabel` interface
+  * retained `Sex` enum without interface implementation annotations
+  * added `AttachmentType` enum with label semantics
+
+* **lib/domain/models/attachment\_model.dart**
+
+  * removed inline `AttachmentType` definition and imported it from `enums_declarations.dart`
+
+* **lib/routing/router.dart**
+
+  * updated the user-form route to use `Routes.formUser` (renamed constant)
+  * adjusted `GoRoute` entry for the form-user screen to match the new path and name
+
+* **lib/routing/routes.dart**
+
+  * renamed `user` → `formUser` constant for consistency with other form routes
+
+* **lib/ui/view/home/home\_view\.dart**
+
+  * renamed `_navUserView` → `_navFormUserView` and updated its call site on the FAB
+  * changed navigation pushes from `Routes.user` → `Routes.formUser`
+  * updated the edit handler to push the `formUser` path
+
+* **lib/ui/view/home/form\_user/form\_user\_view\.dart**
+
+  * updated validator reference from `GenericValidations.brBirthDate` → `GenericValidations.brDate`
+
+* **lib/utils/extensions/string\_extentions.dart**
+
+  * corrected absolute import path to `date_time_extensions.dart` using the project root prefix
+
+* **lib/utils/validates/generic\_validations.dart**
+
+  * renamed static method `brBirthDate` → `brDate` for broader applicability
+  * cleaned up import paths to use root-prefixed syntax
+
+### Conclusion
+
+Enum management is now consolidated, route identifiers for user forms are consistent, and validation naming has been clarified—improving overall code readability and maintainability.
+
+
 ## 2025/06/18 route_view_files-01 - by rudsonalves
 
 ### Support Scoped Repositories with Filtering and Shell Routes
