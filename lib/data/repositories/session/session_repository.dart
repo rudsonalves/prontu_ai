@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import '/data/services/database/tables/sql_tables.dart';
 import '/domain/models/session_model.dart';
 import '../../common/table_names.dart';
 import '/data/services/database/database_service.dart';
@@ -7,9 +8,14 @@ import '/data/repositories/session/i_session_repository.dart';
 import '/utils/result.dart';
 
 class SessionRepository implements ISessionRepository {
+  final String _episodeId;
   final DatabaseService _databaseService;
 
-  SessionRepository(this._databaseService);
+  SessionRepository({
+    required String episodeId,
+    required DatabaseService databaseService,
+  }) : _episodeId = episodeId,
+       _databaseService = databaseService;
 
   bool _started = false;
 
@@ -88,6 +94,7 @@ class SessionRepository implements ISessionRepository {
 
       final result = await _databaseService.fetchAll<SessionModel>(
         TableNames.sessions,
+        filter: {TableSessions.episodeId: _episodeId},
         fromMap: SessionModel.fromMap,
       );
 

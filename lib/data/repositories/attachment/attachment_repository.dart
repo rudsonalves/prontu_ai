@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import '/data/services/database/tables/sql_tables.dart';
 import '../../common/table_names.dart';
 import '/data/services/database/database_service.dart';
 import '/domain/models/attachment_model.dart';
@@ -7,9 +8,14 @@ import '/data/repositories/attachment/i_attachment_repository.dart';
 import '/utils/result.dart';
 
 class AttachmentRepository implements IAttachmentRepository {
+  final String _sessionId;
   final DatabaseService _databaseService;
 
-  AttachmentRepository(this._databaseService);
+  AttachmentRepository({
+    required String sessionId,
+    required DatabaseService databaseService,
+  }) : _databaseService = databaseService,
+       _sessionId = sessionId;
 
   bool _started = false;
 
@@ -88,6 +94,7 @@ class AttachmentRepository implements IAttachmentRepository {
 
       final result = await _databaseService.fetchAll<AttachmentModel>(
         TableNames.users,
+        filter: {TableAttachments.sessionId: _sessionId},
         fromMap: AttachmentModel.fromMap,
       );
 
