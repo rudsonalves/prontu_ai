@@ -43,9 +43,10 @@ class AiSummaryRepository implements IAiSummaryRepository {
       );
 
       if (result.isFailure) throw Exception('Insert failed');
-      _cache[aiSummary.id!] = aiSummary.copyWith(id: result.value!);
+      final newAiSummary = aiSummary.copyWith(id: result.value!);
+      _cache[newAiSummary.id!] = newAiSummary;
 
-      return Result.success(_cache[aiSummary.id!]!);
+      return Result.success(newAiSummary);
     } on Exception catch (err, stack) {
       log('AiSummaryRepository.insert', error: err, stackTrace: stack);
       return Result.failure(err);

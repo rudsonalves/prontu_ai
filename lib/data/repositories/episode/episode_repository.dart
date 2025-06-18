@@ -43,9 +43,10 @@ class EpisodeRepository implements IEpisodeRepository {
       );
 
       if (result.isFailure) throw Exception('Insert failed');
-      _cache[episode.id!] = episode.copyWith(id: result.value!);
+      final newEpisode = episode.copyWith(id: result.value!);
+      _cache[newEpisode.id!] = newEpisode;
 
-      return Result.success(_cache[episode.id!]!);
+      return Result.success(newEpisode);
     } on Exception catch (err, stack) {
       log('EpisodeRepository.insert', error: err, stackTrace: stack);
       return Result.failure(err);
