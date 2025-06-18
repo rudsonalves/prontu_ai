@@ -1,7 +1,22 @@
 import 'package:go_router/go_router.dart';
-import 'package:prontu_ai/domain/models/user_model.dart';
 import 'package:provider/provider.dart';
 
+import '/domain/models/attachment_model.dart';
+import '/domain/models/episode_model.dart';
+import '/domain/models/session_model.dart';
+import '/ui/view/attachment/attachment_view.dart';
+import '/ui/view/attachment/attachment_view_model.dart';
+import '/ui/view/attachment/form_attachment/form_attachment_view.dart';
+import '/ui/view/attachment/form_attachment/form_attachment_view_model.dart';
+import '/ui/view/episode/form_episode/form_episode_view.dart';
+import '/ui/view/episode/form_episode/form_episode_view_model.dart';
+import '/ui/view/session/form_session/form_session_view.dart';
+import '/ui/view/session/form_session/form_session_view_model.dart';
+import '/ui/view/session/session_view.dart';
+import '/ui/view/session/session_view_model.dart';
+import '/domain/models/user_model.dart';
+import '/ui/view/episode/episode_view.dart';
+import '/ui/view/episode/episode_view_model.dart';
 import '/ui/view/home/form_user/form_user_view.dart';
 import '/ui/view/home/form_user/form_user_view_model.dart';
 import '/app_theme_mode.dart';
@@ -31,6 +46,57 @@ GoRouter router() => GoRouter(
         viewModel: FormUserViewModel(
           userRepository: context.read<IUserRepository>(),
         ),
+      ),
+    ),
+    // Episodes pages
+    GoRoute(
+      path: Routes.episode.path,
+      name: Routes.episode.name,
+      builder: (context, state) => EpisodeView(
+        userId: state.extra as String,
+        viewModel: EpisodeViewModel(),
+      ),
+    ),
+    GoRoute(
+      path: Routes.formEpisode.path,
+      name: Routes.formEpisode.name,
+      builder: (context, state) => FormEpisodeView(
+        episode: state.extra as EpisodeModel,
+        viewModel: FormEpisodeViewModel(),
+      ),
+    ),
+    // Sessions pages
+    GoRoute(
+      path: Routes.session.path,
+      name: Routes.session.name,
+      builder: (context, state) => SessionView(
+        episodeId: state.extra as String,
+        viewModel: SessionViewModel(),
+      ),
+    ),
+    GoRoute(
+      path: Routes.formSession.path,
+      name: Routes.formSession.name,
+      builder: (context, state) => FormSessionView(
+        session: state.extra as SessionModel,
+        viewModel: FormSessionViewModel(),
+      ),
+    ),
+    // Attachments pages
+    GoRoute(
+      path: Routes.attachment.path,
+      name: Routes.attachment.name,
+      builder: (context, state) => AttachmentView(
+        sessionId: state.extra as String,
+        viewModel: AttachmentViewModel(),
+      ),
+    ),
+    GoRoute(
+      path: Routes.formAttachment.path,
+      name: Routes.formAttachment.name,
+      builder: (context, state) => FormAttachmentView(
+        attachment: state.extra as AttachmentModel,
+        viewModel: FormAttachmentViewModel(),
       ),
     ),
   ],
