@@ -1,13 +1,4 @@
-enum Sex {
-  male('Masculino'),
-  female('Feminino'),
-  other('Outro');
-
-  final String label;
-  const Sex(this.label);
-
-  static Sex byName(String name) => byName(name);
-}
+import '/domain/enums/enums_declarations.dart';
 
 class UserModel {
   final String? id;

@@ -4,6 +4,107 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/18 home_view - by rudsonalves
+
+### Add User Form Flow, UI Components, Enums, Extensions, and Validation
+
+This commit enhances the **ProntuAI** application by introducing a full user-management workflow: form screens for creating/editing users, domain enums for labels, layout constants, reusable UI widgets (buttons, cards, fields), and validation. Utility extensions for date formatting and string handling support the new form, while minor fixes improve toggle behavior and repository insert logic.
+
+### Modified Files
+
+* **docs/.\$Diagrama de Classes.drawio.dtmp**
+
+  * removed obsolete temporary export
+
+* **lib/app\_theme\_mode.dart**
+
+  * changed `toggle()` from `Future<void>` to synchronous `void` method
+
+* **lib/data/repositories/*/*\_repository.dart** (all four repositories)
+
+  * simplified `insert` to assign `result.value` to a local copy before caching and return that new instance
+
+* **lib/domain/models/episode\_model.dart**
+
+  * adjusted inline comments spacing for consistency
+
+* **lib/domain/models/user\_model.dart**
+
+  * removed embedded `Sex` enum declaration; now imports from `enums_declarations.dart`
+
+* **lib/routing/router.dart**
+
+  * reordered imports and added a new `/user` route mapped to `FormUserView` with `FormUserViewModel`
+
+* **lib/routing/routes.dart**
+
+  * added `user` route constant (`/user`)
+
+* **lib/ui/core/theme/theme.dart**
+
+  * standardized import quoting and trimmed trailing list initializers
+
+* **lib/ui/view/home/home\_view\.dart**
+
+  * switched theme-icon action to listen on `HomeViewModel.themeMode`
+  * refactored body to display user list via `DismissibleCard`, loading indicator, empty state, and navigation to user form
+
+* **lib/ui/view/home/home\_view\_model.dart**
+
+  * injected `AppThemeMode`, added `delete` command, updated load/delete logic, and exposed `users`, `toggleTheme`, and `isDark` getters
+
+* **test/data/services/database/database\_service\_test.dart**
+
+  * added import for `enums_declarations.dart` to support new `Sex` enum
+
+### New Files
+
+* **lib/domain/enums/enums\_declarations.dart**
+  defines `EnumLabel` interface and `Sex` enum with labels
+
+* **lib/ui/core/theme/dimens.dart**
+  responsive padding, spacing, radius, and border-radius constants
+
+* **lib/ui/core/ui/buttons/big\_button.dart**
+  customizable full-width button with loading state
+
+* **lib/ui/core/ui/dismissibles/dismissible\_card.dart**
+  swipe-to-edit/remove card wrapper
+
+* **lib/ui/core/ui/dismissibles/dismissible\_container.dart**
+  styled background container for dismissible actions
+
+* **lib/ui/core/ui/form\_fields/basic\_form\_field.dart**
+  styled `TextFormField` wrapper with validation handling
+
+* **lib/ui/core/ui/form\_fields/date\_form\_field.dart**
+  date picker field that formats Brazilian dates
+
+* **lib/ui/core/ui/form\_fields/enum\_form\_field.dart**
+  toggle-buttons-based enum selector
+
+* **lib/ui/core/ui/form\_fields/widgets/toggle\_buttons\_text.dart**
+  text widget used inside enum toggle buttons
+
+* **lib/ui/view/home/form\_user/form\_user\_view\.dart**
+  form screen for creating and editing `UserModel`
+
+* **lib/ui/view/home/form\_user/form\_user\_view\_model.dart**
+  view model wiring insert/update commands with simulated delays
+
+* **lib/utils/extensions/date\_time\_extensions.dart**
+  extension to format `DateTime` as `DD/MM/YYYY` and parse back
+
+* **lib/utils/extensions/string\_extentions.dart**
+  extension to strip non-digits and detect Brazilian date format
+
+* **lib/utils/validates/generic\_validations.dart**
+  common validation methods for name, phone, birth date, and sex
+
+### Conclusion
+
+The user-management feature is now complete with form-driven creation, editing, and deletion flows—powered by shared UI components, robust validation, and clear domain abstractions.
+
 ## 2025/06/17 repository-02 - by rudsonalves
 
 ### Rename Tables to TableNames and Propagate Across Repositories

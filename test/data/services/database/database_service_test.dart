@@ -4,6 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:prontu_ai/data/common/table_names.dart';
 import 'package:prontu_ai/data/services/database/database_service.dart';
+import 'package:prontu_ai/domain/enums/enums_declarations.dart';
 import 'package:prontu_ai/domain/models/user_model.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
