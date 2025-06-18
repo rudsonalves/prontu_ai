@@ -105,7 +105,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _navToEpisode(UserModel user) {
-    debugPrint('Navegando para o episódio ${user.name}');
+    context.push(Routes.episode.path, extra: user.id!);
   }
 
   void _editUser(dynamic user) {
