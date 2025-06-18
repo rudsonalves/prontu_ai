@@ -85,7 +85,7 @@ class _FormUserViewState extends State<FormUserView> {
                 labelText: 'Data de Nascimento',
                 hintText: 'Digite a data de nascimento',
                 controller: _dateController,
-                validator: GenericValidations.brBirthDate,
+                validator: GenericValidations.brDate,
               ),
               EnumFormField<Sex>(
                 labelBuilder: (sex) => sex.label,

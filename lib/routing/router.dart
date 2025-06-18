@@ -48,8 +48,8 @@ GoRouter router() => GoRouter(
       ),
     ),
     GoRoute(
-      path: Routes.user.path,
-      name: Routes.user.name,
+      path: Routes.formUser.path,
+      name: Routes.formUser.name,
       builder: (context, state) => FormUserView(
         user: state.extra as UserModel?,
         viewModel: FormUserViewModel(

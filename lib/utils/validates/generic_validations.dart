@@ -1,5 +1,5 @@
-import 'package:prontu_ai/domain/enums/enums_declarations.dart';
-import 'package:prontu_ai/utils/extensions/string_extentions.dart';
+import '/domain/enums/enums_declarations.dart';
+import '/utils/extensions/string_extentions.dart';
 
 class GenericValidations {
   GenericValidations._();
@@ -29,7 +29,7 @@ class GenericValidations {
     return null;
   }
 
-  static String? brBirthDate(String? value) {
+  static String? brDate(String? value) {
     if (value == null || value.isEmpty) {
       return 'Data de nascimento é obrigatória.';
     }

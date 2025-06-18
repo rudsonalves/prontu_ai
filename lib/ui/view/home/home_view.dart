@@ -58,7 +58,7 @@ class _HomeViewState extends State<HomeView> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _navUserView,
+        onPressed: _navFormUserView,
         child: const Icon(Icons.add),
       ),
       body: Padding(
@@ -109,7 +109,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _editUser(dynamic user) {
-    context.push(Routes.user.path, extra: user);
+    context.push(Routes.formUser.path, extra: user);
   }
 
   Future<bool> _removeUser(dynamic user) async {
@@ -117,8 +117,8 @@ class _HomeViewState extends State<HomeView> {
     return false;
   }
 
-  void _navUserView() {
-    context.push(Routes.user.path);
+  void _navFormUserView() {
+    context.push(Routes.formUser.path);
   }
 
   void _isDeleted() {
