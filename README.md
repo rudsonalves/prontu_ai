@@ -4,6 +4,48 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/18 route_view_files - by rudsonalves
+
+### Extend App Routing with Episode, Session, Attachment and AI Summary
+
+This commit enhances the navigation layer by adding routes for episodes, sessions, attachments, and AI summaries. Corresponding view and view-model placeholders are introduced to scaffold each feature. The home view’s episode navigation call is updated to use the new router paths, ensuring end-to-end flow readiness.
+
+### Modified Files
+
+* **lib/routing/router.dart**
+
+  * imported domain models (`EpisodeModel`, `SessionModel`, `AttachmentModel`) and their view/view-model widgets
+  * added `GoRoute` entries for `episode`, `formEpisode`, `session`, `formSession`, `attachment`, `formAttachment`, and `aiSummary`
+* **lib/routing/routes.dart**
+
+  * renamed `user` route to `form_user`
+  * added constants for `episode`, `formEpisode`, `attachment`, `formAttachment`, `session`, `formSession`, and `aiSummary`
+* **lib/ui/view/home/home\_view\.dart**
+
+  * updated `_navToEpisode` to push `Routes.episode.path` with the selected user’s ID
+
+### New Files
+
+* **lib/ui/view/ai\_summary/ai\_summary\_view\.dart** & **ai\_summary\_view\_model.dart**
+  placeholder screen and view-model for AI summary feature
+* **lib/ui/view/attachment/attachment\_view\.dart** & **attachment\_view\_model.dart**
+  placeholder screen and view-model for listing attachments
+* **lib/ui/view/attachment/form\_attachment/form\_attachment\_view\.dart** & **form\_attachment\_view\_model.dart**
+  placeholder form screen and view-model for creating/editing an attachment
+* **lib/ui/view/episode/episode\_view\.dart** & **episode\_view\_model.dart**
+  placeholder for listing or displaying episodes
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\.dart** & **form\_episode\_view\_model.dart**
+  placeholder form for creating/editing an episode
+* **lib/ui/view/session/session\_view\.dart** & **session\_view\_model.dart**
+  placeholder for listing or displaying sessions
+* **lib/ui/view/session/form\_session/form\_session\_view\.dart** & **form\_session\_view\_model.dart**
+  placeholder form for creating/editing a session
+
+### Conclusion
+
+Routing now supports all core entities—episodes, sessions, attachments, and AI summaries—with scaffolded view modules ready for feature implementation.
+
+
 ## 2025/06/18 home_view - by rudsonalves
 
 ### Add User Form Flow, UI Components, Enums, Extensions, and Validation
