@@ -1,4 +1,4 @@
-import 'package:prontu_ai/utils/extensions/date_time_extensions.dart';
+import '/utils/extensions/date_time_extensions.dart';
 
 extension StringExtensions on String {
   String onlyDigits() => replaceAll(RegExp(r'[^\d]'), '');

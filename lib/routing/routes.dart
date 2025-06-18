@@ -7,7 +7,7 @@ class Route {
 
 abstract final class Routes {
   static const home = Route('home', '/');
-  static const user = Route('form_user', '/form_user');
+  static const formUser = Route('form_user', '/form_user');
 
   static const episode = Route('episode', '/episode');
   static const formEpisode = Route('form_episode', '/form_episode');
