@@ -7,4 +7,5 @@ class Route {
 
 abstract final class Routes {
   static const home = Route('home', '/');
+  static const user = Route('user', '/user');
 }

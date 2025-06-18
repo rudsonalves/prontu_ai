@@ -43,9 +43,10 @@ class AttachmentRepository implements IAttachmentRepository {
       );
 
       if (result.isFailure) throw Exception('Insert failed');
-      _cache[attachment.id!] = attachment.copyWith(id: result.value!);
+      final newAttachment = attachment.copyWith(id: result.value!);
+      _cache[newAttachment.id!] = newAttachment;
 
-      return Result.success(_cache[attachment.id!]!);
+      return Result.success(newAttachment);
     } on Exception catch (err, stack) {
       log('AttachmentRepository.insert', error: err, stackTrace: stack);
       return Result.failure(err);

@@ -9,7 +9,7 @@ class AppThemeMode extends ChangeNotifier {
 
   bool get isDark => _themeMode == ThemeMode.dark;
 
-  Future<void> toggle() async {
+  void toggle() {
     _themeMode = _themeMode == ThemeMode.light
         ? ThemeMode.dark
         : ThemeMode.light;
