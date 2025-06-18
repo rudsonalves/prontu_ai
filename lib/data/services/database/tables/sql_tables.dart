@@ -55,3 +55,57 @@ class SqlTables {
   )
   ''';
 }
+
+class TableSessions {
+  TableSessions._();
+
+  static const id = 'id';
+  static const episodeId = 'episode_id';
+  static const doctor = 'doctor';
+  static const phone = 'phone';
+  static const notes = 'notes';
+  static const createdAt = 'created_at';
+}
+
+class TableEpisodes {
+  TableEpisodes._();
+
+  static const id = 'id';
+  static const userId = 'user_id';
+  static const title = 'title';
+  static const weight = 'weight';
+  static const height = 'height';
+  static const mainComplaint = 'main_complaint';
+  static const history = 'history';
+  static const anamnesis = 'anamnesis';
+  static const createdAt = 'created_at';
+  static const updatedAt = 'updated_at';
+}
+
+class TableAttachments {
+  TableAttachments._();
+
+  static const id = 'id';
+  static const sessionId = 'session_id';
+  static const path = 'path';
+  static const type = 'type';
+  static const createdAt = 'created_at';
+}
+
+class TableAiSummaries {
+  TableAiSummaries._();
+
+  static const id = 'id';
+  static const episodeId = 'episode_id';
+  static const summary = 'summary';
+  static const createdAt = 'created_at';
+}
+
+class TableUsers {
+  TableUsers._();
+
+  static const id = 'id';
+  static const name = 'name';
+  static const birthDate = 'birth_date';
+  static const sex = 'sex';
+}

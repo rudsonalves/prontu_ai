@@ -92,12 +92,25 @@ class DatabaseService {
 
   Future<Result<List<T>>> fetchAll<T>(
     String table, {
+    Map<String, dynamic>? filter,
     required T Function(Map<String, dynamic>) fromMap,
   }) async {
     try {
       if (_db == null) throw Exception('Database is not initialized');
 
-      final List<Map<String, dynamic>> results = await _db!.query(table);
+      late final List<Map<String, dynamic>> results;
+      if (filter != null) {
+        final where = filter.keys.map((key) => '$key = ?').join(' AND ');
+        final whereArgs = filter.values.toList();
+        results = await _db!.query(
+          table,
+          where: where,
+          whereArgs: whereArgs,
+        );
+      } else {
+        results = await _db!.query(table);
+      }
+
       final List<T> items = results.map(fromMap).toList();
       return Result.success(items);
     } on Exception catch (err, stack) {

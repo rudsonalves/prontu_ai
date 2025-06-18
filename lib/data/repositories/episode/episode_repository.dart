@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import '/data/services/database/tables/sql_tables.dart';
 import '../../common/table_names.dart';
 import '/data/services/database/database_service.dart';
 import '/domain/models/episode_model.dart';
@@ -7,9 +8,14 @@ import '/data/repositories/episode/i_episode_repository.dart';
 import '/utils/result.dart';
 
 class EpisodeRepository implements IEpisodeRepository {
+  final String _userId;
   final DatabaseService _databaseService;
 
-  EpisodeRepository(this._databaseService);
+  EpisodeRepository({
+    required String userId,
+    required DatabaseService databaseService,
+  }) : _databaseService = databaseService,
+       _userId = userId;
 
   bool _started = false;
 
@@ -88,6 +94,7 @@ class EpisodeRepository implements IEpisodeRepository {
 
       final result = await _databaseService.fetchAll<EpisodeModel>(
         TableNames.episodes,
+        filter: {TableEpisodes.userId: _userId},
         fromMap: EpisodeModel.fromMap,
       );
 
