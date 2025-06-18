@@ -62,7 +62,7 @@ class _HomeViewState extends State<HomeView> {
         child: const Icon(Icons.add),
       ),
       body: Padding(
-        padding: EdgeInsets.all(dimens.paddingScreenAll / 2),
+        padding: EdgeInsets.all(dimens.paddingScreenAll),
         child: ListenableBuilder(
           listenable: viewModel.load,
           builder: (context, _) {
@@ -105,7 +105,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _navToEpisode(UserModel user) {
-    context.push(Routes.episode.path, extra: user.id!);
+    context.push(Routes.episode.path, extra: user);
   }
 
   void _editUser(dynamic user) {

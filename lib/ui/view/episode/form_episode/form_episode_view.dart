@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:prontu_ai/domain/models/episode_model.dart';
 
+import '/domain/models/episode_model.dart';
 import '/ui/view/episode/form_episode/form_episode_view_model.dart';
 
 class FormEpisodeView extends StatefulWidget {

@@ -1,6 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'utils/repository_scope.dart';
+import '/data/repositories/attachment/attachment_repository.dart';
+import '/data/repositories/attachment/i_attachment_repository.dart';
+import '/data/repositories/episode/i_episode_repository.dart';
+import '/data/repositories/session/i_session_repository.dart';
+import '/data/repositories/session/session_repository.dart';
+import '/data/repositories/episode/episode_repository.dart';
+import '/data/services/database/database_service.dart';
 import '/domain/models/attachment_model.dart';
 import '/domain/models/episode_model.dart';
 import '/domain/models/session_model.dart';
@@ -49,55 +58,126 @@ GoRouter router() => GoRouter(
       ),
     ),
     // Episodes pages
-    GoRoute(
-      path: Routes.episode.path,
-      name: Routes.episode.name,
-      builder: (context, state) => EpisodeView(
-        userId: state.extra as String,
-        viewModel: EpisodeViewModel(),
-      ),
-    ),
-    GoRoute(
-      path: Routes.formEpisode.path,
-      name: Routes.formEpisode.name,
-      builder: (context, state) => FormEpisodeView(
-        episode: state.extra as EpisodeModel,
-        viewModel: FormEpisodeViewModel(),
-      ),
-    ),
-    // Sessions pages
-    GoRoute(
-      path: Routes.session.path,
-      name: Routes.session.name,
-      builder: (context, state) => SessionView(
-        episodeId: state.extra as String,
-        viewModel: SessionViewModel(),
-      ),
-    ),
-    GoRoute(
-      path: Routes.formSession.path,
-      name: Routes.formSession.name,
-      builder: (context, state) => FormSessionView(
-        session: state.extra as SessionModel,
-        viewModel: FormSessionViewModel(),
-      ),
-    ),
-    // Attachments pages
-    GoRoute(
-      path: Routes.attachment.path,
-      name: Routes.attachment.name,
-      builder: (context, state) => AttachmentView(
-        sessionId: state.extra as String,
-        viewModel: AttachmentViewModel(),
-      ),
-    ),
-    GoRoute(
-      path: Routes.formAttachment.path,
-      name: Routes.formAttachment.name,
-      builder: (context, state) => FormAttachmentView(
-        attachment: state.extra as AttachmentModel,
-        viewModel: FormAttachmentViewModel(),
-      ),
+    ShellRoute(
+      builder: (context, state, child) {
+        final user = state.extra as UserModel;
+
+        final episodeRepository = EpisodeRepository(
+          userId: user.id!,
+          databaseService: context.read<DatabaseService>(),
+        );
+
+        return RepositoryScope<IEpisodeRepository>(
+          repository: episodeRepository,
+          child: child,
+        );
+      },
+      routes: [
+        GoRoute(
+          path: Routes.episode.path,
+          name: Routes.episode.name,
+          builder: (context, state) => Builder(
+            builder: (context) => EpisodeView(
+              user: state.extra as UserModel,
+              viewModel: EpisodeViewModel(
+                RepositoryScope.of<IEpisodeRepository>(context),
+              ),
+            ),
+          ),
+        ),
+        GoRoute(
+          path: Routes.formEpisode.path,
+          name: Routes.formEpisode.name,
+          pageBuilder: (context, state) => MaterialPage(
+            child: FormEpisodeView(
+              episode: state.extra as EpisodeModel,
+              viewModel: FormEpisodeViewModel(
+                RepositoryScope.of<IEpisodeRepository>(context),
+              ),
+            ),
+          ),
+        ),
+        // Sessions pages
+        ShellRoute(
+          builder: (context, state, child) {
+            final episode = state.extra as EpisodeModel;
+
+            final sessionRepository = SessionRepository(
+              episodeId: episode.id!,
+              databaseService: context.read<DatabaseService>(),
+            );
+
+            return RepositoryScope<ISessionRepository>(
+              repository: sessionRepository,
+              child: child,
+            );
+          },
+          routes: [
+            GoRoute(
+              path: Routes.session.path,
+              name: Routes.session.name,
+              builder: (context, state) {
+                final episode = state.extra as EpisodeModel;
+
+                return SessionView(
+                  episode: episode,
+                  viewModel: SessionViewModel(
+                    RepositoryScope.of<ISessionRepository>(context),
+                  ),
+                );
+              },
+            ),
+            GoRoute(
+              path: Routes.formSession.path,
+              name: Routes.formSession.name,
+              builder: (context, state) => FormSessionView(
+                session: state.extra as SessionModel,
+                viewModel: FormSessionViewModel(
+                  RepositoryScope.of<ISessionRepository>(context),
+                ),
+              ),
+            ),
+            // Attachments pages
+            ShellRoute(
+              builder: (context, state, child) {
+                final session = state.extra as SessionModel;
+
+                final attachmentRepository = AttachmentRepository(
+                  sessionId: session.id!,
+                  databaseService: context.read<DatabaseService>(),
+                );
+
+                return RepositoryScope<IAttachmentRepository>(
+                  repository: attachmentRepository,
+                  child: child,
+                );
+              },
+              routes: [
+                GoRoute(
+                  path: Routes.attachment.path,
+                  name: Routes.attachment.name,
+                  builder: (context, state) => AttachmentView(
+                    session: state.extra as SessionModel,
+                    viewModel: AttachmentViewModel(
+                      RepositoryScope.of<IAttachmentRepository>(context),
+                    ),
+                  ),
+                ),
+                GoRoute(
+                  path: Routes.formAttachment.path,
+                  name: Routes.formAttachment.name,
+                  builder: (context, state) => FormAttachmentView(
+                    attachment: state.extra as AttachmentModel,
+                    viewModel: FormAttachmentViewModel(
+                      RepositoryScope.of<IAttachmentRepository>(context),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
     ),
   ],
 );
