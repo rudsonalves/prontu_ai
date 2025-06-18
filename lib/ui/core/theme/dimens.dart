@@ -73,7 +73,7 @@ final class _DimensMobile extends Dimens {
   final double profilePictureSize = 64.0;
 
   @override
-  final double spacingVertical = 20.0;
+  final double spacingVertical = 6.0;
 
   @override
   final double spacingHorizontal = 8.0;

@@ -4,6 +4,103 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/18 route_view_files-01 - by rudsonalves
+
+### Support Scoped Repositories with Filtering and Shell Routes
+
+This commit refactors dependency provisioning to use scoped repositories per feature, adds record-level filtering to `fetchAll`, and restructures routing with nested `ShellRoute` wrappers. Database table column constants are grouped into `Table*` classes for stronger typing. UI layout tweaks ensure consistent spacing, and view/view-model pairs now execute an initial load command.
+
+### Modified Files
+
+* **lib/config/composition\_root.dart**
+
+  * switched `Provider<DatabaseService>` to reuse the single initialized `database` instance instead of creating a new one
+
+* **lib/data/repositories/attachment/attachment\_repository.dart**
+
+  * injected `sessionId` in constructor; imported `TableAttachments.sessionId`;
+  * applied `filter: { session_id: _sessionId }` to `fetchAll` calls for scoped attachment lists
+
+* **lib/data/repositories/episode/episode\_repository.dart**
+
+  * injected `userId` in constructor; imported `TableEpisodes.userId`;
+  * applied `filter: { user_id: _userId }` to `fetchAll` for user-specific episodes
+
+* **lib/data/repositories/session/session\_repository.dart**
+
+  * injected `episodeId` in constructor; imported `TableSessions.episodeId`;
+  * applied `filter: { episode_id: _episodeId }` to `fetchAll` for session-specific lists
+
+* **lib/data/services/database/database\_service.dart**
+
+  * added optional `filter` parameter to `fetchAll`; builds `WHERE` clause dynamically when provided
+
+* **lib/data/services/database/tables/sql\_tables.dart**
+
+  * defined new classes `TableSessions`, `TableEpisodes`, `TableAttachments`, `TableAiSummaries`, and `TableUsers` with static column names;
+
+* **lib/routing/router.dart**
+
+  * replaced flat `GoRoute` definitions with nested `ShellRoute` wrappers that create and provide scoped repositories (`EpisodeRepository`, `SessionRepository`, `AttachmentRepository`) via a new `RepositoryScope` inherited widget;
+  * updated route builders to retrieve the scoped repository and inject into corresponding view-models;
+
+* **lib/routing/routes\_base/attachment\_routes.dart**, **episodes\_routes.dart**, **sessions\_routes.dart**
+
+  * factored out route definitions for attachments, episodes, and sessions into their own lists for modular imports
+
+* **lib/routing/utils/repository\_scope.dart**
+
+  * introduced `RepositoryScope<T>` inherited widget for passing repository instances down the widget tree
+
+* **lib/ui/core/theme/dimens.dart**
+
+  * adjusted `spacingVertical` for mobile to `6.0` for more compact lists
+
+* **lib/ui/core/ui/dismissibles/dismissible\_card.dart**
+
+  * wrapped each `Dismissible` in a bottom padding using `Dimens.spacingVertical * 2` and removed default card margin for tighter grouping
+
+* **lib/ui/view/ai\_summary/ai\_summary\_view\_model.dart**
+
+  * injected `IAiSummaryRepository` and triggered `initialize()` via `Command0<void> load`
+
+* **lib/ui/view/attachment/attachment\_view\.dart** & **attachment\_view\_model.dart**
+
+  * updated to accept a full `SessionModel`, show a `Scaffold` with session context in the `AppBar`, and execute `load` command on init
+
+* **lib/ui/view/attachment/form\_attachment/form\_attachment\_view\_model.dart**
+
+  * injected `IAttachmentRepository` and exposed `save`/`update` commands
+
+* **lib/ui/view/episode/episode\_view\.dart** & **episode\_view\_model.dart**
+
+  * updated to accept `UserModel`, display user name in `AppBar`, and execute `load` command
+
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\_model.dart**
+
+  * injected `IEpisodeRepository` and exposed `save`/`update` commands
+
+* **lib/ui/view/home/home\_view\.dart**
+
+  * restored full `paddingScreenAll` on body padding; changed `_navToEpisode` to pass a `UserModel` extra instead of ID
+
+* **lib/ui/view/home/home\_view\_model.dart**
+
+  * cleaned import order and kept existing logic
+
+* **lib/ui/view/session/form\_session/form\_session\_view\_model.dart**
+
+  * injected `ISessionRepository` and exposed `save`/`update` commands
+
+* **lib/ui/view/session/session\_view\.dart** & **session\_view\_model.dart**
+
+  * updated to accept `EpisodeModel`, display episode title in `AppBar`, and execute `load` command
+
+### Conclusion
+
+Routing, data access, and UI flows are now fully scoped per feature, ensuring repository instances are correctly provisioned with context-specific filters. The new `RepositoryScope` and `ShellRoute` patterns establish a robust foundation for modular feature development.
+
+
 ## 2025/06/18 route_view_files - by rudsonalves
 
 ### Extend App Routing with Episode, Session, Attachment and AI Summary

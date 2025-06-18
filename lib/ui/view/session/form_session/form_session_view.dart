@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:prontu_ai/domain/models/session_model.dart';
 
+import '/domain/models/session_model.dart';
 import '/ui/view/session/form_session/form_session_view_model.dart';
 
 class FormSessionView extends StatefulWidget {

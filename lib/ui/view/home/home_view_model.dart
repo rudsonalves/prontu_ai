@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:prontu_ai/app_theme_mode.dart';
-import 'package:prontu_ai/domain/models/user_model.dart';
-import 'package:prontu_ai/utils/result.dart';
 
+import '/app_theme_mode.dart';
+import '/domain/models/user_model.dart';
+import '/utils/result.dart';
 import '/data/repositories/user/i_user_repository.dart';
 import '/utils/command.dart';
 
