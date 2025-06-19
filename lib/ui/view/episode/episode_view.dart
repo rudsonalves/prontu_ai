@@ -44,7 +44,7 @@ class _EpisodeViewState extends State<EpisodeView> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _navEpisodeView,
+        onPressed: _navFormEpisodeView,
         child: const Icon(Icons.add),
       ),
       body: Padding(
@@ -92,10 +92,7 @@ class _EpisodeViewState extends State<EpisodeView> {
     );
   }
 
-  void _navEpisodeView() {
-    context.push(
-      Routes.formEpisode.path,
-      extra: {'user_id': widget.user.id},
-    );
+  void _navFormEpisodeView() {
+    context.push(Routes.formEpisode.path, extra: {'user': widget.user});
   }
 }

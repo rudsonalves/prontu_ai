@@ -42,6 +42,10 @@ class DatabaseService {
     final batch = db.batch();
 
     batch.execute(SqlTables.users);
+    batch.execute(SqlTables.sessions);
+    batch.execute(SqlTables.episodes);
+    batch.execute(SqlTables.attachments);
+    batch.execute(SqlTables.aiSummaries);
 
     await batch.commit();
   }
