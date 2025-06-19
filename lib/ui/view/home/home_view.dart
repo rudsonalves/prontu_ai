@@ -136,24 +136,6 @@ class _HomeViewState extends State<HomeView> {
           ],
         ) ??
         false;
-    // await showSimpleMessage(
-    //   context,
-    //   title: 'Remover usuário',
-    //   body: [
-    //     'Deseja realmente remover $genere usuári$genere **${user.name}**?',
-    //   ],
-    //   actionButtons: [
-    //     TextButton(
-    //       child: const Text('Sim'),
-    //       onPressed: () => Navigator.pop(context, true),
-    //     ),
-    //     TextButton(
-    //       child: const Text('Não'),
-    //       onPressed: () => Navigator.pop(context, false),
-    //     ),
-    //   ],
-    // ) ??
-    // false;
 
     if (!response) return false;
 
@@ -172,8 +154,8 @@ class _HomeViewState extends State<HomeView> {
     if (result != null && result.isFailure) {
       showSnackError(
         context,
-        'Ocorreu um erro ao remover o usuário: ${result.error}.\n'
-        'Favor, tente mais tarde.',
+        'Ocorreu um erro ao remover o usuário.\n'
+        'Favor tentar mais tarde.',
       );
 
       return;
@@ -182,6 +164,5 @@ class _HomeViewState extends State<HomeView> {
     showSnackSuccess(context, 'Usuário removido com sucesso.');
 
     setState(() {});
-    return;
   }
 }
