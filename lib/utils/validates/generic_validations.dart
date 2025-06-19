@@ -59,4 +59,12 @@ class GenericValidations {
 
     return null;
   }
+
+  static String? attachmentType(AttachmentType? value) {
+    if (value == null) {
+      return 'Tipo de arquivo é obrigatório.';
+    }
+
+    return null;
+  }
 }

@@ -127,9 +127,9 @@ class _FormUserViewState extends State<FormUserView> {
 
     if (result == null || result.isFailure) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(
-            'Ocorreu um erro ao salvar o usuário: ${result!.error}.\n'
+            'Ocorreu um erro ao salvar o usuário.\n'
             'Favor, tente mais tarde.',
           ),
         ),
