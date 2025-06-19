@@ -50,7 +50,9 @@ class _FormAttachmentViewState extends State<FormAttachmentView> {
     viewModel.insert.addListener(_isSaved);
     viewModel.update.addListener(_isSaved);
 
-    _initializeForm();
+    if (widget.attachment != null) {
+      _initializeForm();
+    }
 
     super.initState();
   }
@@ -155,17 +157,15 @@ class _FormAttachmentViewState extends State<FormAttachmentView> {
   }
 
   void _initializeForm() {
-    final attachment = widget.attachment;
+    final attachment = widget.attachment!;
 
-    if (attachment != null) {
-      _namecontroller.text = attachment.name;
-      _pathController.text = attachment.path;
-      _type = attachment.type;
+    _namecontroller.text = attachment.name;
+    _pathController.text = attachment.path;
+    _type = attachment.type;
 
-      _isEditing = true;
+    _isEditing = true;
 
-      setState(() {});
-    }
+    setState(() {});
   }
 
   void _selectType(AttachmentType? type) => _type = type;

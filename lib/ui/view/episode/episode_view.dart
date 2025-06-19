@@ -28,7 +28,6 @@ class _EpisodeViewState extends State<EpisodeView> {
   void initState() {
     super.initState();
     viewModel = widget.viewModel;
-    viewModel.load.execute();
   }
 
   @override
