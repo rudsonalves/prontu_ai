@@ -20,6 +20,8 @@ dependencies:
   google_fonts: ^6.2.1
   material_symbols_icons: ^4.2815.1
   file_picker: ^10.2.0
+  flutter_dotenv: ^5.2.1
+  dart_openai: ^5.1.0
 
 dev_dependencies:
   flutter_test:
