@@ -4,6 +4,50 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/19 ia_service - by rudsonalves
+
+### Add OpenAI integration, dotenv support, and view refinements
+
+This commit integrates an `OpenIaService` using `dart_openai` with environment-based API key loading via `flutter_dotenv`, refines session and attachment view imports and lifecycle methods, and updates dependency configuration and ignore rules to support secure key management.
+
+### Modified Files
+
+* **.gitignore**
+
+  * Added `.env` to prevent local environment files from being committed.
+
+* **pubspec.yaml**
+
+  * Introduced `flutter_dotenv: ^5.2.1` and `dart_openai: ^5.1.0` under dependencies for secure configuration and AI model access.
+
+* **lib/ui/view/attachment/attachment\_view\.dart**
+
+  * Corrected import statements to use root-relative paths for `episode_model.dart` and `user_model.dart`.
+
+* **lib/ui/view/session/session\_view\.dart**
+
+  * Imported `Dimens` to access layout constants.
+  * Moved `SessionViewModel` initialization into `initState` and disposed listeners in `dispose`.
+  * Updated `AppBar` title formatting and added padding placeholder in `body`.
+
+* **lib/ui/view/session/session\_view\_model.dart**
+
+  * Added a `delete` command (`Command1<void, String>`) alongside the existing `load` command.
+
+### New Files
+
+* **lib/data/services/open\_ia/open\_ia\_service.dart**
+  Defines `OpenIaService` to initialize the OpenAI client, load the API key from `.env`, list available models, and perform episode analysis prompts with concise technical responses.
+
+* **lib/domain/dtos/episode\_analysis.dart**
+  Declares `EpisodeAnalysis` DTO containing `recommendedSpecialist` and `clinicalSummary` fields to encapsulate AI-generated insights.
+
+
+### Conclusion
+
+All core AI service and configuration updates are complete, views are cleaned up, and secure environment handling is in place.
+
+
 ## 2025/06/19 routing-02 - by rudsonalves
 
 ### Add new tables to initialization, extend attachments schema, and increase vertical spacing
