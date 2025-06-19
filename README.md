@@ -4,6 +4,99 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/19 attachments-01 - by rudsonalves
+
+### Implement Attachment feature and refine routing, forms, and validations
+
+This commit adds full support for managing attachments within the app—including list, create, edit, and delete flows—while also tightening up routing and form behavior for episodes and users. Validations are extended, UI padding and spacing now use the shared `Dimens`, and error messaging is standardized across views.
+
+### Modified Files
+
+* **lib/routing/router.dart**
+
+  * Changed `FormEpisodeView`’s `episode` parameter to be nullable, preventing downstream cast errors when no `EpisodeModel` is provided.
+
+* **lib/ui/view/attachment/attachment\_view\.dart**
+
+  * Imported routing, theming, dialogs, and dismissible card utilities.
+  * Initialized and disposed `delete` listener on `AttachmentViewModel`.
+  * Added FAB to navigate to the attachment form.
+  * Wrapped body in a `ListenableBuilder` to show loading state, empty placeholder, or a `ListView` of `DismissibleCard`s.
+  * Implemented `_isDeleted()`, `_navFormAttachmentView()`, `_editAttachment()`, and `_removeAttachment()` methods for delete confirmation and navigation.
+
+* **lib/ui/view/attachment/attachment\_view\_model.dart**
+
+  * Imported `AttachmentModel`.
+  * Added `delete` `Command1` for removal operations.
+  * Exposed `attachments` getter from repository.
+
+* **lib/ui/view/attachment/form\_attachment/form\_attachment\_view\.dart**
+
+  * Replaced placeholder with a `Scaffold` containing a form.
+  * Added text controllers, init/dispose listeners for `insert` and `update` commands.
+  * Built form fields for name and file path, using `BasicFormField` and generic validations.
+
+* **lib/ui/view/attachment/form\_attachment/form\_attachment\_view\_model.dart**
+
+  * Renamed `save` command to `insert` to clarify its purpose.
+
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\.dart**
+
+  * Made `episode` parameter nullable to match router change.
+
+* **lib/ui/view/home/form\_user/form\_user\_view\.dart**
+
+  * Imported `Dimens` and applied consistent padding and spacing.
+  * Disposed `_nameController` and `_dateController` properly.
+  * Removed custom `OutlineInputBorder` in favor of default styling.
+
+* **lib/ui/view/home/home\_view\.dart**
+
+  * Cleaned up commented-out removal dialog code.
+  * Standardized error snack messages and removed redundant `return`.
+
+* **lib/utils/validates/generic\_validations.dart**
+
+  * Introduced `notEmpty` validator to enforce non-empty strings of minimum length.
+
+### Conclusion
+
+All changes are complete and the attachment workflow, form refinements, and routing updates are now functional.
+
+
+## 2025/06/19 messages_and_dialogs - by rudsonalves
+
+### Add global snackbars, bottom-sheet dialogs, and rich-text support
+
+This commit introduces a set of reusable UI utilities for displaying feedback and prompts throughout the app: a global snackbar component (`AppSnackBar`), a versatile bottom-sheet confirmation dialog (`BottonSheetMessage`), a simple alert dialog wrapper (`showSimpleMessage`), and a rich-text parser for markdown-style formatting. The HomeView has been updated to leverage these new components for user removal confirmation and feedback.
+
+### Modified Files
+
+* **lib/ui/view/home/home\_view\.dart**
+
+  * imported `BottonSheetMessage`, `ButtonSignature`, `showSnackError` / `showSnackSuccess`, and `Sex` enum
+  * refactored `_removeUser` to present a bottom-sheet confirmation with gender-aware copy and replaced direct `ScaffoldMessenger` calls with `showSnackError` / `showSnackSuccess`
+  * ensured the removal flow respects the user’s choice before invoking the deletion command
+
+### New Files
+
+* **lib/ui/core/ui/dialogs/app\_snack\_bar.dart**
+  Provides `showSnackError` / `showSnackSuccess` wrappers and a configurable `AppSnackBar` for error/success feedback with custom icons and durations.
+
+* **lib/ui/core/ui/dialogs/botton\_sheet\_message.dart.dart**
+  Defines `BottonSheetMessage` and `ButtonSignature` to display a modal bottom sheet with rich-text body, platform-adaptive button styles, and return values.
+
+* **lib/ui/core/ui/dialogs/simple\_dialog.dart**
+  Implements `showSimpleMessage`, a lightweight `AlertDialog` wrapper that accepts rich-text bodies and custom action buttons.
+
+* **lib/ui/core/ui/texts/parse\_rich\_text.dart**
+  Introduces `parseRichText` to convert `*italic*`, `**bold**`, and line-prefix icons (`-`, `>`, `<`) into a Flutter `RichText` or icon-prefixed row.
+
+### Conclusion
+
+These enhancements centralize user feedback and confirmation flows, ensure consistent styling, and enable rich-text formatting across dialogs and snackbars.
+
+
 ## 2025/06/18 small_adjustments - by rudsonalves
 
 ### Refactor Enums, Route Naming, and Validation Identifiers

@@ -4,12 +4,12 @@ import '/domain/models/episode_model.dart';
 import '/ui/view/episode/form_episode/form_episode_view_model.dart';
 
 class FormEpisodeView extends StatefulWidget {
-  final EpisodeModel episode;
+  final EpisodeModel? episode;
   final FormEpisodeViewModel viewModel;
 
   const FormEpisodeView({
     super.key,
-    required this.episode,
+    this.episode,
     required this.viewModel,
   });
 
