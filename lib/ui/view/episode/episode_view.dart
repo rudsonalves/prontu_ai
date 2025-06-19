@@ -28,7 +28,8 @@ class _EpisodeViewState extends State<EpisodeView> {
   void initState() {
     super.initState();
     viewModel = widget.viewModel;
-    viewModel.load.execute();
+
+    viewModel.loadEpisodesForUser(widget.user.id!);
   }
 
   @override
@@ -89,7 +90,10 @@ class _EpisodeViewState extends State<EpisodeView> {
   void _navEpisodeView() {
     context.push(
       Routes.formEpisode.path,
-      extra: widget.user,
+      extra: {'user': widget.user},
+
+      
     );
+    
   }
 }
