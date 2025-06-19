@@ -4,6 +4,69 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/19 database-01 - by rudsonalves
+
+### Add new tables to initialization, extend attachments schema, and increase vertical spacing
+
+This commit enhances database setup by including sessions, episodes, attachments, and AI summaries tables in the batch creation, updates the attachments table to store a `name` field, and refines the mobile UI spacing by increasing the vertical gap. These changes ensure all core models persist locally and improve layout consistency.
+
+### Modified Files
+
+* **lib/data/services/database/database\_service.dart**
+
+  * Added execution of `SqlTables.sessions`, `SqlTables.episodes`, `SqlTables.attachments`, and `SqlTables.aiSummaries` in the batch initialization to create these tables on startup.
+
+* **lib/data/services/database/tables/sql\_tables.dart**
+
+  * Introduced a required `name TEXT NOT NULL` column in the `attachments` table definition to store a human-readable identifier alongside `path` and `type`.
+
+* **lib/ui/core/theme/dimens.dart**
+
+  * Increased `spacingVertical` from `6.0` to `24.0` in the mobile dimensions class to provide more generous vertical padding across UI elements.
+
+### Conclusion
+
+All core tables are now initialized, the attachments schema is extended with names, and vertical spacing is improved—local persistence and UI layout are fully updated.
+
+
+## 2025/06/19 routing-01 - by rudsonalves
+
+### Refactor GoRouter to use Map extras and remove legacy route bases
+
+This commit standardizes route handling by unpacking `state.extra` as `Map<String, dynamic>` for all GoRouter navigations, ensuring explicit extraction of `UserModel` and `EpisodeModel`. Legacy `routes_base/*` files have been removed, and navigation methods have been updated to pass and receive structured route parameters consistently.
+
+### Modified Files
+
+* **lib/routing/router.dart**
+
+  * Replaced direct casts of `state.extra` to model types with map unpacking (`final map = state.extra as Map<String, dynamic>`).
+  * Extracted `user` and `episode` from the map for `EpisodeView`, `FormEpisodeView`, and other routes.
+  * Simplified builder closures to read `user` once and pass it into view constructors.
+
+* **lib/ui/view/episode/episode\_view\.dart**
+
+  * Renamed `_navEpisodeView` to `_navFormEpisodeView` for clarity.
+  * Updated `context.push` to include `extra: {'user': widget.user}` when navigating to the form.
+
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\.dart**
+
+  * Changed constructor parameter from `String userId` to `UserModel user`.
+  * Added import of `user_model.dart` and updated all references to use `widget.user.id`.
+
+* **lib/ui/view/home/home\_view\.dart**
+
+  * Modified `_navToEpisode` to push `extra: {'user': user}` instead of raw model.
+  * Corrected `_navFormUserView` to navigate to `Routes.formUser.path` instead of `formEpisode`.
+
+* **Deleted legacy route files**
+
+  * Removed `lib/routing/routes_base/attachment_routes.dart`, `episodes_routes.dart`, and `sessions_routes.dart` to eliminate duplicated route definitions.
+
+### Conclusion
+
+All route definitions now use structured maps for parameters, and legacy base files have been cleaned up — navigation flows remain fully functional.
+
+
 ## 2025/06/19 attachments-02 - by rudsonalves
 
 ### Add file picker support and extend attachment/session route parameters
