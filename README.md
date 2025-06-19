@@ -4,6 +4,39 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/19 messages_and_dialogs - by rudsonalves
+
+### Add global snackbars, bottom-sheet dialogs, and rich-text support
+
+This commit introduces a set of reusable UI utilities for displaying feedback and prompts throughout the app: a global snackbar component (`AppSnackBar`), a versatile bottom-sheet confirmation dialog (`BottonSheetMessage`), a simple alert dialog wrapper (`showSimpleMessage`), and a rich-text parser for markdown-style formatting. The HomeView has been updated to leverage these new components for user removal confirmation and feedback.
+
+### Modified Files
+
+* **lib/ui/view/home/home\_view\.dart**
+
+  * imported `BottonSheetMessage`, `ButtonSignature`, `showSnackError` / `showSnackSuccess`, and `Sex` enum
+  * refactored `_removeUser` to present a bottom-sheet confirmation with gender-aware copy and replaced direct `ScaffoldMessenger` calls with `showSnackError` / `showSnackSuccess`
+  * ensured the removal flow respects the user’s choice before invoking the deletion command
+
+### New Files
+
+* **lib/ui/core/ui/dialogs/app\_snack\_bar.dart**
+  Provides `showSnackError` / `showSnackSuccess` wrappers and a configurable `AppSnackBar` for error/success feedback with custom icons and durations.
+
+* **lib/ui/core/ui/dialogs/botton\_sheet\_message.dart.dart**
+  Defines `BottonSheetMessage` and `ButtonSignature` to display a modal bottom sheet with rich-text body, platform-adaptive button styles, and return values.
+
+* **lib/ui/core/ui/dialogs/simple\_dialog.dart**
+  Implements `showSimpleMessage`, a lightweight `AlertDialog` wrapper that accepts rich-text bodies and custom action buttons.
+
+* **lib/ui/core/ui/texts/parse\_rich\_text.dart**
+  Introduces `parseRichText` to convert `*italic*`, `**bold**`, and line-prefix icons (`-`, `>`, `<`) into a Flutter `RichText` or icon-prefixed row.
+
+### Conclusion
+
+These enhancements centralize user feedback and confirmation flows, ensure consistent styling, and enable rich-text formatting across dialogs and snackbars.
+
+
 ## 2025/06/18 small_adjustments - by rudsonalves
 
 ### Refactor Enums, Route Naming, and Validation Identifiers
