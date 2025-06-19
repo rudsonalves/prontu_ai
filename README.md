@@ -4,6 +4,67 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/19 attachments-02 - by rudsonalves
+
+### Add file picker support and extend attachment/session route parameters
+
+This commit enhances attachment handling by introducing a `name` field to the `AttachmentModel`, integrates the `file_picker` package for file selection, and refactors routing to pass additional identifiers (`userId`, `episodeId`, `sessionId`). Validation and UI elements have been updated accordingly to improve the form interaction and maintain consistency across views.
+
+### Modified Files
+
+* **lib/domain/models/attachment\_model.dart**
+
+  * Introduced a new `name` property and required it in the constructor.
+  * Made `createdAt` optional with a default of `DateTime.now()`.
+  * Updated `copyWith`, `toMap`, and `fromMap` methods to include `name`.
+
+* **lib/routing/router.dart**
+
+  * Refactored `formEpisode`, `formSession`, and `formAttachment` routes to read `state.extra` as a `Map<String, dynamic>`.
+  * Extracted and passed `userId`, `episodeId`, and `sessionId` to their respective views.
+  * Simplified builder signatures and removed old `state.extra as Model` casts.
+
+* **lib/routing/routes\_base/attachment\_routes.dart**
+
+  * Mirrored the router changes: now unpacks `sessionId` and optional `attachment` from `state.extra`.
+
+* **lib/ui/view/attachment/attachment\_view\.dart**
+
+  * Corrected import paths to use root-relative (`/routing` and `/ui/core`) instead of package prefixes.
+
+* **lib/ui/view/attachment/form\_attachment/form\_attachment\_view\.dart**
+
+  * Added `file_picker` import and declared a required `sessionId` parameter on `FormAttachmentView`.
+  * Replaced plain button with `BigButton` and wrapped the file path field in an `InkWell` to trigger `_selectFile()`.
+  * Inserted an `EnumFormField` for selecting `AttachmentType`.
+  * Implemented `_initializeForm()`, `_isSaved()`, and `_saveForm()` methods to handle edit/save logic and error reporting.
+  * Integrated `FilePicker` to allow users to choose files with specific extensions.
+
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\.dart**
+
+  * Added a required `userId` field to the `FormEpisodeView` constructor.
+
+* **lib/ui/view/home/form\_user/form\_user\_view\.dart**
+
+  * Made the `SnackBar` constant and removed the inline error interpolation for consistency.
+
+* **lib/ui/view/session/form\_session/form\_session\_view\.dart**
+
+  * Changed `session` to be nullable and introduced a required `episodeId` parameter.
+
+* **lib/utils/validates/generic\_validations.dart**
+
+  * Added a new `attachmentType` validator to ensure a file type is selected.
+
+* **pubspec.yaml**
+
+  * Added `file_picker: ^10.2.0` to dependencies for file selection functionality.
+
+### Conclusion
+
+### All changes complete – attachment forms now support naming and file selection, and routing carries the correct identifiers.
+
+
 ## 2025/06/19 attachments-01 - by rudsonalves
 
 ### Implement Attachment feature and refine routing, forms, and validations
