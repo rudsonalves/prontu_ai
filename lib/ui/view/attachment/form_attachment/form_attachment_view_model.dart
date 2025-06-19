@@ -6,12 +6,12 @@ class FormAttachmentViewModel {
   final IAttachmentRepository _attachmentRepository;
 
   FormAttachmentViewModel(this._attachmentRepository) {
-    save = Command1<AttachmentModel, AttachmentModel>(
+    insert = Command1<AttachmentModel, AttachmentModel>(
       _attachmentRepository.insert,
     );
     update = Command1<void, AttachmentModel>(_attachmentRepository.update);
   }
 
-  late final Command1<AttachmentModel, AttachmentModel> save;
+  late final Command1<AttachmentModel, AttachmentModel> insert;
   late final Command1<void, AttachmentModel> update;
 }

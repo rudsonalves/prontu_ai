@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:prontu_ai/ui/core/theme/dimens.dart';
 
 import '/domain/models/user_model.dart';
 import '/utils/extensions/date_time_extensions.dart';
@@ -52,21 +53,26 @@ class _FormUserViewState extends State<FormUserView> {
     viewModel.insert.removeListener(_isSaved);
     viewModel.update.removeListener(_isSaved);
 
+    _nameController.dispose();
+    _dateController.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final dimens = Dimens.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Editar Usuário' : 'Criar Usuário'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(dimens.paddingScreenAll),
         child: Form(
           key: _formKey,
           child: Column(
-            spacing: 12,
+            spacing: dimens.spacingVertical,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -76,9 +82,6 @@ class _FormUserViewState extends State<FormUserView> {
                 controller: _nameController,
                 textCapitalization: TextCapitalization.words,
                 validator: GenericValidations.name,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
                 prefixIconData: Symbols.person,
               ),
               DateFormatField(

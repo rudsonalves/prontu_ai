@@ -15,6 +15,17 @@ class GenericValidations {
     return null;
   }
 
+  static String? notEmpty(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Este campo é obrigatório';
+    }
+    if (value.length < 3) {
+      return 'Este campo deve ter pelo menos 3 caracteres.';
+    }
+
+    return null;
+  }
+
   static String? phone(String? value) {
     if (value == null || value.isEmpty) {
       return 'Telefone é obrigatório';
