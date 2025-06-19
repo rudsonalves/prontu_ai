@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:prontu_ai/domain/enums/enums_declarations.dart';
 import 'package:prontu_ai/ui/core/theme/dimens.dart';
@@ -93,4 +92,8 @@ class _FormAttachmentViewState extends State<FormAttachmentView> {
       ),
     );
   }
+
+  void _isSaved() {}
+
+  void _initializeForm() {}
 }
