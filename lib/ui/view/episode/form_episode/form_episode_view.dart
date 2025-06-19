@@ -25,34 +25,22 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
   late final FormEpisodeViewModel viewModel;
   final _formKey = GlobalKey<FormState>();
 
-  late final TextEditingController _titleController;
-  late final TextEditingController _weightController;
-  late final TextEditingController _heightController;
-  late final TextEditingController _mainComplaintController;
-  late final TextEditingController _historyController;
-  late final TextEditingController _anamnesisController;
+  final _titleController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _heightController = TextEditingController();
+  final _mainComplaintController = TextEditingController();
+  final _historyController = TextEditingController();
+  final _anamnesisController = TextEditingController();
 
   @override
   void initState() {
-    super.initState();
     viewModel = widget.viewModel;
 
-    _titleController = TextEditingController(text: widget.episode?.title ?? '');
-    _weightController = TextEditingController(
-      text: widget.episode?.weight.toString() ?? '0',
-    );
-    _heightController = TextEditingController(
-      text: widget.episode?.height.toString() ?? '0',
-    );
-    _mainComplaintController = TextEditingController(
-      text: widget.episode?.mainComplaint ?? '',
-    );
-    _historyController = TextEditingController(
-      text: widget.episode?.history ?? '',
-    );
-    _anamnesisController = TextEditingController(
-      text: widget.episode?.anamnesis ?? '',
-    );
+    if (widget.episode != null) {
+      _initializeForm();
+    }
+
+    super.initState();
   }
 
   @override
@@ -66,24 +54,28 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
     super.dispose();
   }
 
-  Future<void> _save() async {
+  Future<void> _saveForm() async {
+    if (viewModel.insert.isRunning || viewModel.update.isRunning) return;
+
     if (_formKey.currentState == null || !_formKey.currentState!.validate()) {
       return;
     }
+
+    FocusScope.of(context).unfocus();
 
     final newEpisode = EpisodeModel(
       id: widget.episode?.id,
       userId: widget.user.id!,
       title: _titleController.text.trim(),
-      weight: int.tryParse(_weightController.text.trim()) ?? 0,
-      height: int.tryParse(_heightController.text.trim()) ?? 0,
+      weight: 1000 * (int.tryParse(_weightController.text.trim()) ?? 0),
+      height: 100 * (int.tryParse(_heightController.text.trim()) ?? 0),
       mainComplaint: _mainComplaintController.text.trim(),
       history: _historyController.text.trim(),
       anamnesis: _anamnesisController.text.trim(),
       createdAt: widget.episode?.createdAt,
     );
 
-    final result = viewModel.insert.execute(newEpisode);
+    viewModel.insert.execute(newEpisode);
   }
 
   @override
@@ -96,7 +88,7 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
-            onPressed: _save,
+            onPressed: _saveForm,
           ),
         ],
       ),
@@ -167,5 +159,18 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
         ),
       ),
     );
+  }
+
+  void _initializeForm() {
+    final episode = widget.episode!;
+
+    _titleController.text = episode.title;
+    _weightController.text = (episode.weight / 1000).toStringAsFixed(2);
+    _heightController.text = (episode.height / 100).toStringAsFixed(2);
+    _mainComplaintController.text = episode.mainComplaint;
+    _historyController.text = episode.history;
+    _anamnesisController.text = episode.anamnesis;
+
+    setState(() {});
   }
 }
