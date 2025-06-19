@@ -80,7 +80,9 @@ GoRouter router() => GoRouter(
             builder: (context) => EpisodeView(
               user: state.extra as UserModel,
               viewModel: EpisodeViewModel(
-                RepositoryScope.of<IEpisodeRepository>(context),
+                episodeRepository: RepositoryScope.of<IEpisodeRepository>(
+                  context,
+                ),
               ),
             ),
           ),
