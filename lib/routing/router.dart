@@ -90,7 +90,7 @@ GoRouter router() => GoRouter(
           name: Routes.formEpisode.name,
           pageBuilder: (context, state) => MaterialPage(
             child: FormEpisodeView(
-              episode: state.extra as EpisodeModel,
+              episode: state.extra as EpisodeModel?,
               viewModel: FormEpisodeViewModel(
                 RepositoryScope.of<IEpisodeRepository>(context),
               ),
