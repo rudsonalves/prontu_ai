@@ -144,7 +144,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _navFormUserView() {
-    context.push(Routes.formEpisode.path);
+    context.push(Routes.formUser.path);
   }
 
   void _isDeleted() {
