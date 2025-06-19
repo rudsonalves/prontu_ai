@@ -44,7 +44,7 @@ class _EpisodeViewState extends State<EpisodeView> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _navFormEpisodeView,
+        onPressed: _navEpisodeView,
         child: const Icon(Icons.add),
       ),
       body: Padding(
@@ -76,13 +76,7 @@ class _EpisodeViewState extends State<EpisodeView> {
                 final episode = episodes[index];
                 return ListTile(
                   title: Text(episode.title),
-                  subtitle: Text(
-                    'Peso: ${episode.weight}g | Altura: ${episode.height}cm',
-                  ),
-                  onTap: () {
-                    // Ex: navegar para a view de sessões do episódio
-                    // context.push(Routes.session.path, extra: episode);
-                  },
+                  onTap: () {},
                 );
               },
             );
@@ -92,7 +86,10 @@ class _EpisodeViewState extends State<EpisodeView> {
     );
   }
 
-  void _navFormEpisodeView() {
-    context.push(Routes.formEpisode.path, extra: {'user': widget.user});
+  void _navEpisodeView() {
+    context.push(
+      Routes.formEpisode.path,
+      extra: widget.user,
+    );
   }
 }

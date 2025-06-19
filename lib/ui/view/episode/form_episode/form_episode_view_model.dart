@@ -15,19 +15,27 @@ class FormEpisodeViewModel {
   late final Command1<EpisodeModel, EpisodeModel> insert;
   late final Command1<void, EpisodeModel> update;
 
-  Future<Result<EpisodeModel>> _insert(EpisodeModel user) async {
+  Future<Result<EpisodeModel>> save(EpisodeModel episode) async {
+    if (episode.id == null) {
+      return await _insert(episode);
+    } else {
+      final result = await _update(episode);
+
+      return result.isSuccess
+          ? Result.success(episode)
+          : Result.failure(result.error ?? Exception("Erro desconhecido"));
+    }
+  }
+
+  Future<Result<EpisodeModel>> _insert(EpisodeModel episode) async {
     await Future.delayed(const Duration(seconds: 2));
-
-    final result = await _episodeRepository.insert(user);
-
+    final result = await _episodeRepository.insert(episode);
     return result;
   }
 
-  Future<Result<void>> _update(EpisodeModel user) async {
+  Future<Result<void>> _update(EpisodeModel episode) async {
     await Future.delayed(const Duration(seconds: 2));
-
-    final result = await _episodeRepository.update(user);
-
+    final result = await _episodeRepository.update(episode);
     return result;
   }
 }

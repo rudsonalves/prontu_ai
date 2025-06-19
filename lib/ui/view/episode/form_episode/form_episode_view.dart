@@ -24,26 +24,145 @@ class FormEpisodeView extends StatefulWidget {
 class _FormEpisodeViewState extends State<FormEpisodeView> {
   late final FormEpisodeViewModel viewModel;
   final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _weightController = TextEditingController();
-  final _heightController = TextEditingController();
-  final _mainComplaintController = TextEditingController();
+
+  late final TextEditingController _titleController;
+  late final TextEditingController _weightController;
+  late final TextEditingController _heightController;
+  late final TextEditingController _mainComplaintController;
+  late final TextEditingController _historyController;
+  late final TextEditingController _anamnesisController;
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel = widget.viewModel;
+
+    _titleController = TextEditingController(text: widget.episode?.title ?? '');
+    _weightController = TextEditingController(
+      text: widget.episode?.weight.toString() ?? '0',
+    );
+    _heightController = TextEditingController(
+      text: widget.episode?.height.toString() ?? '0',
+    );
+    _mainComplaintController = TextEditingController(
+      text: widget.episode?.mainComplaint ?? '',
+    );
+    _historyController = TextEditingController(
+      text: widget.episode?.history ?? '',
+    );
+    _anamnesisController = TextEditingController(
+      text: widget.episode?.anamnesis ?? '',
+    );
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _weightController.dispose();
+    _heightController.dispose();
+    _mainComplaintController.dispose();
+    _historyController.dispose();
+    _anamnesisController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _save() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final newEpisode = EpisodeModel(
+      id: widget.episode?.id,
+      userId: widget.user.id!,
+      title: _titleController.text.trim(),
+      weight: int.tryParse(_weightController.text.trim()) ?? 0,
+      height: int.tryParse(_heightController.text.trim()) ?? 0,
+      mainComplaint: _mainComplaintController.text.trim(),
+      history: _historyController.text.trim(),
+      anamnesis: _anamnesisController.text.trim(),
+      createdAt: widget.episode?.createdAt,
+      updatedAt: DateTime.now(),
+    );
+
+    final result = await viewModel.save(newEpisode);
+
+    if (mounted) Navigator.pop(context, newEpisode);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Episódio"),
+        title: Text(
+          widget.episode == null ? 'Novo Episódio' : 'Editar Episódio',
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: _save,
+          ),
+        ],
       ),
-      body: Padding(
-        padding: EdgeInsets.all(12),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BasicFormField(),
+              // Título
+              TextFormField(
+                controller: _titleController,
+                decoration: const InputDecoration(labelText: 'Título'),
+                validator: (v) =>
+                    (v == null || v.isEmpty) ? 'Informe o título' : null,
+              ),
+
+              TextFormField(
+                controller: _weightController,
+                decoration: const InputDecoration(labelText: 'Peso (g)'),
+                keyboardType: TextInputType.number,
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'Informe o peso';
+                  if (int.tryParse(v) == null)
+                    return 'Informe um número válido';
+                  return null;
+                },
+              ),
+
+              TextFormField(
+                controller: _heightController,
+                decoration: const InputDecoration(labelText: 'Altura (cm)'),
+                keyboardType: TextInputType.number,
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'Informe a altura';
+                  if (int.tryParse(v) == null)
+                    return 'Informe um número válido';
+                  return null;
+                },
+              ),
+
+              TextFormField(
+                controller: _mainComplaintController,
+                decoration: const InputDecoration(
+                  labelText: 'Queixa Principal',
+                ),
+                validator: (v) => (v == null || v.isEmpty)
+                    ? 'Informe a queixa principal'
+                    : null,
+              ),
+
+              TextFormField(
+                controller: _historyController,
+                decoration: const InputDecoration(labelText: 'Histórico'),
+                maxLines: 3,
+              ),
+
+              TextFormField(
+                controller: _anamnesisController,
+                decoration: const InputDecoration(labelText: 'Anamnese'),
+                maxLines: 3,
+              ),
             ],
           ),
         ),
