@@ -4,6 +4,31 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/19 database-01 - by rudsonalves
+
+### Add new tables to initialization, extend attachments schema, and increase vertical spacing
+
+This commit enhances database setup by including sessions, episodes, attachments, and AI summaries tables in the batch creation, updates the attachments table to store a `name` field, and refines the mobile UI spacing by increasing the vertical gap. These changes ensure all core models persist locally and improve layout consistency.
+
+### Modified Files
+
+* **lib/data/services/database/database\_service.dart**
+
+  * Added execution of `SqlTables.sessions`, `SqlTables.episodes`, `SqlTables.attachments`, and `SqlTables.aiSummaries` in the batch initialization to create these tables on startup.
+
+* **lib/data/services/database/tables/sql\_tables.dart**
+
+  * Introduced a required `name TEXT NOT NULL` column in the `attachments` table definition to store a human-readable identifier alongside `path` and `type`.
+
+* **lib/ui/core/theme/dimens.dart**
+
+  * Increased `spacingVertical` from `6.0` to `24.0` in the mobile dimensions class to provide more generous vertical padding across UI elements.
+
+### Conclusion
+
+All core tables are now initialized, the attachments schema is extended with names, and vertical spacing is improved—local persistence and UI layout are fully updated.
+
+
 ## 2025/06/19 routing-01 - by rudsonalves
 
 ### Refactor GoRouter to use Map extras and remove legacy route bases
