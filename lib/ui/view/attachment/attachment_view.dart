@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:prontu_ai/domain/models/episode_model.dart';
+import 'package:prontu_ai/domain/models/user_model.dart';
 
 import '/routing/routes.dart';
 import '/ui/core/ui/dialogs/app_snack_bar.dart';
@@ -13,11 +15,15 @@ import '/domain/models/session_model.dart';
 import '/ui/view/attachment/attachment_view_model.dart';
 
 class AttachmentView extends StatefulWidget {
+  final UserModel user;
+  final EpisodeModel episode;
   final SessionModel session;
   final AttachmentViewModel viewModel;
 
   const AttachmentView({
     super.key,
+    required this.user,
+    required this.episode,
     required this.session,
     required this.viewModel,
   });
