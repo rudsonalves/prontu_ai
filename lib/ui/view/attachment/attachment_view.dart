@@ -134,7 +134,13 @@ class _AttachmentViewState extends State<AttachmentView> {
   }
 
   void _editAttachment(AttachmentModel attachment) {
-    context.push(Routes.formAttachment.path, extra: attachment);
+    context.push(
+      Routes.formAttachment.path,
+      extra: {
+        'session': widget.session,
+        'attachment': attachment,
+      },
+    );
   }
 
   Future<bool> _removeAttachment(AttachmentModel attachment) async {

@@ -1,3 +1,5 @@
+import 'package:prontu_ai/domain/models/session_model.dart';
+
 import '/data/repositories/session/i_session_repository.dart';
 import '/utils/command.dart';
 
@@ -13,4 +15,6 @@ class SessionViewModel {
 
   late final Command0<void> load;
   late final Command1<void, String> delete;
+
+  List<SessionModel> get sessions => _sessionRepository.sessions;
 }

@@ -4,6 +4,58 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/19 ia_service-01 - by rudsonalves
+
+### Implement masked input controller and refine session & attachment flows
+
+This commit adds a reusable `MaskedEditingController` for formatted text input and enhances session and attachment views with consistent navigation, data handling, and validation. Route extras are repacked as maps, form initialization logic is improved, and session listings now support create, edit, and delete interactions. ViewModels are updated to expose insert/update/delete commands and session collections.
+
+### Modified Files
+
+* **lib/ui/view/attachment/attachment\_view\.dart**
+
+  * Updated `_editAttachment` to push both `session` and `attachment` in a map via `extra`.
+  * Corrected import paths to use root-relative imports for domain models and UI components.
+
+* **lib/ui/view/attachment/form\_attachment/form\_attachment\_view\.dart**
+
+  * Removed unused `user` and `episode` parameters from constructor.
+  * Guarded `_initializeForm()` call to only run when `attachment` is non-null.
+  * Streamlined form field population and `_isEditing` flag setup.
+
+* **lib/ui/view/session/form\_session/form\_session\_view\.dart**
+
+  * Switched from `Placeholder` to a full form scaffold with `BasicFormField`, `MaskedEditingController` for phone input, and `BigButton`.
+  * Added `_formKey`, controllers for doctor, phone, and notes, and generic validation.
+  * Implemented `initState`/`dispose` listeners for `insert` and `update` commands.
+  * Defined `_initializeForm`, `_isSaved`, and `_saveForm` to handle edit vs. create flows, validation, and navigation.
+
+* **lib/ui/view/session/form\_session/form\_session\_view\_model.dart**
+
+  * Renamed `save` command to `insert` for clarity, matching repository API.
+
+* **lib/ui/view/session/session\_view\.dart**
+
+  * Imported routing, dialogs, theme, and extensions.
+  * Re-enabled `delete` listener in `initState`/`dispose`.
+  * Added floating action button to navigate to form, passing no extra.
+  * Wrapped `body` in `ListenableBuilder` to show loading state, empty message, or `DismissibleCard` list.
+  * Implemented `_editSession`, `_navFormSessionView`, `_isDeleted`, and `_removeSession` with confirmation dialog and snackbars.
+
+* **lib/ui/view/session/session\_view\_model.dart**
+
+  * Imported `SessionModel` and exposed `sessions` getter from the repository.
+
+### New Files
+
+* **lib/ui/core/ui/editing\_controllers/masked\_editing\_controller.dart**
+  Provides `MaskedEditingController` to enforce input masks (e.g., phone numbers) by filtering digits and injecting mask characters automatically.
+
+### Conclusion
+
+All input masking and session/attachment workflows are now robustly implemented with clear form handling and navigation.
+
+
 ## 2025/06/19 ia_service - by rudsonalves
 
 ### Add OpenAI integration, dotenv support, and view refinements
