@@ -4,6 +4,44 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/19 routing-01 - by rudsonalves
+
+### Refactor GoRouter to use Map extras and remove legacy route bases
+
+This commit standardizes route handling by unpacking `state.extra` as `Map<String, dynamic>` for all GoRouter navigations, ensuring explicit extraction of `UserModel` and `EpisodeModel`. Legacy `routes_base/*` files have been removed, and navigation methods have been updated to pass and receive structured route parameters consistently.
+
+### Modified Files
+
+* **lib/routing/router.dart**
+
+  * Replaced direct casts of `state.extra` to model types with map unpacking (`final map = state.extra as Map<String, dynamic>`).
+  * Extracted `user` and `episode` from the map for `EpisodeView`, `FormEpisodeView`, and other routes.
+  * Simplified builder closures to read `user` once and pass it into view constructors.
+
+* **lib/ui/view/episode/episode\_view\.dart**
+
+  * Renamed `_navEpisodeView` to `_navFormEpisodeView` for clarity.
+  * Updated `context.push` to include `extra: {'user': widget.user}` when navigating to the form.
+
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\.dart**
+
+  * Changed constructor parameter from `String userId` to `UserModel user`.
+  * Added import of `user_model.dart` and updated all references to use `widget.user.id`.
+
+* **lib/ui/view/home/home\_view\.dart**
+
+  * Modified `_navToEpisode` to push `extra: {'user': user}` instead of raw model.
+  * Corrected `_navFormUserView` to navigate to `Routes.formUser.path` instead of `formEpisode`.
+
+* **Deleted legacy route files**
+
+  * Removed `lib/routing/routes_base/attachment_routes.dart`, `episodes_routes.dart`, and `sessions_routes.dart` to eliminate duplicated route definitions.
+
+### Conclusion
+
+All route definitions now use structured maps for parameters, and legacy base files have been cleaned up — navigation flows remain fully functional.
+
+
 ## 2025/06/19 attachments-02 - by rudsonalves
 
 ### Add file picker support and extend attachment/session route parameters

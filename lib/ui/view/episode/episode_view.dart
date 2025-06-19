@@ -32,13 +32,13 @@ class _EpisodeViewState extends State<EpisodeView> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _navEpisodeView,
+        onPressed: _navFormEpisodeView,
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  void _navEpisodeView() {
-    context.push(Routes.formEpisode.path);
+  void _navFormEpisodeView() {
+    context.push(Routes.formEpisode.path, extra: {'user': widget.user});
   }
 }

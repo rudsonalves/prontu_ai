@@ -108,7 +108,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _navToEpisode(UserModel user) {
-    context.push(Routes.episode.path, extra: user);
+    context.push(Routes.episode.path, extra: {'user': user});
   }
 
   void _editUser(UserModel user) {
@@ -144,7 +144,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _navFormUserView() {
-    context.push(Routes.formEpisode.path);
+    context.push(Routes.formUser.path);
   }
 
   void _isDeleted() {
