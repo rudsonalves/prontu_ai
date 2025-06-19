@@ -110,7 +110,6 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Título
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(labelText: 'Título'),
@@ -118,9 +117,10 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
                     (v == null || v.isEmpty) ? 'Informe o título' : null,
               ),
 
-              TextFormField(
+              BasicFormField(
+                labelText: 'Peso (Kg)',
                 controller: _weightController,
-                decoration: const InputDecoration(labelText: 'Peso (g)'),
+                textCapitalization: TextCapitalization.words,
                 keyboardType: TextInputType.number,
                 validator: (v) {
                   if (v == null || v.isEmpty) return 'Informe o peso';
@@ -130,10 +130,11 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
                 },
               ),
 
-              TextFormField(
+              BasicFormField(
                 controller: _heightController,
-                decoration: const InputDecoration(labelText: 'Altura (cm)'),
+                labelText: 'Altura (cm)',
                 keyboardType: TextInputType.number,
+                textCapitalization: TextCapitalization.words,
                 validator: (v) {
                   if (v == null || v.isEmpty) return 'Informe a altura';
                   if (int.tryParse(v) == null)
@@ -142,25 +143,26 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
                 },
               ),
 
-              TextFormField(
+              BasicFormField(
                 controller: _mainComplaintController,
-                decoration: const InputDecoration(
-                  labelText: 'Queixa Principal',
-                ),
+                textCapitalization: TextCapitalization.words,
+                labelText: 'Queixa Principal',
                 validator: (v) => (v == null || v.isEmpty)
                     ? 'Informe a queixa principal'
                     : null,
               ),
 
-              TextFormField(
+              BasicFormField(
                 controller: _historyController,
-                decoration: const InputDecoration(labelText: 'Histórico'),
+                labelText: 'Histórico',
+                textCapitalization: TextCapitalization.words,
                 maxLines: 3,
               ),
 
-              TextFormField(
+              BasicFormField(
                 controller: _anamnesisController,
-                decoration: const InputDecoration(labelText: 'Anamnese'),
+                textCapitalization: TextCapitalization.words,
+                labelText: 'Anamnese',
                 maxLines: 3,
               ),
             ],

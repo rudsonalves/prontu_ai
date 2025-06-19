@@ -23,7 +23,9 @@ class FormEpisodeViewModel {
 
       return result.isSuccess
           ? Result.success(episode)
-          : Result.failure(result.error ?? Exception("Erro desconhecido"));
+          : Result.failure(
+              result.error ?? Exception("Erro ao atualizar episódio"),
+            );
     }
   }
 
