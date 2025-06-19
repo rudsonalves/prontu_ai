@@ -28,8 +28,6 @@ class _EpisodeViewState extends State<EpisodeView> {
   void initState() {
     super.initState();
     viewModel = widget.viewModel;
-
-    viewModel.loadEpisodesForUser(widget.user.id!);
   }
 
   @override
@@ -45,7 +43,7 @@ class _EpisodeViewState extends State<EpisodeView> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _navEpisodeView,
+        onPressed: _navFormEpisodeView,
         child: const Icon(Icons.add),
       ),
       body: Padding(
@@ -77,7 +75,13 @@ class _EpisodeViewState extends State<EpisodeView> {
                 final episode = episodes[index];
                 return ListTile(
                   title: Text(episode.title),
-                  onTap: () {},
+                  subtitle: Text(
+                    'Peso: ${episode.weight}g | Altura: ${episode.height}cm',
+                  ),
+                  onTap: () {
+                    // Ex: navegar para a view de sessões do episódio
+                    // context.push(Routes.session.path, extra: episode);
+                  },
                 );
               },
             );
@@ -87,10 +91,7 @@ class _EpisodeViewState extends State<EpisodeView> {
     );
   }
 
-  void _navEpisodeView() {
-    context.push(
-      Routes.formEpisode.path,
-      extra: {'user': widget.user},
-    );
+  void _navFormEpisodeView() {
+    context.push(Routes.formEpisode.path, extra: {'user': widget.user});
   }
 }

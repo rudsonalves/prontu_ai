@@ -24,6 +24,7 @@ class FormEpisodeViewModel {
   Future<Result<void>> _update(EpisodeModel episode) async {
     await Future.delayed(const Duration(seconds: 2));
     final result = await _episodeRepository.update(episode);
+
     return result;
   }
 }
