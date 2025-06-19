@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prontu_ai/domain/models/user_model.dart';
 import 'package:prontu_ai/ui/core/ui/form_fields/basic_form_field.dart';
 
 import '/domain/models/episode_model.dart';
@@ -6,13 +7,13 @@ import '/ui/view/episode/form_episode/form_episode_view_model.dart';
 
 class FormEpisodeView extends StatefulWidget {
   final EpisodeModel? episode;
-  final String userId;
+  final UserModel user;
   final FormEpisodeViewModel viewModel;
 
   const FormEpisodeView({
     super.key,
     this.episode,
-    required this.userId,
+    required this.user,
     required this.viewModel,
   });
 
