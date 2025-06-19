@@ -60,7 +60,8 @@ GoRouter router() => GoRouter(
     // Episodes pages
     ShellRoute(
       builder: (context, state, child) {
-        final user = state.extra as UserModel;
+        final map = state.extra as Map<String, dynamic>;
+        final user = map['user'] as UserModel;
 
         final episodeRepository = EpisodeRepository(
           userId: user.id!,
@@ -77,12 +78,17 @@ GoRouter router() => GoRouter(
           path: Routes.episode.path,
           name: Routes.episode.name,
           builder: (context, state) => Builder(
-            builder: (context) => EpisodeView(
-              user: state.extra as UserModel,
-              viewModel: EpisodeViewModel(
-                RepositoryScope.of<IEpisodeRepository>(context),
-              ),
-            ),
+            builder: (context) {
+              final map = state.extra as Map<String, dynamic>;
+              final user = map['user'] as UserModel;
+
+              return EpisodeView(
+                user: user,
+                viewModel: EpisodeViewModel(
+                  RepositoryScope.of<IEpisodeRepository>(context),
+                ),
+              );
+            },
           ),
         ),
         GoRoute(
@@ -90,13 +96,13 @@ GoRouter router() => GoRouter(
           name: Routes.formEpisode.name,
           pageBuilder: (context, state) {
             final map = state.extra as Map<String, dynamic>;
-            final userId = map['user_id'] as String;
+            final user = map['user'] as UserModel;
             final episode = map['episode'] as EpisodeModel?;
 
             return MaterialPage(
               child: FormEpisodeView(
                 episode: episode,
-                userId: userId,
+                user: user,
                 viewModel: FormEpisodeViewModel(
                   RepositoryScope.of<IEpisodeRepository>(context),
                 ),
