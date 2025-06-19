@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:prontu_ai/routing/routes.dart';
-import 'package:prontu_ai/ui/core/ui/dialogs/app_snack_bar.dart';
-import 'package:prontu_ai/ui/core/ui/dialogs/botton_sheet_message.dart.dart';
 
+import '/routing/routes.dart';
+import '/ui/core/ui/dialogs/app_snack_bar.dart';
+import '/ui/core/ui/dialogs/botton_sheet_message.dart.dart';
 import '/domain/models/attachment_model.dart';
 import '/ui/core/theme/dimens.dart';
 import '/ui/core/ui/dismissibles/dismissible_card.dart';
