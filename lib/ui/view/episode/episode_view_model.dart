@@ -7,8 +7,7 @@ import '/utils/command.dart';
 class EpisodeViewModel {
   final IEpisodeRepository _episodeRepository;
 
-  EpisodeViewModel({required IEpisodeRepository episodeRepository})
-    : _episodeRepository = episodeRepository {
+  EpisodeViewModel(this._episodeRepository) {
     load = Command0<void>(_episodeRepository.initialize);
     delete = Command1<void, String>(_episodeRepository.delete);
   }
