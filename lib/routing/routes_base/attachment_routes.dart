@@ -24,11 +24,18 @@ final attachmentRoutes = <RouteBase>[
   GoRoute(
     path: Routes.formAttachment.path,
     name: Routes.formAttachment.name,
-    builder: (context, state) => FormAttachmentView(
-      attachment: state.extra as AttachmentModel,
-      viewModel: FormAttachmentViewModel(
-        RepositoryScope.of<IAttachmentRepository>(context),
-      ),
-    ),
+    builder: (context, state) {
+      final map = state.extra as Map<String, dynamic>;
+      final sessionId = map['session_id'] as String;
+      final attachment = map['attachment'] as AttachmentModel?;
+
+      return FormAttachmentView(
+        attachment: attachment,
+        sessionId: sessionId,
+        viewModel: FormAttachmentViewModel(
+          RepositoryScope.of<IAttachmentRepository>(context),
+        ),
+      );
+    },
   ),
 ];
