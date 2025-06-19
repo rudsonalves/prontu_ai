@@ -32,9 +32,15 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
   final _historyController = TextEditingController();
   final _anamnesisController = TextEditingController();
 
-  @override
+
+  bool _isEditing = false;
+
+@override
   void initState() {
     viewModel = widget.viewModel;
+
+    viewModel.insert.addListener(_isSaved);
+    viewModel.update.addListener(_isSaved);
 
     if (widget.episode != null) {
       _initializeForm();
@@ -43,8 +49,13 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
     super.initState();
   }
 
+
   @override
   void dispose() {
+
+    viewModel.insert.removeListener(_isSaved);
+    viewModel.update.removeListener(_isSaved);
+    
     _titleController.dispose();
     _weightController.dispose();
     _heightController.dispose();
@@ -173,4 +184,30 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
 
     setState(() {});
   }
+
+  void _isSaved() {
+    if (viewModel.insert.isRunning || viewModel.update.isRunning) return;
+
+    final result = _isEditing
+        ? viewModel.update.result
+        : viewModel.insert.result;
+
+    if (result == null || result.isFailure) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Ocorreu um erro ao salvar.\n'
+            'Favor, tente mais tarde.',
+          ),
+        ),
+      );
+      return;
+    }
+
+    Navigator.pop(context);
+    
+  }
+
+ 
+
 }

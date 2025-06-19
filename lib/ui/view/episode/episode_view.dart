@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:prontu_ai/domain/models/episode_model.dart';
 import 'package:prontu_ai/routing/routes.dart';
 import 'package:prontu_ai/ui/core/theme/dimens.dart';
+import 'package:prontu_ai/ui/core/ui/dialogs/app_snack_bar.dart';
+import 'package:prontu_ai/ui/core/ui/dialogs/botton_sheet_message.dart.dart';
+import 'package:prontu_ai/ui/core/ui/dismissibles/dismissible_card.dart';
+import 'package:prontu_ai/utils/extensions/date_time_extensions.dart';
 
 import '/domain/models/user_model.dart';
 import '/ui/view/episode/episode_view_model.dart';
@@ -26,8 +31,11 @@ class _EpisodeViewState extends State<EpisodeView> {
 
   @override
   void initState() {
-    super.initState();
     viewModel = widget.viewModel;
+
+    viewModel.delete.addListener(_isDeleted);
+
+    super.initState();
   }
 
   @override
@@ -44,7 +52,7 @@ class _EpisodeViewState extends State<EpisodeView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navFormEpisodeView,
-        child: const Icon(Icons.add),
+        child: const Icon(Symbols.add_rounded),
       ),
       body: Padding(
         padding: EdgeInsets.all(dimens.paddingScreenAll),
@@ -73,15 +81,14 @@ class _EpisodeViewState extends State<EpisodeView> {
               itemCount: episodes.length,
               itemBuilder: (_, index) {
                 final episode = episodes[index];
-                return ListTile(
-                  title: Text(episode.title),
-                  subtitle: Text(
-                    'Peso: ${episode.weight}g | Altura: ${episode.height}cm',
-                  ),
-                  onTap: () {
-                    // Ex: navegar para a view de sessões do episódio
-                    // context.push(Routes.session.path, extra: episode);
-                  },
+
+                return DismissibleCard<EpisodeModel>(
+                  title: episode.title,
+                  subtitle: episode.createdAt.toDDMMYYYY(),
+                  value: episode,
+                  editFunction: _editAttachment,
+                  removeFunction: _removeAttachment,
+                  // onTap: () =>,
                 );
               },
             );
@@ -93,5 +100,53 @@ class _EpisodeViewState extends State<EpisodeView> {
 
   void _navFormEpisodeView() {
     context.push(Routes.formEpisode.path, extra: {'user': widget.user});
+  }
+
+  void _isDeleted() {
+    if (viewModel.delete.isRunning) return;
+
+    final result = viewModel.delete.result;
+    if (result != null && result.isFailure) {
+      showSnackError(
+        context,
+        'Remover episódio',
+      );
+
+      return;
+    }
+    showSnackSuccess(context, 'Removido com sucesso');
+
+    setState(() {});
+  }
+
+  void _editAttachment(EpisodeModel episode) {
+    context.push(Routes.formEpisode.path, extra: episode);
+  }
+
+  Future<bool> _removeAttachment(EpisodeModel episode) async {
+    final response =
+        await BottonSheetMessage.show<bool?>(
+          context,
+          title: 'Remover',
+          body: [
+            'Deseja realmente remover o **${episode.title}**?',
+          ],
+          buttons: [
+            ButtonSignature(
+              label: 'Sim',
+              onPressed: () => true,
+            ),
+            ButtonSignature(
+              label: 'Não',
+              onPressed: () => false,
+            ),
+          ],
+        ) ??
+        false;
+
+    if (!response) return false;
+
+    await viewModel.delete.execute(episode.id!);
+    return false;
   }
 }
