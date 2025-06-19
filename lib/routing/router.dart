@@ -149,12 +149,10 @@ GoRouter router() => GoRouter(
               name: Routes.formSession.name,
               builder: (context, state) {
                 final map = state.extra as Map<String, dynamic>;
-                final user = map['user'] as UserModel;
                 final episode = map['episode'] as EpisodeModel;
                 final session = map['session'] as SessionModel?;
 
                 return FormSessionView(
-                  user: user,
                   episode: episode,
                   session: session,
                   viewModel: FormSessionViewModel(
@@ -204,14 +202,10 @@ GoRouter router() => GoRouter(
                   name: Routes.formAttachment.name,
                   builder: (context, state) {
                     final map = state.extra as Map<String, dynamic>;
-                    final user = map['user'] as UserModel;
-                    final episode = map['episode'] as EpisodeModel;
                     final session = map['session'] as SessionModel;
                     final attachment = map['attachment'] as AttachmentModel?;
 
                     return FormAttachmentView(
-                      user: user,
-                      episode: episode,
                       session: session,
                       attachment: attachment,
                       viewModel: FormAttachmentViewModel(
