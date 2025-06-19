@@ -40,6 +40,7 @@ class SqlTables {
   CREATE TABLE IF NOT EXISTS attachments (
     id TEXT PRIMARY KEY,
     session_id TEXT NOT NULL,
+    name TEXT NOT NULL,
     path TEXT NOT NULL,
     type TEXT NOT NULL,
     created_at TEXT NOT NULL
