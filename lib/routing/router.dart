@@ -113,7 +113,8 @@ GoRouter router() => GoRouter(
         // Sessions pages
         ShellRoute(
           builder: (context, state, child) {
-            final episode = state.extra as EpisodeModel;
+            final map = state.extra as Map<String, dynamic>;
+            final episode = map['episode'] as EpisodeModel;
 
             final sessionRepository = SessionRepository(
               episodeId: episode.id!,
@@ -129,23 +130,32 @@ GoRouter router() => GoRouter(
             GoRoute(
               path: Routes.session.path,
               name: Routes.session.name,
-              builder: (context, state) => SessionView(
-                episode: state.extra as EpisodeModel,
-                viewModel: SessionViewModel(
-                  RepositoryScope.of<ISessionRepository>(context),
-                ),
-              ),
+              builder: (context, state) {
+                final map = state.extra as Map<String, dynamic>;
+                final user = map['user'] as UserModel;
+                final episode = map['episode'] as EpisodeModel;
+
+                return SessionView(
+                  user: user,
+                  episode: episode,
+                  viewModel: SessionViewModel(
+                    RepositoryScope.of<ISessionRepository>(context),
+                  ),
+                );
+              },
             ),
             GoRoute(
               path: Routes.formSession.path,
               name: Routes.formSession.name,
               builder: (context, state) {
                 final map = state.extra as Map<String, dynamic>;
-                final episodeId = map['episode_id'] as String;
+                final user = map['user'] as UserModel;
+                final episode = map['episode'] as EpisodeModel;
                 final session = map['session'] as SessionModel?;
 
                 return FormSessionView(
-                  episodeId: episodeId,
+                  user: user,
+                  episode: episode,
                   session: session,
                   viewModel: FormSessionViewModel(
                     RepositoryScope.of<ISessionRepository>(context),
@@ -156,7 +166,8 @@ GoRouter router() => GoRouter(
             // Attachments pages
             ShellRoute(
               builder: (context, state, child) {
-                final session = state.extra as SessionModel;
+                final map = state.extra as Map<String, dynamic>;
+                final session = map['session'] as SessionModel;
 
                 final attachmentRepository = AttachmentRepository(
                   sessionId: session.id!,
@@ -172,23 +183,36 @@ GoRouter router() => GoRouter(
                 GoRoute(
                   path: Routes.attachment.path,
                   name: Routes.attachment.name,
-                  builder: (context, state) => AttachmentView(
-                    session: state.extra as SessionModel,
-                    viewModel: AttachmentViewModel(
-                      RepositoryScope.of<IAttachmentRepository>(context),
-                    ),
-                  ),
+                  builder: (context, state) {
+                    final map = state.extra as Map<String, dynamic>;
+                    final user = map['user'] as UserModel;
+                    final episode = map['episode'] as EpisodeModel;
+                    final session = map['session'] as SessionModel;
+
+                    return AttachmentView(
+                      user: user,
+                      episode: episode,
+                      session: session,
+                      viewModel: AttachmentViewModel(
+                        RepositoryScope.of<IAttachmentRepository>(context),
+                      ),
+                    );
+                  },
                 ),
                 GoRoute(
                   path: Routes.formAttachment.path,
                   name: Routes.formAttachment.name,
                   builder: (context, state) {
                     final map = state.extra as Map<String, dynamic>;
+                    final user = map['user'] as UserModel;
+                    final episode = map['episode'] as EpisodeModel;
+                    final session = map['session'] as SessionModel;
                     final attachment = map['attachment'] as AttachmentModel?;
-                    final sessionId = map['session_id'] as String;
 
                     return FormAttachmentView(
-                      sessionId: sessionId,
+                      user: user,
+                      episode: episode,
+                      session: session,
                       attachment: attachment,
                       viewModel: FormAttachmentViewModel(
                         RepositoryScope.of<IAttachmentRepository>(context),
