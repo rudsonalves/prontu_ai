@@ -1,10 +1,8 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:prontu_ai/domain/models/episode_model.dart';
-import 'package:prontu_ai/domain/models/session_model.dart';
-import 'package:prontu_ai/domain/models/user_model.dart';
 
+import '/domain/models/session_model.dart';
 import '/ui/core/ui/buttons/big_button.dart';
 import '/ui/core/ui/form_fields/enum_form_field.dart';
 import '/domain/enums/enums_declarations.dart';
@@ -15,8 +13,6 @@ import '/domain/models/attachment_model.dart';
 import '/ui/view/attachment/form_attachment/form_attachment_view_model.dart';
 
 class FormAttachmentView extends StatefulWidget {
-  final UserModel user;
-  final EpisodeModel episode;
   final SessionModel session;
   final AttachmentModel? attachment;
   final FormAttachmentViewModel viewModel;
@@ -24,8 +20,6 @@ class FormAttachmentView extends StatefulWidget {
   const FormAttachmentView({
     super.key,
     this.attachment,
-    required this.user,
-    required this.episode,
     required this.session,
     required this.viewModel,
   });

@@ -6,10 +6,10 @@ class FormSessionViewModel {
   final ISessionRepository _sessionRepository;
 
   FormSessionViewModel(this._sessionRepository) {
-    save = Command1<SessionModel, SessionModel>(_sessionRepository.insert);
+    insert = Command1<SessionModel, SessionModel>(_sessionRepository.insert);
     update = Command1<void, SessionModel>(_sessionRepository.update);
   }
 
-  late final Command1<SessionModel, SessionModel> save;
+  late final Command1<SessionModel, SessionModel> insert;
   late final Command1<void, SessionModel> update;
 }

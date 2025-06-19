@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:prontu_ai/ui/core/theme/dimens.dart';
 
+import '/domain/models/session_model.dart';
+import '/routing/routes.dart';
+import '/ui/core/theme/dimens.dart';
+import '/ui/core/ui/dialogs/app_snack_bar.dart';
+import '/ui/core/ui/dialogs/botton_sheet_message.dart.dart';
+import '/ui/core/ui/dismissibles/dismissible_card.dart';
+import '/utils/extensions/date_time_extensions.dart';
 import '/domain/models/user_model.dart';
 import '/domain/models/episode_model.dart';
 import '/ui/view/session/session_view_model.dart';
@@ -29,14 +36,14 @@ class _SessionViewState extends State<SessionView> {
   void initState() {
     viewModel = widget.viewModel;
 
-    // viewModel.delete.addListener(_isDeleted);
+    viewModel.delete.addListener(_isDeleted);
 
     super.initState();
   }
 
   @override
   void dispose() {
-    // viewModel.delete.removeListener(_isDeleted);
+    viewModel.delete.removeListener(_isDeleted);
 
     super.dispose();
   }
@@ -53,13 +60,110 @@ class _SessionViewState extends State<SessionView> {
           icon: const Icon(Symbols.arrow_back_ios_new_rounded),
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _navFormSessionView,
-      //   child: const Icon(Symbols.add_rounded),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _navFormSessionView,
+        child: const Icon(Symbols.add_rounded),
+      ),
       body: Padding(
         padding: EdgeInsets.all(dimens.paddingScreenAll),
+        child: ListenableBuilder(
+          listenable: viewModel.load,
+          builder: (context, _) {
+            if (viewModel.load.isRunning) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            final sessions = viewModel.sessions;
+            if (sessions.isEmpty) {
+              return Center(
+                child: Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(dimens.paddingScreenAll),
+                    child: const Text('Nenhum Sessão cadastrada.'),
+                  ),
+                ),
+              );
+            }
+            return ListView.builder(
+              itemCount: sessions.length,
+              itemBuilder: (_, index) {
+                final session = sessions[index];
+
+                return DismissibleCard<SessionModel>(
+                  title: session.doctor,
+                  subtitle: session.createdAt.toDDMMYYYY(),
+                  value: session,
+                  editFunction: _editSession,
+                  removeFunction: _removeSession,
+                  // onTap: () => _navToAttachment(user),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
+  }
+
+  void _editSession(SessionModel session) {
+    context.push(
+      Routes.formAttachment.path,
+      extra: {
+        'episode': widget.episode,
+        'session': session,
+      },
+    );
+  }
+
+  void _navFormSessionView() {
+    context.push(Routes.formSession.path);
+  }
+
+  void _isDeleted() {
+    if (viewModel.delete.isRunning) return;
+
+    final result = viewModel.delete.result;
+    if (result != null && result.isFailure) {
+      showSnackError(
+        context,
+        'Ocorreu um erro ao remover a sessão.\n'
+        'Favor tentar mais tarde.',
+      );
+
+      return;
+    }
+
+    showSnackSuccess(context, 'Sessão removida com sucesso.');
+
+    setState(() {});
+  }
+
+  Future<bool> _removeSession(SessionModel session) async {
+    final response =
+        await BottonSheetMessage.show<bool?>(
+          context,
+          title: 'Remover Anexo',
+          body: [
+            'Deseja realmente remover a sessão **${session.doctor}**?',
+          ],
+          buttons: [
+            ButtonSignature(
+              label: 'Sim',
+              onPressed: () => true,
+            ),
+            ButtonSignature(
+              label: 'Não',
+              onPressed: () => false,
+            ),
+          ],
+        ) ??
+        false;
+
+    if (!response) return false;
+
+    await viewModel.delete.execute(session.id!);
+    return false;
   }
 }
