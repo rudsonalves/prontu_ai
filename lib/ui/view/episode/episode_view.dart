@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:prontu_ai/routing/routes.dart';
 
 import '/domain/models/user_model.dart';
 import '/ui/view/episode/episode_view_model.dart';
@@ -29,6 +31,14 @@ class _EpisodeViewState extends State<EpisodeView> {
           icon: const Icon(Symbols.arrow_back_ios_new_rounded),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _navEpisodeView,
+        child: const Icon(Icons.add),
+      ),
     );
+  }
+
+  void _navEpisodeView() {
+    context.push(Routes.formEpisode.path);
   }
 }
