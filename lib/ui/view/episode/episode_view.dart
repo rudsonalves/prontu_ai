@@ -91,9 +91,6 @@ class _EpisodeViewState extends State<EpisodeView> {
     context.push(
       Routes.formEpisode.path,
       extra: {'user': widget.user},
-
-      
     );
-    
   }
 }

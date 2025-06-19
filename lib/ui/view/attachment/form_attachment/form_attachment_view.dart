@@ -50,6 +50,7 @@ class _FormAttachmentViewState extends State<FormAttachmentView> {
     viewModel.insert.addListener(_isSaved);
     viewModel.update.addListener(_isSaved);
 
+    if (widget.attachment != null) {}
     _initializeForm();
 
     super.initState();

@@ -67,7 +67,7 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
   }
 
   Future<void> _save() async {
-    if (!_formKey.currentState!.validate()) {
+    if (_formKey.currentState == null || !_formKey.currentState!.validate()) {
       return;
     }
 
@@ -81,12 +81,9 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
       history: _historyController.text.trim(),
       anamnesis: _anamnesisController.text.trim(),
       createdAt: widget.episode?.createdAt,
-      updatedAt: DateTime.now(),
     );
 
-    final result = await viewModel.save(newEpisode);
-
-    if (mounted) Navigator.pop(context, newEpisode);
+    final result = viewModel.insert.execute(newEpisode);
   }
 
   @override
