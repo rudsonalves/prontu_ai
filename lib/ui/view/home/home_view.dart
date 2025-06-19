@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '/ui/core/ui/dialogs/botton_sheet_message.dart.dart';
+import '/domain/enums/enums_declarations.dart';
+import '/ui/core/ui/dialogs/app_snack_bar.dart';
 import '/domain/models/user_model.dart';
 import '/routing/routes.dart';
 import '/ui/core/theme/dimens.dart';
@@ -108,11 +111,52 @@ class _HomeViewState extends State<HomeView> {
     context.push(Routes.episode.path, extra: user);
   }
 
-  void _editUser(dynamic user) {
+  void _editUser(UserModel user) {
     context.push(Routes.formUser.path, extra: user);
   }
 
-  Future<bool> _removeUser(dynamic user) async {
+  Future<bool> _removeUser(UserModel user) async {
+    final genere = user.sex == Sex.male ? 'o' : 'a';
+    final response =
+        await BottonSheetMessage.show<bool?>(
+          context,
+          title: 'Remover usuário',
+          body: [
+            'Deseja realmente remover $genere usuári$genere **${user.name}**?',
+          ],
+          buttons: [
+            ButtonSignature(
+              label: 'Sim',
+              onPressed: () => true,
+            ),
+            ButtonSignature(
+              label: 'Não',
+              onPressed: () => false,
+            ),
+          ],
+        ) ??
+        false;
+    // await showSimpleMessage(
+    //   context,
+    //   title: 'Remover usuário',
+    //   body: [
+    //     'Deseja realmente remover $genere usuári$genere **${user.name}**?',
+    //   ],
+    //   actionButtons: [
+    //     TextButton(
+    //       child: const Text('Sim'),
+    //       onPressed: () => Navigator.pop(context, true),
+    //     ),
+    //     TextButton(
+    //       child: const Text('Não'),
+    //       onPressed: () => Navigator.pop(context, false),
+    //     ),
+    //   ],
+    // ) ??
+    // false;
+
+    if (!response) return false;
+
     await viewModel.delete.execute(user.id!);
     return false;
   }
@@ -126,22 +170,16 @@ class _HomeViewState extends State<HomeView> {
 
     final result = viewModel.delete.result;
     if (result != null && result.isFailure) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Ocorreu um erro ao remover o usuário: ${result.error}.\n'
-            'Favor, tente mais tarde.',
-          ),
-        ),
+      showSnackError(
+        context,
+        'Ocorreu um erro ao remover o usuário: ${result.error}.\n'
+        'Favor, tente mais tarde.',
       );
+
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Usuário removido com sucesso.'),
-      ),
-    );
+    showSnackSuccess(context, 'Usuário removido com sucesso.');
 
     setState(() {});
     return;
