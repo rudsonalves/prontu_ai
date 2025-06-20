@@ -5,8 +5,8 @@ class EpisodeModel {
   final int weight; // gramas
   final int height; // cm
   final String mainComplaint; // motivo da consulta
-  final String history; // histórico atual
-  final String anamnesis; // histórico clínico geral
+  final String? history; // histórico atual
+  final String? anamnesis; // histórico clínico geral
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -17,8 +17,8 @@ class EpisodeModel {
     required this.weight,
     required this.height,
     required this.mainComplaint,
-    required this.history,
-    required this.anamnesis,
+    this.history,
+    this.anamnesis,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : createdAt = createdAt ?? DateTime.now(),

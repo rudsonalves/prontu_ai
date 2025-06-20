@@ -28,8 +28,13 @@ class EpisodeAiSummaryUserCase {
     return _episodeRepository.delete(uid);
   }
 
-  Future<Result<AiSummaryModel>> analiseEpisode(EpisodeModel episode) async {
-    await Future.delayed(const Duration(seconds: 2));
-    return await _aiSummaryRepository.analiseEpisode(episode);
+  Future<Result<(AiSummaryModel, EpisodeModel)>> analiseEpisode(
+    EpisodeModel episode,
+  ) async {
+    final result = await _aiSummaryRepository.analiseEpisode(episode);
+    if (result.isFailure) return Result.failure(result.error!);
+
+    final aiSummary = result.value!;
+    return Result.success((aiSummary, episode));
   }
 }

@@ -18,8 +18,8 @@ class SqlTables {
     weight INTEGER NOT NULL,
     height INTEGER NOT NULL,
     main_complaint TEXT NOT NULL,
-    history TEXT NOT NULL,
-    anamnesis TEXT NOT NULL,
+    history TEXT,
+    anamnesis TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
   )
@@ -52,6 +52,7 @@ class SqlTables {
     id TEXT PRIMARY KEY,
     episode_id TEXT NOT NULL,
     summary TEXT NOT NULL,
+    specialist TEXT NOT NULL,
     created_at TEXT NOT NULL
   )
   ''';

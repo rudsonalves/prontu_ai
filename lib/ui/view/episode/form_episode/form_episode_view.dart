@@ -204,8 +204,8 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
     _weightController.text = weight;
     _heightController.text = height;
     _mainComplaintController.text = episode.mainComplaint;
-    _historyController.text = episode.history;
-    _anamnesisController.text = episode.anamnesis;
+    _historyController.text = episode.history ?? '';
+    _anamnesisController.text = episode.anamnesis ?? '';
 
     _isEditing = true;
 

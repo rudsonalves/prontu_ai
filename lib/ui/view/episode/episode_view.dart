@@ -150,9 +150,17 @@ class _EpisodeViewState extends State<EpisodeView> {
       );
     }
 
-    showSnackSuccess(
+    final (aisummary, episode) = result!.value!;
+
+    showSimpleMessage(
       context,
-      message: 'Evento analisado com sucesso.',
+      title: episode.title,
+      iconTitle: Symbols.medical_services_rounded,
+      body: [
+        'Busque um especialista em **${aisummary.specialist}** para tratar a'
+            ' sua situação de **${episode.title}**.',
+        '\n\n${aisummary.summary}',
+      ],
     );
   }
 

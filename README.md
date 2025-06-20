@@ -4,7 +4,65 @@ A new Flutter project.
 
 # ChangeLog
 
-## 2025/06/20 make_a_simple_routing-02 - by rudsonalves
+## 2025/06/20 ia_service-03 - by rudsonalves
+
+### Implement AI summary caching, database set operation, and UI integration
+
+This commit enhances the AI summary feature by adding caching in `AiSummaryRepository`, introducing a generic `set` method to `DatabaseService`, refining SQL schema for optional fields, and updating the episode view and view model to display detailed AI results through a dialog. Composition root and service initialization are aligned for dependency injection of OpenAI and summary repositories.
+
+### Modified Files
+
+* **lib/config/composition\_root.dart**
+
+  * Moved AI summary and OpenIA imports to root-relative paths.
+
+* **lib/data/repositories/ai\_summary/ai\_summary\_repository.dart**
+
+  * Guard initialization in `analiseEpisode`, return cached summary if exists.
+  * Wrap AI analysis in `try`/`catch` and log errors.
+  * Use `DatabaseService.set` instead of `insert` for upserts, and populate `_cache` consistently.
+  * Adjusted cache merging in `fetchAll` and removed null-check on `id` for updates.
+
+* **lib/data/services/database/database\_service.dart**
+
+  * Added `set<T>(table, map)` method to perform inserts requiring an existing `id`.
+
+* **lib/data/services/database/tables/sql\_tables.dart**
+
+  * Made `history` and `anamnesis` nullable in episodes table.
+  * Added `specialist` column to the `ai_summaries` table schema.
+
+* **lib/data/services/open\_ia/open\_ia\_service.dart**
+
+  * Removed hard-coded fallback, left commented examples.
+
+* **lib/domain/models/ai\_summary\_model.dart**
+
+  * Switched `id` to non-nullable, removed `episodeId` field, and simplified `toMap`/`fromMap`.
+
+* **lib/domain/models/episode\_model.dart**
+
+  * Made `history` and `anamnesis` nullable in the DTO to match the database.
+
+* **lib/domain/user\_cases/episode\_ai\_summary\_user\_case.dart**
+
+  * Changed `analiseEpisode` to return a tuple `(AiSummaryModel, EpisodeModel)` on success.
+
+* **lib/ui/view/episode/episode\_view\.dart**
+
+  * Updated `_showIAAssistant` to unpack the tuple and display a `simple_dialog` with specialist and summary.
+  * Imported `Symbols` and `simple_dialog.dart`; enhanced the AI button and dialog formatting.
+
+* **lib/ui/view/episode/episode\_view\_model.dart**
+
+  * Renamed injected field to `_episodeAiUserCase` and updated `analise` command type to match the tuple return.
+
+### Conclusion
+
+AI summaries are now cached and persisted via the new `set` operation, the schema supports nullable clinical fields, and the episode view cleanly presents specialist recommendations and summaries in a dialog.
+
+
+## 2025/06/20 ia_service-02 - by rudsonalves
 
 ### Integrate AI-driven episode summaries and register summary repository
 

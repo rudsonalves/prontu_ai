@@ -83,6 +83,9 @@ class OpenIaService {
       final specialist = parsed['especialista_medico'] as String;
       final summary = parsed['situacao_clinica'] as String;
 
+      // final specialist = 'Gastro';
+      // final summary = 'Paciente com dor de barriga';
+
       return Result.success(
         EpisodeAnalysis(
           recommendedSpecialist: specialist,

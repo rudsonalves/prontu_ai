@@ -46,20 +46,31 @@ class AiSummaryRepository implements IAiSummaryRepository {
 
   @override
   Future<Result<AiSummaryModel>> analiseEpisode(EpisodeModel episode) async {
-    final result = await _openIaService.analyze(episode);
-    if (result.isFailure) return Result.failure(result.error!);
+    if (!_started) return throw Exception('Repository not initialized');
 
-    final analyse = result.value!;
+    try {
+      if (_cache.containsKey(episode.id!)) {
+        return Result.success(_cache[episode.id!]!);
+      }
 
-    final aiSummary = AiSummaryModel(
-      episodeId: episode.id!,
-      summary: analyse.clinicalSummary,
-      specialist: analyse.recommendedSpecialist,
-    );
+      final result = await _openIaService.analyze(episode);
+      if (result.isFailure) return Result.failure(result.error!);
 
-    // _cache[aiSummary.id!] = aiSummary;
+      final analyse = result.value!;
 
-    return await insert(aiSummary);
+      final aiSummary = AiSummaryModel(
+        id: episode.id!,
+        summary: analyse.clinicalSummary,
+        specialist: analyse.recommendedSpecialist,
+      );
+
+      _cache[aiSummary.id] = aiSummary;
+
+      return await insert(aiSummary);
+    } on Exception catch (err, stack) {
+      log('AiSummaryRepository.analiseEpisode', error: err, stackTrace: stack);
+      return Result.failure(err);
+    }
   }
 
   @override
@@ -67,16 +78,16 @@ class AiSummaryRepository implements IAiSummaryRepository {
     try {
       if (!_started) return throw Exception('Repository not initialized');
 
-      final result = await _databaseService.insert(
+      final result = await _databaseService.set(
         TableNames.aiSummaries,
         aiSummary.toMap(),
       );
 
       if (result.isFailure) throw Exception('Insert failed');
-      final newAiSummary = aiSummary.copyWith(id: result.value!);
-      _cache[newAiSummary.id!] = newAiSummary;
 
-      return Result.success(newAiSummary);
+      _cache[aiSummary.id] = aiSummary;
+
+      return Result.success(aiSummary);
     } on Exception catch (err, stack) {
       log('AiSummaryRepository.insert', error: err, stackTrace: stack);
       return Result.failure(err);
@@ -123,7 +134,7 @@ class AiSummaryRepository implements IAiSummaryRepository {
 
       if (result.isFailure) return result;
       _cache.clear();
-      _cache.addAll({for (final user in result.value!) user.id!: user});
+      _cache.addAll({for (final user in result.value!) user.id: user});
 
       return result;
     } on Exception catch (err, stack) {
@@ -137,17 +148,13 @@ class AiSummaryRepository implements IAiSummaryRepository {
     try {
       if (!_started) throw Exception('Repository not initialized');
 
-      if (aiSummary.id == null) {
-        throw Exception('User ID must not be null for update');
-      }
-
       final result = await _databaseService.update<AiSummaryModel>(
         TableNames.aiSummaries,
         map: aiSummary.toMap(),
       );
 
       if (result.isFailure) return result;
-      _cache[aiSummary.id!] = aiSummary;
+      _cache[aiSummary.id] = aiSummary;
 
       return result;
     } on Exception catch (err, stack) {
