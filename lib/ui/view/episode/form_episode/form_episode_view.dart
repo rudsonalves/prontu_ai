@@ -136,7 +136,7 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
                 textCapitalization: TextCapitalization.sentences,
                 minLines: 1,
                 maxLines: null,
-                validator: GenericValidations.notEmpty,
+                // validator: GenericValidations.notEmpty,
                 prefixIconData: Symbols.history_rounded,
               ),
 
@@ -147,7 +147,7 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
                 textCapitalization: TextCapitalization.words,
                 minLines: 1,
                 maxLines: null,
-                validator: GenericValidations.notEmpty,
+                // validator: GenericValidations.notEmpty,
                 prefixIconData: Symbols.mixture_med_rounded,
               ),
 
@@ -204,8 +204,8 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
     _weightController.text = weight;
     _heightController.text = height;
     _mainComplaintController.text = episode.mainComplaint;
-    _historyController.text = episode.history;
-    _anamnesisController.text = episode.anamnesis;
+    _historyController.text = episode.history ?? '';
+    _anamnesisController.text = episode.anamnesis ?? '';
 
     _isEditing = true;
 
@@ -224,6 +224,9 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
     final int weight = (1000 * _weightController.currencyValue).round();
     final int height = (100 * _heightController.currencyValue).round();
 
+    final history = _historyController.text.trim();
+    final anamnesis = _anamnesisController.text.trim();
+
     final newEpisode = EpisodeModel(
       id: widget.episode?.id,
       userId: widget.user.id!,
@@ -231,8 +234,8 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
       weight: weight,
       height: height,
       mainComplaint: _mainComplaintController.text.trim(),
-      history: _historyController.text.trim(),
-      anamnesis: _anamnesisController.text.trim(),
+      history: history.isEmpty ? null : history,
+      anamnesis: anamnesis.isEmpty ? null : anamnesis,
       createdAt: widget.episode?.createdAt,
     );
 

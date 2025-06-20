@@ -15,13 +15,18 @@ showSnackError(BuildContext context, String message) {
   );
 }
 
-showSnackSuccess(BuildContext context, String message) {
+showSnackSuccess(
+  BuildContext context, {
+  required String message,
+  IconData? iconTitle = Symbols.check_rounded,
+  Duration duration = const Duration(seconds: 2),
+}) {
   AppSnackBar.showBottom(
     context,
     title: 'Sucesso!',
-    iconTitle: Symbols.check_rounded,
+    iconTitle: iconTitle,
     message: message,
-    duration: const Duration(seconds: 2),
+    duration: duration,
     isError: false,
   );
 }

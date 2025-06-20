@@ -5,8 +5,8 @@ class EpisodeModel {
   final int weight; // gramas
   final int height; // cm
   final String mainComplaint; // motivo da consulta
-  final String history; // histórico atual
-  final String anamnesis; // histórico clínico geral
+  final String? history; // histórico atual
+  final String? anamnesis; // histórico clínico geral
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -17,8 +17,8 @@ class EpisodeModel {
     required this.weight,
     required this.height,
     required this.mainComplaint,
-    required this.history,
-    required this.anamnesis,
+    this.history,
+    this.anamnesis,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : createdAt = createdAt ?? DateTime.now(),
@@ -76,8 +76,8 @@ class EpisodeModel {
       weight: map['weight']?.toInt() as int,
       height: map['height']?.toInt() as int,
       mainComplaint: map['main_complaint'] as String,
-      history: map['history'] as String,
-      anamnesis: map['anamnesis'] as String,
+      history: map['history'] as String?,
+      anamnesis: map['anamnesis'] as String?,
       createdAt: DateTime.parse(map['created_at'] as String),
       updatedAt: DateTime.parse(map['updated_at'] as String),
     );

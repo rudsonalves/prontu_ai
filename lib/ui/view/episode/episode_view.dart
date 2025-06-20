@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:prontu_ai/ui/core/ui/dialogs/simple_dialog.dart';
 
 import '/domain/models/episode_model.dart';
 import '/ui/core/ui/buttons/icon_back_button.dart';
@@ -35,6 +37,7 @@ class _EpisodeViewState extends State<EpisodeView> {
     viewModel.load.execute(widget.user.id!);
 
     viewModel.delete.addListener(_isDeleted);
+    viewModel.analise.addListener(_showIAAssistant);
 
     super.initState();
   }
@@ -42,6 +45,7 @@ class _EpisodeViewState extends State<EpisodeView> {
   @override
   void dispose() {
     viewModel.delete.removeListener(_isDeleted);
+    viewModel.analise.removeListener(_showIAAssistant);
 
     super.dispose();
   }
@@ -49,11 +53,18 @@ class _EpisodeViewState extends State<EpisodeView> {
   @override
   Widget build(BuildContext context) {
     final dimens = Dimens.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Eventos de ${widget.user.name}'),
         leading: const IconBackButton(),
+        actions: [
+          IconButton(
+            onPressed: _showHelpMessage,
+            icon: const Icon(Symbols.question_mark_rounded),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navFormEpisodeView,
@@ -93,6 +104,22 @@ class _EpisodeViewState extends State<EpisodeView> {
                       'Peso: ${episode.weight / 1000} kg |'
                       ' Altura: ${episode.height / 100} m',
                   value: episode,
+                  trailing: ListenableBuilder(
+                    listenable: viewModel.analise,
+                    builder: (context, _) => IconButton(
+                      onPressed: () => _checkIAAssistant(episode),
+                      icon: viewModel.analise.isRunning
+                          ? const SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(),
+                            )
+                          : Icon(
+                              Symbols.medical_services_rounded,
+                              color: colorScheme.primary,
+                            ),
+                    ),
+                  ),
                   editFunction: _editEpisode,
                   removeFunction: _removeEpisode,
                   onTap: () => _navToSessionView(episode),
@@ -102,6 +129,59 @@ class _EpisodeViewState extends State<EpisodeView> {
           },
         ),
       ),
+    );
+  }
+
+  void _checkIAAssistant(EpisodeModel episode) {
+    if (viewModel.analise.isRunning) return;
+
+    viewModel.analise.execute(episode);
+  }
+
+  void _showIAAssistant() {
+    if (viewModel.analise.isRunning) return;
+
+    final result = viewModel.analise.result;
+    if (result != null && result.isFailure) {
+      showSnackError(
+        context,
+        'Ocorreu um erro ao analisar o evento.\n'
+        'Favor tentar mais tarde.',
+      );
+    }
+
+    final (aisummary, episode) = result!.value!;
+
+    showSimpleMessage(
+      context,
+      title: episode.title,
+      iconTitle: Symbols.medical_services_rounded,
+      body: [
+        'Busque um especialista em **${aisummary.specialist}** para tratar a'
+            ' sua situação de **${episode.title}**.',
+        '\n\n${aisummary.summary}',
+      ],
+    );
+  }
+
+  void _showHelpMessage() {
+    final texts = [
+      'Aqui abre as ocorrências de **Eventos Médicos**, situações que'
+          ' necessitem de uma intervenção médica. '
+          'As ações disponíveis nesta página são:',
+      '- Toque no botão flutuante "**+**" para adicionar um novo usuário.',
+      '- Toque num usuário para criar um **novo Evento Médico**.',
+      '> Arraste para **à Direita** para **Editar** o usuário.',
+      '< Arraste para **à Esquerda** para **Remover** o usuário.',
+      '- Toque no botão **maletinha** do evento para orientações do '
+          'assitente virtual.',
+    ];
+
+    showSimpleMessage(
+      context,
+      iconTitle: Symbols.help_rounded,
+      title: 'Eventos Médicos',
+      body: texts,
     );
   }
 
@@ -130,7 +210,7 @@ class _EpisodeViewState extends State<EpisodeView> {
       return;
     }
 
-    showSnackSuccess(context, 'Evento removido com sucesso.');
+    showSnackSuccess(context, message: 'Evento removido com sucesso.');
 
     setState(() {});
   }

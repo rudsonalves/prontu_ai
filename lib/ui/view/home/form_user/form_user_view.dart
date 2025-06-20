@@ -69,7 +69,7 @@ class _FormUserViewState extends State<FormUserView> {
         title: Text(_isEditing ? 'Editar Usuário' : 'Criar Usuário'),
         leading: const IconBackButton(),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(dimens.paddingScreenAll),
         child: Form(
           key: _formKey,

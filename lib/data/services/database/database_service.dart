@@ -154,6 +154,33 @@ class DatabaseService {
     }
   }
 
+  Future<Result<void>> set<T>(
+    String table,
+    Map<String, dynamic> map,
+  ) async {
+    try {
+      if (_db == null) throw Exception('Database is not initialized');
+
+      if (map['id'] == null) {
+        throw Exception('ID should be provided for set');
+      }
+
+      await _db!.insert(
+        table,
+        map,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      return const Result.success(null);
+    } on Exception catch (err, stack) {
+      log(
+        'DatabeseService.insert: $err',
+        error: err,
+        stackTrace: stack,
+      );
+      return Result.failure(err);
+    }
+  }
+
   Future<Result<void>> update<T>(
     String table, {
     required Map<String, dynamic> map,
