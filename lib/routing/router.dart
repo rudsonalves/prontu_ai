@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:prontu_ai/ui/view/splash/splash_view.dart';
+import 'package:prontu_ai/ui/view/splash/splash_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '/data/repositories/attachment/i_attachment_repository.dart';
@@ -30,8 +32,19 @@ import '/routing/routes.dart';
 import '/ui/view/home/home_view.dart';
 
 GoRouter router() => GoRouter(
-  initialLocation: Routes.home.path,
+  // initialLocation: Routes.home.path,
+     initialLocation: Routes.splash.path,
   routes: [
+    // splash
+  GoRoute(
+  path: Routes.splash.path,
+  name: Routes.splash.name,
+  builder: (context, state) => SplashLogoView(
+    viewModel: SplashViewModel(
+        themeMode: context.read<AppThemeMode>(),
+    ),
+  ),
+),
     GoRoute(
       path: Routes.home.path,
       name: Routes.home.name,
@@ -52,7 +65,6 @@ GoRouter router() => GoRouter(
         ),
       ),
     ),
-
     // Episodes pages
     GoRoute(
       path: Routes.episode.path,

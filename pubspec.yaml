@@ -37,5 +37,13 @@ flutter:
   uses-material-design: true
 
   assets:
-    - .env
+    # - .env
     - assets/images/
+    - assets/icons/
+
+
+flutter_launcher_icons:
+  image_path: assets/icons/app_icon_resized.png
+  android: true
+  ios: true
+  min_sdk_android: 21
