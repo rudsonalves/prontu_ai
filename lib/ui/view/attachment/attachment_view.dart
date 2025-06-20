@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
+import '/ui/core/ui/buttons/icon_back_button.dart';
 import '/domain/models/episode_model.dart';
 import '/domain/models/user_model.dart';
 import '/routing/routes.dart';
@@ -39,6 +40,8 @@ class _AttachmentViewState extends State<AttachmentView> {
   void initState() {
     viewModel = widget.viewModel;
 
+    viewModel.load.execute(widget.session.id!);
+
     viewModel.delete.addListener(_isDeleted);
 
     super.initState();
@@ -58,10 +61,7 @@ class _AttachmentViewState extends State<AttachmentView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Exames: Dr ${widget.session.doctor}'),
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Symbols.arrow_back_ios_new_rounded),
-        ),
+        leading: const IconBackButton(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navFormAttachmentView,
@@ -89,6 +89,7 @@ class _AttachmentViewState extends State<AttachmentView> {
                 ),
               );
             }
+
             return ListView.builder(
               itemCount: attachments.length,
               itemBuilder: (_, index) {
@@ -100,7 +101,6 @@ class _AttachmentViewState extends State<AttachmentView> {
                   value: attachment,
                   editFunction: _editAttachment,
                   removeFunction: _removeAttachment,
-                  // onTap: () => _navToAttachment(user),
                 );
               },
             );
@@ -111,7 +111,10 @@ class _AttachmentViewState extends State<AttachmentView> {
   }
 
   void _navFormAttachmentView() {
-    context.push(Routes.formAttachment.path);
+    context.push(
+      Routes.formAttachment.path,
+      extra: {'session': widget.session},
+    );
   }
 
   void _isDeleted() {

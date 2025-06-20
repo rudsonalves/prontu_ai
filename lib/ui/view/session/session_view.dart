@@ -36,6 +36,8 @@ class _SessionViewState extends State<SessionView> {
   void initState() {
     viewModel = widget.viewModel;
 
+    viewModel.load.execute(widget.episode.id!);
+
     viewModel.delete.addListener(_isDeleted);
 
     super.initState();
@@ -54,7 +56,7 @@ class _SessionViewState extends State<SessionView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Epsódio: ${widget.episode.title}'),
+        title: Text('Consultas: ${widget.episode.title}'),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Symbols.arrow_back_ios_new_rounded),
@@ -92,12 +94,12 @@ class _SessionViewState extends State<SessionView> {
                 final session = sessions[index];
 
                 return DismissibleCard<SessionModel>(
-                  title: session.doctor,
+                  title: '${session.doctor} - ${session.phone}',
                   subtitle: session.createdAt.toDDMMYYYY(),
                   value: session,
                   editFunction: _editSession,
                   removeFunction: _removeSession,
-                  // onTap: () => _navToAttachment(user),
+                  onTap: () => _navToAttachmentView(session),
                 );
               },
             );
@@ -107,9 +109,20 @@ class _SessionViewState extends State<SessionView> {
     );
   }
 
+  void _navToAttachmentView(SessionModel session) {
+    context.push(
+      Routes.attachment.path,
+      extra: {
+        'user': widget.user,
+        'episode': widget.episode,
+        'session': session,
+      },
+    );
+  }
+
   void _editSession(SessionModel session) {
     context.push(
-      Routes.formAttachment.path,
+      Routes.formSession.path,
       extra: {
         'episode': widget.episode,
         'session': session,
@@ -118,7 +131,7 @@ class _SessionViewState extends State<SessionView> {
   }
 
   void _navFormSessionView() {
-    context.push(Routes.formSession.path);
+    context.push(Routes.formSession.path, extra: {'episode': widget.episode});
   }
 
   void _isDeleted() {

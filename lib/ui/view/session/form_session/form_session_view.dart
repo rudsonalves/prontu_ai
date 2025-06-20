@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:prontu_ai/ui/core/ui/editing_controllers/masked_editing_controller.dart';
 
+import '/ui/core/ui/buttons/icon_back_button.dart';
+import '/ui/core/ui/editing_controllers/masked_editing_controller.dart';
 import '/ui/core/ui/form_fields/basic_form_field.dart';
 import '/utils/validates/generic_validations.dart';
 import '/ui/core/theme/dimens.dart';
@@ -52,7 +53,6 @@ class _FormSessionViewState extends State<FormSessionView> {
 
   @override
   void dispose() {
-    super.dispose();
     viewModel.insert.removeListener(_isSaved);
     viewModel.update.removeListener(_isSaved);
 
@@ -66,13 +66,14 @@ class _FormSessionViewState extends State<FormSessionView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Editar Seção' : 'Criar Seção'),
+        leading: const IconBackButton(),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(dimens.paddingScreenAll),
         child: Form(
           key: _formKey,
           child: Column(
-            spacing: dimens.spacingVertical,
+            spacing: dimens.spacingVertical * 3,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -97,7 +98,8 @@ class _FormSessionViewState extends State<FormSessionView> {
                 hintText: 'Adicione as notas de se médico.',
                 controller: _notesController,
                 minLines: 1,
-                textCapitalization: TextCapitalization.words,
+                maxLines: null,
+                textCapitalization: TextCapitalization.sentences,
                 validator: GenericValidations.name,
                 prefixIconData: Symbols.docs_rounded,
               ),
@@ -168,9 +170,9 @@ class _FormSessionViewState extends State<FormSessionView> {
     final attachment = SessionModel(
       id: widget.session?.id,
       episodeId: widget.episode.id!,
-      doctor: '',
-      phone: '',
-      notes: '',
+      doctor: _doctorController.text.trim(),
+      phone: _phoneController.text.trim(),
+      notes: _notesController.text.trim(),
     );
 
     _isEditing

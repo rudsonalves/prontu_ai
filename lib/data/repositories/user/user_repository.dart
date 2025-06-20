@@ -25,7 +25,8 @@ class UserRepository implements IUserRepository {
 
       _started = true;
 
-      await fetchAll();
+      final result = await fetchAll();
+      if (result.isFailure) return result;
 
       return const Result.success(null);
     } on Exception catch (err, stack) {

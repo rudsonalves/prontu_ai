@@ -8,14 +8,13 @@ import '/data/repositories/episode/i_episode_repository.dart';
 import '/utils/result.dart';
 
 class EpisodeRepository implements IEpisodeRepository {
-  final String _userId;
   final DatabaseService _databaseService;
 
   EpisodeRepository({
-    required String userId,
     required DatabaseService databaseService,
-  }) : _databaseService = databaseService,
-       _userId = userId;
+  }) : _databaseService = databaseService;
+
+  String? _userId;
 
   bool _started = false;
 
@@ -25,11 +24,17 @@ class EpisodeRepository implements IEpisodeRepository {
   List<EpisodeModel> get episodes => List.unmodifiable(_cache.values);
 
   @override
-  Future<Result<void>> initialize() async {
+  Future<Result<void>> initialize(String userId) async {
     try {
-      if (_started) return const Result.success(null);
+      if (_userId != null && userId == _userId) {
+        return const Result.success(null);
+      }
 
+      _userId = userId;
       _started = true;
+
+      final result = await fetchAll();
+      if (result.isFailure) return result;
 
       return const Result.success(null);
     } on Exception catch (err, stack) {
@@ -144,6 +149,9 @@ class EpisodeRepository implements IEpisodeRepository {
         TableNames.sessions,
         id: uid,
       );
+
+      if (result.isFailure) return result;
+      _cache.remove(uid);
 
       return result;
     } on Exception catch (err, stack) {

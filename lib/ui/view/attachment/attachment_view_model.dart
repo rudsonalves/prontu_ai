@@ -6,11 +6,11 @@ class AttachmentViewModel {
   final IAttachmentRepository _attachmentRepository;
 
   AttachmentViewModel(this._attachmentRepository) {
-    load = Command0<void>(_attachmentRepository.initialize)..execute();
+    load = Command1<void, String>(_attachmentRepository.initialize);
     delete = Command1<void, String>(_attachmentRepository.delete);
   }
 
-  late final Command0<void> load;
+  late final Command1<void, String> load;
   late final Command1<void, String> delete;
 
   List<AttachmentModel> get attachments => _attachmentRepository.attachments;

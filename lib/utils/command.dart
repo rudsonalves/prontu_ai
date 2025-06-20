@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:prontu_ai/utils/result.dart';
+import '/utils/result.dart';
 
 typedef CommandAction0<Output> = Future<Result<Output>> Function();
 

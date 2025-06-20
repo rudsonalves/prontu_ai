@@ -31,6 +31,7 @@ class FormAttachmentView extends StatefulWidget {
 class _FormAttachmentViewState extends State<FormAttachmentView> {
   late final FormAttachmentViewModel viewModel;
   final _formKey = GlobalKey<FormState>();
+
   final _namecontroller = TextEditingController();
   final _pathController = TextEditingController();
 
@@ -53,7 +54,6 @@ class _FormAttachmentViewState extends State<FormAttachmentView> {
 
   @override
   void dispose() {
-    super.dispose();
     viewModel.insert.removeListener(_isSaved);
     viewModel.update.removeListener(_isSaved);
 
@@ -70,13 +70,17 @@ class _FormAttachmentViewState extends State<FormAttachmentView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Editar Anexo' : 'Criar Anexo'),
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Symbols.arrow_back_ios_new_rounded),
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(dimens.paddingScreenAll),
         child: Form(
           key: _formKey,
           child: Column(
-            spacing: dimens.spacingVertical,
+            spacing: dimens.spacingVertical * 3,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -88,6 +92,7 @@ class _FormAttachmentViewState extends State<FormAttachmentView> {
                 validator: GenericValidations.name,
                 prefixIconData: Symbols.docs_rounded,
               ),
+
               InkWell(
                 onTap: _selectFile,
                 child: AbsorbPointer(
@@ -100,6 +105,7 @@ class _FormAttachmentViewState extends State<FormAttachmentView> {
                   ),
                 ),
               ),
+
               EnumFormField<AttachmentType>(
                 labelBuilder: (value) => value.label,
                 initialValue: _type,
@@ -107,6 +113,7 @@ class _FormAttachmentViewState extends State<FormAttachmentView> {
                 onChanged: _selectType,
                 validator: GenericValidations.attachmentType,
               ),
+
               ListenableBuilder(
                 listenable: Listenable.merge([
                   viewModel.insert,

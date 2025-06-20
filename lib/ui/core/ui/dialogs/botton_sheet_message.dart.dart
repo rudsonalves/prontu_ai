@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:prontu_ai/ui/core/ui/texts/parse_rich_text.dart';
 
+import '/ui/core/ui/texts/parse_rich_text.dart';
 import '/ui/core/theme/dimens.dart';
 import '/ui/core/theme/fonts.dart';
 

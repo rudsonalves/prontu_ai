@@ -1,6 +1,12 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+import '/data/repositories/attachment/attachment_repository.dart';
+import '/data/repositories/attachment/i_attachment_repository.dart';
+import '/data/repositories/session/i_session_repository.dart';
+import '/data/repositories/session/session_repository.dart';
+import '/data/repositories/episode/episode_repository.dart';
+import '/data/repositories/episode/i_episode_repository.dart';
 import '/app_theme_mode.dart';
 import '/data/repositories/user/i_user_repository.dart';
 import '/data/repositories/user/user_repository.dart';
@@ -12,11 +18,20 @@ Future<List<SingleChildWidget>> compositionRoot() async {
 
   return <SingleChildWidget>[
     ChangeNotifierProvider<AppThemeMode>(
-      create: (context) => AppThemeMode(),
+      create: (ctx) => AppThemeMode(),
     ),
-    Provider<DatabaseService>(create: (context) => database),
+    Provider<DatabaseService>(create: (ctx) => database),
     Provider<IUserRepository>(
-      create: (context) => UserRepository(database),
+      create: (ctx) => UserRepository(database),
+    ),
+    Provider<IEpisodeRepository>(
+      create: (ctx) => EpisodeRepository(databaseService: database),
+    ),
+    Provider<ISessionRepository>(
+      create: (ctx) => SessionRepository(databaseService: database),
+    ),
+    Provider<IAttachmentRepository>(
+      create: (ctx) => AttachmentRepository(databaseService: database),
     ),
   ];
 }

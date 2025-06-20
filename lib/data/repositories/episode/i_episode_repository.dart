@@ -1,10 +1,10 @@
-import 'package:prontu_ai/domain/models/episode_model.dart';
-import 'package:prontu_ai/utils/result.dart';
+import '/domain/models/episode_model.dart';
+import '/utils/result.dart';
 
 abstract interface class IEpisodeRepository {
   List<EpisodeModel> get episodes;
 
-  Future<Result<void>> initialize();
+  Future<Result<void>> initialize(String userId);
 
   Future<Result<EpisodeModel>> insert(EpisodeModel episode);
 

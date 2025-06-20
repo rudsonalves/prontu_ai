@@ -4,6 +4,282 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/20 make_a_simple_routing-01 - by rudsonalves
+
+### Ensure fetchAll results are checked, clean imports, and refine form behaviors
+
+This commit adds failure handling for `fetchAll` in all repositories, standardizes import paths, fixes disposal order in forms, adjusts scrolling behavior, and corrects navigation in the session view for a more robust and consistent codebase.
+
+### Modified Files
+
+* **lib/data/repositories/ai\_summary/i\_ai\_summary\_repository.dart**
+
+  * Updated imports to use root-relative paths (`/domain/models` and `/utils/result`).
+
+* **lib/data/repositories/attachment/attachment\_repository.dart**
+
+  * After setting `_sessionId`, now awaits `fetchAll()` and returns on failure.
+  * In `delete()`, checks delete result for failure before removing from cache.
+
+* **lib/data/repositories/attachment/i\_attachment\_repository.dart**
+
+  * Cleaned imports to root-relative.
+
+* **lib/data/repositories/episode/episode\_repository.dart**
+
+  * Wrapped `fetchAll()` in failure check in `initialize`.
+  * In `delete()`, returns on failure before cache removal.
+
+* **lib/data/repositories/episode/i\_episode\_repository.dart**
+
+  * Cleaned imports.
+
+* **lib/data/repositories/session/session\_repository.dart**
+
+  * Added failure-handling around `fetchAll()` in `initialize`.
+  * In `delete()`, returns on failure before cache removal.
+
+* **lib/data/repositories/user/user\_repository.dart**
+
+  * Checks `fetchAll()` result and returns on failure in `initialize`.
+
+* **lib/main.dart**
+
+  * Updated `composition_root` import to use root-relative path.
+
+* **lib/ui/core/ui/dialogs/botton\_sheet\_message.dart.dart**
+
+  * Adjusted import of `parse_rich_text.dart` to root-relative.
+
+* **lib/ui/view/attachment/attachment\_view\.dart**
+
+  * Cleaned import paths to root-relative and removed redundant import.
+
+* **lib/ui/view/attachment/form\_attachment/form\_attachment\_view\.dart**
+
+  * Removed premature `super.dispose()` so listeners are removed before `super.dispose()`.
+
+* **lib/ui/view/episode/episode\_view\.dart**
+
+  * Converted all imports to root-relative.
+  * Added `maxLines: null` on long text form fields to allow dynamic height.
+
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\.dart**
+
+  * Added `maxLines: null` on multiline fields for unbounded expansion.
+
+* **lib/ui/view/home/form\_user/form\_user\_view\.dart**
+
+  * Cleaned back-button import path to root-relative.
+
+* **lib/ui/view/session/form\_session/form\_session\_view\.dart**
+
+  * Changed body to `SingleChildScrollView` to support scrolling.
+  * Moved listener removal before `super.dispose()`.
+  * Added `maxLines: null` and corrected `textCapitalization` and trimmed field values on save.
+
+* **lib/ui/view/session/session\_view\.dart**
+
+  * Updated session title to include phone number.
+  * Fixed navigation to attachment view using `Routes.attachment.path`.
+
+* **lib/utils/command.dart**
+
+  * Standardized import of `result.dart` to root-relative.
+
+### Conclusion
+
+All repositories now guard against fetch failures, imports are unified, and form views properly handle scrolling, disposal, and navigation—ensuring improved stability and user experience.
+
+
+## 2025/06/20 make_a_simple_routing - by rudsonalves
+
+### Standardize repository initialization, simplify routing, and add back-button component
+
+This commit refactors dependency injection and routing to use provider-scoped repositories with parameterized `initialize` methods, replaces nested `ShellRoute` blocks with flat `GoRoute` definitions, and introduces a reusable `IconBackButton` widget. ViewModels now expose `load` commands accepting IDs, ensuring data fetches occur only when needed.
+
+### Modified Files
+
+* **lib/config/composition\_root.dart**
+
+  * Registered `IEpisodeRepository`, `ISessionRepository`, and `IAttachmentRepository` in the provider list without requiring ID parameters at construction.
+  * Consolidated provider `create` closures to use consistent `ctx` naming.
+
+* **lib/data/repositories/attachment/attachment\_repository.dart**
+
+  * Removed constructor `sessionId` parameter and introduced a nullable `_sessionId` field.
+  * Updated `initialize` signature to `initialize(String sessionId)`, guarding against redundant initializations.
+
+* **lib/data/repositories/attachment/i\_attachment\_repository.dart**
+
+  * Changed `initialize()` to `initialize(String sessionId)` in the interface.
+
+* **lib/data/repositories/episode/episode\_repository.dart**
+
+  * Removed `userId` constructor argument in favor of an internal nullable `_userId`.
+  * Updated `initialize` to accept `String userId` and fetch all episodes only on first call per user.
+
+* **lib/data/repositories/episode/i\_episode\_repository.dart**
+
+  * Updated interface to `initialize(String userId)`.
+
+* **lib/data/repositories/session/session\_repository.dart**
+
+  * Removed `episodeId` constructor argument; added nullable `_episodeId` field.
+  * Changed `initialize()` to `initialize(String episodeId)` with single-call guard.
+
+* **lib/data/repositories/session/i\_session\_repository.dart**
+
+  * Updated interface to `initialize(String episodeId)`.
+
+* **lib/routing/router.dart**
+
+  * Flattened route hierarchy by replacing `ShellRoute` sections with top-level `GoRoute` entries for Episodes, Sessions, and Attachments.
+  * Injected repositories via `context.read<…>()` and unpacked `state.extra` maps directly in each route builder.
+  * Removed legacy `repository_scope` imports and manual repository instantiations.
+
+* **lib/ui/core/ui/buttons/icon\_back\_button.dart**
+
+  * Added new `IconBackButton` widget for consistent back-navigation in AppBars.
+
+* **lib/ui/view/attachment/attachment\_view\.dart**
+
+  * Replaced manual back-button icon with `IconBackButton`, and invoked `viewModel.load.execute(sessionId)` in `initState`.
+
+* **lib/ui/view/attachment/attachment\_view\_model.dart**
+
+  * Changed `load` command from `Command0` to `Command1<void, String>` to pass the session ID.
+
+* **lib/ui/view/episode/episode\_view\.dart**
+
+  * Swapped manual back-icon for `IconBackButton`, triggered `viewModel.load.execute(userId)` in `initState`, and updated the AppBar title.
+  * Adjusted delete listener placement to `initState`/`dispose`.
+
+* **lib/ui/view/episode/episode\_view\_model.dart**
+
+  * Converted `load` from `Command0` to `Command1<void, String>`.
+
+* **lib/ui/view/session/session\_view\.dart**
+
+  * Added `viewModel.load.execute(episodeId)` in `initState`, swapped manual back button for `IconBackButton`, and updated the AppBar title to "Consultas".
+  * Adjusted `_navFormSessionView` to pass extra `episode` ID.
+
+* **lib/ui/view/session/session\_view\_model.dart**
+
+  * Changed `load` from `Command0` to `Command1<void, String>`.
+
+### New Files
+
+* **lib/ui/core/ui/buttons/icon\_back\_button.dart**
+  Provides a reusable `IconBackButton` for consistent AppBar back navigation across views.
+
+### Conclusion
+
+Dependency injection and routing are now streamlined, form and view models support parameterized data loading, and navigation components are unified for a cleaner codebase.
+
+
+## 2025/06/20 merge_and_bug_fix-01 - by rudsonalves
+
+### Refine routing sections and streamline episode editing logic
+
+These changes enhance the router definition by adding clear separation between route groups, improve the `EpisodeView` UI and navigation handlers, and optimize the episode form to use preformatted values and the `CurrencyEditingController`’s `currencyValue`.
+
+### Modified Files
+
+* **lib/routing/router.dart**
+
+  * Inserted blank lines before each `ShellRoute` block for Episodes, Sessions, and Attachments to visually separate route groups.
+
+* **lib/ui/view/episode/episode\_view\.dart**
+
+  * Updated the subtitle to display weight in kilograms (`kg`) and height in meters (`m`).
+  * Renamed `editAttachment`/`_removeAttachment` methods to `editEpisode`/`removeEpisode` and updated their handlers to push the `formEpisode` route with the correct `extra` map.
+  * Added `delete` listener in `initState`/`dispose`, and integrated success/error snackbars for episode removal.
+
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\.dart**
+
+  * Pre-calculated formatted `weight` and `height` strings in `_initializeForm()` using `toStringAsFixed(2)` before setting controller text.
+  * Revised `_saveForm()` to derive integer `weight` and `height` by multiplying `currencyValue` from the `CurrencyEditingController`.
+  * Ensured focus is unfocused before save and consolidated parsing logic for clarity.
+
+### Conclusion
+
+Routing clarity, episode view consistency, and form value handling are now fully refined and functional.
+
+
+## 2025/06/20 merge_and_bug_fix - by rudsonalves
+
+### Update application ID, refactor table definitions, and enhance form controllers
+
+This commit updates the Android application namespace and package path to `br.dev.rralves.prontu_ai`, refines local database table ordering, reverts vertical spacing to its original value, and introduces a new `CurrencyEditingController` for formatted numeric inputs. Forms across episodes, sessions, and attachments have been adjusted to leverage this controller, improve spacing, and wire up save/delete listeners for a smoother UX.
+
+### Modified Files
+
+* **android/app/build.gradle.kts**
+
+  * Changed `namespace` and `applicationId` from `com.example.prontu_ai` to `br.dev.rralves.prontu_ai` to match project convention.
+
+* **android/app/src/main/kotlin/.../MainActivity.kt**
+
+  * Renamed package path and updated `package` declaration to `br.dev.rralves.prontu_ai` after directory relocation.
+
+* **lib/data/repositories/episode/episode\_repository.dart**
+
+  * Invoked `await fetchAll()` immediately after initialization to preload all episodes.
+
+* **lib/data/services/database/tables/sql\_tables.dart**
+
+  * Re-ordered the `sessions` table definition below `episodes` for consistency.
+
+* **lib/ui/core/theme/dimens.dart**
+
+  * Reverted `spacingVertical` from `24.0` back to `6.0` in `_DimensMobile` to restore original vertical gaps.
+
+* **lib/ui/view/attachment/attachment\_view\.dart**
+
+  * Added a blank line for readability before `ListView.builder`.
+  * Updated `_navFormAttachmentView` to push `extra: {'session': widget.session}`.
+
+* **lib/ui/view/attachment/form\_attachment/form\_attachment\_view\.dart**
+
+  * Introduced a `_formKey` and wrapped form in a `Form` widget.
+  * Increased column spacing by multiplying `spacingVertical` by 3.
+  * Removed unused `user`/`episode` imports and parameters.
+
+* **lib/ui/view/episode/episode\_view\.dart**
+
+  * Restructured imports and replaced `ListTile` with `DismissibleCard<EpisodeModel>`.
+  * Added `delete` listener in `initState`/`dispose`, snackbars for removal outcomes, and renamed “Episódios” to “Eventos.”
+  * Implemented `_navToSessionView` passing both `user` and `episode` in `extra`.
+
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\.dart**
+
+  * Swapped plain `TextFormField` controllers for `CurrencyEditingController` on weight and height.
+  * Added validation helpers, prefix icons, and updated button section to use listeners on `viewModel.insert`/`update`.
+  * Adjusted form spacing (`spacingVertical * 3`) and moved save logic into `_saveForm`.
+
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\_model.dart**
+
+  * Removed commented-out delay stubs and streamlined `insert`/`update` commands.
+
+* **lib/utils/validates/generic\_validations.dart**
+
+  * Introduced `isDouble` validator to enforce numeric input with optional decimal.
+
+* **pubspec.yaml**
+
+  * Added `intl: ^0.20.2` for number formatting support (currency controller).
+
+### New Files
+
+* **lib/ui/core/ui/editing\_controllers/currency\_editing\_controller.dart**
+  Implements `CurrencyEditingController`, formatting input as localized currency without symbol, providing a `currencyValue` getter/setter and automatic mask application.
+
+### Conclusion
+
+Namespace alignment, database definitions, and UI spacing are restored, while the new currency controller and form enhancements deliver a consistent and validated input experience.
+
+
 ## 2025/06/19 ia_service-01 - by rudsonalves
 
 ### Implement masked input controller and refine session & attachment flows
