@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:prontu_ai/domain/models/episode_model.dart';
-import 'package:prontu_ai/ui/core/ui/buttons/icon_back_button.dart';
-import 'package:prontu_ai/ui/core/ui/dialogs/app_snack_bar.dart';
-import 'package:prontu_ai/ui/core/ui/dialogs/botton_sheet_message.dart.dart';
-import 'package:prontu_ai/ui/core/ui/dismissibles/dismissible_card.dart';
 
+import '/domain/models/episode_model.dart';
+import '/ui/core/ui/buttons/icon_back_button.dart';
+import '/ui/core/ui/dialogs/app_snack_bar.dart';
+import '/ui/core/ui/dialogs/botton_sheet_message.dart.dart';
+import '/ui/core/ui/dismissibles/dismissible_card.dart';
 import '/routing/routes.dart';
 import '/ui/core/theme/dimens.dart';
 import '/domain/models/user_model.dart';

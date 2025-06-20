@@ -1,5 +1,4 @@
-import 'package:prontu_ai/domain/models/session_model.dart';
-
+import '/domain/models/session_model.dart';
 import '/data/repositories/session/i_session_repository.dart';
 import '/utils/command.dart';
 

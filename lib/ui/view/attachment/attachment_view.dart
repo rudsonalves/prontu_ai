@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:prontu_ai/ui/core/ui/buttons/icon_back_button.dart';
 
+import '/ui/core/ui/buttons/icon_back_button.dart';
 import '/domain/models/episode_model.dart';
 import '/domain/models/user_model.dart';
 import '/routing/routes.dart';

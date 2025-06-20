@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:prontu_ai/config/composition_root.dart';
 import 'package:provider/provider.dart';
 
+import '/config/composition_root.dart';
 import '/main_app.dart';
 
 Future<void> main() async {

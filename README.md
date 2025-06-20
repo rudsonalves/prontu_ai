@@ -4,6 +4,94 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/20 make_a_simple_routing-01 - by rudsonalves
+
+### Ensure fetchAll results are checked, clean imports, and refine form behaviors
+
+This commit adds failure handling for `fetchAll` in all repositories, standardizes import paths, fixes disposal order in forms, adjusts scrolling behavior, and corrects navigation in the session view for a more robust and consistent codebase.
+
+### Modified Files
+
+* **lib/data/repositories/ai\_summary/i\_ai\_summary\_repository.dart**
+
+  * Updated imports to use root-relative paths (`/domain/models` and `/utils/result`).
+
+* **lib/data/repositories/attachment/attachment\_repository.dart**
+
+  * After setting `_sessionId`, now awaits `fetchAll()` and returns on failure.
+  * In `delete()`, checks delete result for failure before removing from cache.
+
+* **lib/data/repositories/attachment/i\_attachment\_repository.dart**
+
+  * Cleaned imports to root-relative.
+
+* **lib/data/repositories/episode/episode\_repository.dart**
+
+  * Wrapped `fetchAll()` in failure check in `initialize`.
+  * In `delete()`, returns on failure before cache removal.
+
+* **lib/data/repositories/episode/i\_episode\_repository.dart**
+
+  * Cleaned imports.
+
+* **lib/data/repositories/session/session\_repository.dart**
+
+  * Added failure-handling around `fetchAll()` in `initialize`.
+  * In `delete()`, returns on failure before cache removal.
+
+* **lib/data/repositories/user/user\_repository.dart**
+
+  * Checks `fetchAll()` result and returns on failure in `initialize`.
+
+* **lib/main.dart**
+
+  * Updated `composition_root` import to use root-relative path.
+
+* **lib/ui/core/ui/dialogs/botton\_sheet\_message.dart.dart**
+
+  * Adjusted import of `parse_rich_text.dart` to root-relative.
+
+* **lib/ui/view/attachment/attachment\_view\.dart**
+
+  * Cleaned import paths to root-relative and removed redundant import.
+
+* **lib/ui/view/attachment/form\_attachment/form\_attachment\_view\.dart**
+
+  * Removed premature `super.dispose()` so listeners are removed before `super.dispose()`.
+
+* **lib/ui/view/episode/episode\_view\.dart**
+
+  * Converted all imports to root-relative.
+  * Added `maxLines: null` on long text form fields to allow dynamic height.
+
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\.dart**
+
+  * Added `maxLines: null` on multiline fields for unbounded expansion.
+
+* **lib/ui/view/home/form\_user/form\_user\_view\.dart**
+
+  * Cleaned back-button import path to root-relative.
+
+* **lib/ui/view/session/form\_session/form\_session\_view\.dart**
+
+  * Changed body to `SingleChildScrollView` to support scrolling.
+  * Moved listener removal before `super.dispose()`.
+  * Added `maxLines: null` and corrected `textCapitalization` and trimmed field values on save.
+
+* **lib/ui/view/session/session\_view\.dart**
+
+  * Updated session title to include phone number.
+  * Fixed navigation to attachment view using `Routes.attachment.path`.
+
+* **lib/utils/command.dart**
+
+  * Standardized import of `result.dart` to root-relative.
+
+### Conclusion
+
+All repositories now guard against fetch failures, imports are unified, and form views properly handle scrolling, disposal, and navigation—ensuring improved stability and user experience.
+
+
 ## 2025/06/20 make_a_simple_routing - by rudsonalves
 
 ### Standardize repository initialization, simplify routing, and add back-button component

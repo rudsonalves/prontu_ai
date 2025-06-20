@@ -33,6 +33,9 @@ class SessionRepository implements ISessionRepository {
       _episodeId = episodeId;
       _started = true;
 
+      final result = await fetchAll();
+      if (result.isFailure) return result;
+
       return const Result.success(null);
     } on Exception catch (err, stack) {
       log('SessionRepository.initialize', error: err, stackTrace: stack);
@@ -146,6 +149,9 @@ class SessionRepository implements ISessionRepository {
         TableNames.sessions,
         id: uid,
       );
+
+      if (result.isFailure) return result;
+      _cache.remove(uid);
 
       return result;
     } on Exception catch (err, stack) {

@@ -54,7 +54,6 @@ class _FormAttachmentViewState extends State<FormAttachmentView> {
 
   @override
   void dispose() {
-    super.dispose();
     viewModel.insert.removeListener(_isSaved);
     viewModel.update.removeListener(_isSaved);
 

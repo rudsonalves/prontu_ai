@@ -94,7 +94,7 @@ class _SessionViewState extends State<SessionView> {
                 final session = sessions[index];
 
                 return DismissibleCard<SessionModel>(
-                  title: session.doctor,
+                  title: '${session.doctor} - ${session.phone}',
                   subtitle: session.createdAt.toDDMMYYYY(),
                   value: session,
                   editFunction: _editSession,
@@ -111,7 +111,7 @@ class _SessionViewState extends State<SessionView> {
 
   void _navToAttachmentView(SessionModel session) {
     context.push(
-      Routes.session.path,
+      Routes.attachment.path,
       extra: {
         'user': widget.user,
         'episode': widget.episode,
@@ -122,7 +122,7 @@ class _SessionViewState extends State<SessionView> {
 
   void _editSession(SessionModel session) {
     context.push(
-      Routes.formAttachment.path,
+      Routes.formSession.path,
       extra: {
         'episode': widget.episode,
         'session': session,

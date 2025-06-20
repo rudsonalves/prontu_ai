@@ -33,6 +33,9 @@ class AttachmentRepository implements IAttachmentRepository {
       _sessionId = sessionId;
       _started = true;
 
+      final result = await fetchAll();
+      if (result.isFailure) return result;
+
       return const Result.success(null);
     } on Exception catch (err, stack) {
       log('AttachmentRepository.initialize', error: err, stackTrace: stack);
@@ -144,6 +147,9 @@ class AttachmentRepository implements IAttachmentRepository {
         TableNames.attachments,
         id: uid,
       );
+
+      if (result.isFailure) return result;
+      _cache.remove(uid);
 
       return result;
     } on Exception catch (err, stack) {

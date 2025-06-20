@@ -1,5 +1,5 @@
-import 'package:prontu_ai/domain/models/ai_summary_model.dart';
-import 'package:prontu_ai/utils/result.dart';
+import '/domain/models/ai_summary_model.dart';
+import '/utils/result.dart';
 
 abstract interface class IAiSummaryRepository {
   List<AiSummaryModel> get aiSummaries;

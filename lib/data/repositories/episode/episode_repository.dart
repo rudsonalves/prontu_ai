@@ -33,7 +33,8 @@ class EpisodeRepository implements IEpisodeRepository {
       _userId = userId;
       _started = true;
 
-      await fetchAll();
+      final result = await fetchAll();
+      if (result.isFailure) return result;
 
       return const Result.success(null);
     } on Exception catch (err, stack) {
@@ -148,6 +149,9 @@ class EpisodeRepository implements IEpisodeRepository {
         TableNames.sessions,
         id: uid,
       );
+
+      if (result.isFailure) return result;
+      _cache.remove(uid);
 
       return result;
     } on Exception catch (err, stack) {
