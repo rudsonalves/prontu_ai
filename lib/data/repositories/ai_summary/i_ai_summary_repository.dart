@@ -1,3 +1,5 @@
+import 'package:prontu_ai/domain/models/episode_model.dart';
+
 import '/domain/models/ai_summary_model.dart';
 import '/utils/result.dart';
 
@@ -5,6 +7,8 @@ abstract interface class IAiSummaryRepository {
   List<AiSummaryModel> get aiSummaries;
 
   Future<Result<void>> initialize();
+
+  Future<Result<AiSummaryModel>> analiseEpisode(EpisodeModel episode);
 
   Future<Result<AiSummaryModel>> insert(AiSummaryModel aiSummary);
 

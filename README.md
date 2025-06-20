@@ -4,6 +4,69 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/20 make_a_simple_routing-02 - by rudsonalves
+
+### Integrate AI-driven episode summaries and register summary repository
+
+This commit adds AI-powered medical episode analysis by introducing `AiSummaryRepository`, integrating `OpenIaService`, and wiring an `EpisodeAiSummaryUserCase` into the routing and view models. The composition root is updated to provide AI services, repository methods now check fetch results, and UI snackbars and dialogs are enhanced for consistency.
+
+### Modified Files
+
+* **lib/config/composition\_root.dart**
+
+  * Imported and provided `OpenIaService` and `IAiSummaryRepository` with `AiSummaryRepository`.
+
+* **lib/data/repositories/ai\_summary/ai\_summary\_repository.dart**
+
+  * Wired `DatabaseService` and `OpenIaService` into `AiSummaryRepository`.
+  * Updated `initialize` to fetch existing summaries and invoke AI service initialization.
+  * Added `analiseEpisode` to call AI analysis, map JSON response into `AiSummaryModel`, and persist it.
+  * Replaced hard-coded table names with `TableNames.aiSummaries` in all CRUD methods.
+
+* **lib/data/repositories/ai\_summary/i\_ai\_summary\_repository.dart**
+
+  * Added `analiseEpisode(EpisodeModel)` to the interface.
+
+* **lib/data/services/open\_ia/open\_ia\_service.dart**
+
+  * Changed `initialize` to return `Result<void>` with error handling and select the `gpt-3.5-turbo` model.
+  * Refactored `analyze` to use the chat endpoint with JSON formatting instructions, parse the returned JSON, and wrap results in `Result<EpisodeAnalysis>`.
+
+* **lib/domain/models/ai\_summary\_model.dart**
+
+  * Added `specialist` field, default `createdAt`, and updated `toMap`/`fromMap` to include it.
+
+* **lib/domain/user\_cases/episode\_ai\_summary\_user\_case.dart** *(new)*
+
+  * Created `EpisodeAiSummaryUserCase` to coordinate episode initialization, deletion, and AI analysis through repositories.
+
+* **lib/routing/router.dart**
+
+  * Imported `EpisodeAiSummaryUserCase` and injected it into `EpisodeViewModel` instead of the raw episode repository.
+
+* **lib/ui/core/ui/dialogs/app\_snack\_bar.dart**
+
+  * Enhanced `showSnackSuccess` signature to accept named `message`, optional icon, and configurable duration.
+
+* **lib/ui/view/episode/episode\_view\.dart**
+
+  * Added help icon to AppBar, bind `analise` command listener, show progress indicator on AI button, and display results via snackbars.
+  * Imported `simple_dialog.dart` and `Symbols` for help dialog content.
+
+* **lib/ui/view/episode/episode\_view\_model.dart**
+
+  * Swapped raw repository for `EpisodeAiSummaryUserCase`, added `analise` command alongside `load` and `delete`.
+
+### New Files
+
+* **lib/domain/user\_cases/episode\_ai\_summary\_user\_case.dart**
+  Encapsulates the workflow for loading episodes, initializing AI summary service, deleting episodes, and performing AI analysis.
+
+### Conclusion
+
+AI-driven episode summarization is now fully integrated—from dependency provision to UI triggers—enabling concise specialist recommendations and clinical summaries in the app.
+
+
 ## 2025/06/20 make_a_simple_routing-01 - by rudsonalves
 
 ### Ensure fetchAll results are checked, clean imports, and refine form behaviors

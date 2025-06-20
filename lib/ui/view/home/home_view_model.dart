@@ -31,8 +31,6 @@ class HomeViewModel {
   List<UserModel> get users => _userRepository.users;
 
   Future<Result<void>> _load() async {
-    await Future.delayed(const Duration(seconds: 2));
-
     final result = await _userRepository.initialize();
 
     return result;

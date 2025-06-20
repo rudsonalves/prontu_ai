@@ -75,7 +75,7 @@ class _FormAttachmentViewState extends State<FormAttachmentView> {
           icon: const Icon(Symbols.arrow_back_ios_new_rounded),
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(dimens.paddingScreenAll),
         child: Form(
           key: _formKey,

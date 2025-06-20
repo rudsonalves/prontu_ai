@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:prontu_ai/data/repositories/ai_summary/i_ai_summary_repository.dart';
+import 'package:prontu_ai/domain/user_cases/episode_ai_summary_user_case.dart';
 import 'package:provider/provider.dart';
 
 import '/data/repositories/attachment/i_attachment_repository.dart';
@@ -65,7 +67,10 @@ GoRouter router() => GoRouter(
           return EpisodeView(
             user: user,
             viewModel: EpisodeViewModel(
-              context.read<IEpisodeRepository>(),
+              EpisodeAiSummaryUserCase(
+                episodeRepository: context.read<IEpisodeRepository>(),
+                aiSummaryRepository: context.read<IAiSummaryRepository>(),
+              ),
             ),
           );
         },

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:prontu_ai/ui/core/ui/dialogs/simple_dialog.dart';
 
 import '/ui/core/ui/dialogs/botton_sheet_message.dart.dart';
 import '/domain/enums/enums_declarations.dart';
@@ -49,6 +51,10 @@ class _HomeViewState extends State<HomeView> {
       appBar: AppBar(
         title: const Text('ProntuAI'),
         actions: [
+          IconButton(
+            onPressed: _showHelpMessage,
+            icon: const Icon(Symbols.question_mark_rounded),
+          ),
           IconButton(
             icon: ListenableBuilder(
               listenable: viewModel.themeMode,
@@ -107,6 +113,24 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  void _showHelpMessage() {
+    final texts = [
+      'Você pode registrar vários usuário no aplicativo. '
+          'As ações disponíveis nesta página são:',
+      '- Toque no botão flutuante "**+**" para adicionar um novo usuário.',
+      '- Toque num usuário para criar um **novo Evento Médico**.',
+      '> Arraste para **à Direita** para **Editar** o usuário.',
+      '< Arraste para **à Esquerda** para **Remover** o usuário.',
+    ];
+
+    showSimpleMessage(
+      context,
+      iconTitle: Symbols.help_rounded,
+      title: 'Usuários',
+      body: texts,
+    );
+  }
+
   void _navToEpisode(UserModel user) {
     context.push(Routes.episode.path, extra: {'user': user});
   }
@@ -161,7 +185,7 @@ class _HomeViewState extends State<HomeView> {
       return;
     }
 
-    showSnackSuccess(context, 'Usuário removido com sucesso.');
+    showSnackSuccess(context, message: 'Usuário removido com sucesso.');
 
     setState(() {});
   }

@@ -131,7 +131,7 @@ class _AttachmentViewState extends State<AttachmentView> {
       return;
     }
 
-    showSnackSuccess(context, 'Anexo removido com sucesso.');
+    showSnackSuccess(context, message: 'Anexo removido com sucesso.');
 
     setState(() {});
   }

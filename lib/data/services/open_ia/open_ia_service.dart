@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:prontu_ai/utils/result.dart';
 
 import '/domain/dtos/episode_analysis.dart';
 import '/domain/models/episode_model.dart';
@@ -11,53 +15,84 @@ class OpenIaService {
 
   bool _isStarted = false;
 
-  Future<void> initalize() async {
-    if (_isStarted) return;
-
+  Future<Result<void>> initialize() async {
+    if (_isStarted) return const Result.success(null);
     _isStarted = true;
-    await dotenv.load(fileName: '.env');
 
-    final apiKey = dotenv.env['OPEN_AI_API_KEY'] as String;
+    try {
+      await dotenv.load(fileName: '.env');
 
-    if (apiKey.isEmpty) {
-      throw Exception('OPEN_AI_API_KEY is not set');
+      final apiKey = dotenv.env['OPEN_AI_API_KEY'] as String;
+
+      if (apiKey.isEmpty) {
+        throw Exception('OPEN_AI_API_KEY is not set');
+      }
+
+      OpenAI.apiKey = apiKey;
+      // OpenAI.organization = 'ProntuAI';
+      OpenAI.requestsTimeOut = const Duration(seconds: 60);
+
+      List<OpenAIModelModel> models = await OpenAI.instance.model.list();
+
+      _model = models.firstWhere((m) => m.id == 'gpt-3.5-turbo');
+      return const Result.success(null);
+    } on Exception catch (err, stack) {
+      log('OpenIaService.initialize', error: err, stackTrace: stack);
+      return Result.failure(err);
     }
-
-    OpenAI.apiKey = apiKey;
-    OpenAI.organization = 'ProntuAI';
-    OpenAI.requestsTimeOut = const Duration(seconds: 60);
-
-    List<OpenAIModelModel> models = await OpenAI.instance.model.list();
-
-    _model = models.first;
   }
 
-  Future<EpisodeAnalysis> analyze(EpisodeModel episode) async {
-    final prompt = _createPrompt(episode);
+  Future<Result<EpisodeAnalysis>> analyze(EpisodeModel episode) async {
+    try {
+      final prompt = _createPrompt(episode);
 
-    final completion = await OpenAI.instance.completion.create(
-      model: _model.toString(),
-      prompt: prompt,
-      temperature: 0.5,
-      maxTokens: 20,
-      n: 1,
-      stop: ['\n'],
-      echo: true,
-      seed: 42,
-      bestOf: 2,
-    );
+      final systemMessage = OpenAIChatCompletionChoiceMessageModel(
+        content: [
+          OpenAIChatCompletionChoiceMessageContentItemModel.text(
+            'return any message you are given as JSON.',
+          ),
+        ],
+        role: OpenAIChatMessageRole.assistant,
+      );
 
-    final content = completion.choices.first.text.trim();
-    final lines = content.split('\n');
-    final specialist = lines.first.split(':').sublist(1).join(':').trim();
-    final summary = lines.length > 1
-        ? lines.sublist(1).join(' ').replaceFirst(RegExp(r'^[^:]*:\s*'), '')
-        : '';
+      final userMessage = OpenAIChatCompletionChoiceMessageModel(
+        content: [
+          OpenAIChatCompletionChoiceMessageContentItemModel.text(prompt),
+        ],
+        role: OpenAIChatMessageRole.user,
+      );
 
-    return EpisodeAnalysis(
-      recommendedSpecialist: specialist,
-      clinicalSummary: summary,
-    );
+      final requestMessages = [
+        systemMessage,
+        userMessage,
+      ];
+
+      final chatCompletion = await OpenAI.instance.chat.create(
+        model: _model.id,
+        responseFormat: {'type': 'json_object'},
+        seed: 6,
+        messages: requestMessages,
+        temperature: 0.2,
+        maxTokens: 500,
+      );
+
+      final fragments = chatCompletion.choices.first.message.content!;
+      final fullJsonString = fragments.map((item) => item.text ?? '').join('');
+
+      final Map<String, dynamic> parsed = jsonDecode(fullJsonString);
+      final specialist = parsed['especialista_medico'] as String;
+      final summary = parsed['situacao_clinica'] as String;
+
+      return Result.success(
+        EpisodeAnalysis(
+          recommendedSpecialist: specialist,
+          clinicalSummary: summary,
+        ),
+      );
+    } on Exception catch (err, stack) {
+      log('OpenIaService.analyze', error: err, stackTrace: stack);
+      return Result.failure(err);
+    }
   }
 
   String _createPrompt(EpisodeModel episode) {

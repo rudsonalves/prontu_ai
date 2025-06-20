@@ -148,7 +148,7 @@ class _SessionViewState extends State<SessionView> {
       return;
     }
 
-    showSnackSuccess(context, 'Sessão removida com sucesso.');
+    showSnackSuccess(context, message: 'Sessão removida com sucesso.');
 
     setState(() {});
   }
