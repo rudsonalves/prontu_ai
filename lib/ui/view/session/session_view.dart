@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:prontu_ai/ui/core/ui/dialogs/simple_dialog.dart';
 
 import '/domain/models/session_model.dart';
 import '/routing/routes.dart';
@@ -62,6 +63,12 @@ class _SessionViewState extends State<SessionView> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Symbols.arrow_back_ios_new_rounded),
         ),
+        actions: [
+          IconButton(
+            onPressed: _showHelpMessage,
+            icon: const Icon(Symbols.question_mark_rounded),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navFormSessionView,
@@ -111,6 +118,24 @@ class _SessionViewState extends State<SessionView> {
           },
         ),
       ),
+    );
+  }
+
+  void _showHelpMessage() {
+    final texts = [
+      'Aqui você pode registrar as consultas realizadas no tratamento. '
+          'As ações disponíveis nesta página são:',
+      '- Toque no botão flutuante "**+**" para adicionar um novo usuário.',
+      '- Toque numa colsulta para adicionar **novos Exames**.',
+      '> Arraste para **à Direita** para **Editar** a consulta.',
+      '< Arraste para **à Esquerda** para **Remover** a consulta.',
+    ];
+
+    showSimpleMessage(
+      context,
+      iconTitle: Symbols.help_rounded,
+      title: 'Consultas',
+      body: texts,
     );
   }
 

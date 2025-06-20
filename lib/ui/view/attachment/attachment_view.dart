@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:prontu_ai/ui/core/ui/dialogs/simple_dialog.dart';
 
 import '/ui/core/ui/buttons/icon_back_button.dart';
 import '/domain/models/episode_model.dart';
@@ -62,6 +63,12 @@ class _AttachmentViewState extends State<AttachmentView> {
       appBar: AppBar(
         title: Text('Exames: Dr ${widget.session.doctor}'),
         leading: const IconBackButton(),
+        actions: [
+          IconButton(
+            onPressed: _showHelpMessage,
+            icon: const Icon(Symbols.question_mark_rounded),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navFormAttachmentView,
@@ -107,6 +114,23 @@ class _AttachmentViewState extends State<AttachmentView> {
           },
         ),
       ),
+    );
+  }
+
+  void _showHelpMessage() {
+    final texts = [
+      'Aqui você pode registrar os exames realizados no seu tratamento. '
+          'As ações disponíveis nesta página são:',
+      '- Toque no botão flutuante "**+**" para adicionar um novo usuário.',
+      '> Arraste para **à Direita** para **Editar** o exame.',
+      '< Arraste para **à Esquerda** para **Remover** o exame.',
+    ];
+
+    showSimpleMessage(
+      context,
+      iconTitle: Symbols.help_rounded,
+      title: 'Exames',
+      body: texts,
     );
   }
 

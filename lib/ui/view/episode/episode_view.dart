@@ -170,9 +170,9 @@ class _EpisodeViewState extends State<EpisodeView> {
           ' necessitem de uma intervenção médica. '
           'As ações disponíveis nesta página são:',
       '- Toque no botão flutuante "**+**" para adicionar um novo usuário.',
-      '- Toque num usuário para criar um **novo Evento Médico**.',
-      '> Arraste para **à Direita** para **Editar** o usuário.',
-      '< Arraste para **à Esquerda** para **Remover** o usuário.',
+      '- Toque num evento para adicionar uma **nova Consulta Médica**.',
+      '> Arraste para **à Direita** para **Editar** o evento.',
+      '< Arraste para **à Esquerda** para **Remover** o evento.',
       '- Toque no botão **maletinha** do evento para orientações do '
           'assitente virtual.',
     ];
