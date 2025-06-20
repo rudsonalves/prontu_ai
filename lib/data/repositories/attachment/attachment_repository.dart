@@ -8,14 +8,13 @@ import '/data/repositories/attachment/i_attachment_repository.dart';
 import '/utils/result.dart';
 
 class AttachmentRepository implements IAttachmentRepository {
-  final String _sessionId;
   final DatabaseService _databaseService;
 
   AttachmentRepository({
-    required String sessionId,
     required DatabaseService databaseService,
-  }) : _databaseService = databaseService,
-       _sessionId = sessionId;
+  }) : _databaseService = databaseService;
+
+  String? _sessionId;
 
   bool _started = false;
 
@@ -25,10 +24,13 @@ class AttachmentRepository implements IAttachmentRepository {
   List<AttachmentModel> get attachments => List.unmodifiable(_cache.values);
 
   @override
-  Future<Result<void>> initialize() async {
+  Future<Result<void>> initialize(String sessionId) async {
     try {
-      if (_started) return const Result.success(null);
+      if (_sessionId != null && sessionId == _sessionId) {
+        return const Result.success(null);
+      }
 
+      _sessionId = sessionId;
       _started = true;
 
       return const Result.success(null);

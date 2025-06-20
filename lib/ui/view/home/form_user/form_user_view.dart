@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:prontu_ai/ui/core/ui/buttons/icon_back_button.dart';
 
 import '/ui/core/theme/dimens.dart';
 import '/domain/models/user_model.dart';
@@ -66,6 +67,7 @@ class _FormUserViewState extends State<FormUserView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Editar Usuário' : 'Criar Usuário'),
+        leading: const IconBackButton(),
       ),
       body: Padding(
         padding: EdgeInsets.all(dimens.paddingScreenAll),

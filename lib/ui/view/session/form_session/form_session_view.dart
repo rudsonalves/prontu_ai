@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:prontu_ai/ui/core/ui/buttons/icon_back_button.dart';
 import 'package:prontu_ai/ui/core/ui/editing_controllers/masked_editing_controller.dart';
 
 import '/ui/core/ui/form_fields/basic_form_field.dart';
@@ -66,6 +67,7 @@ class _FormSessionViewState extends State<FormSessionView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Editar Seção' : 'Criar Seção'),
+        leading: const IconBackButton(),
       ),
       body: Padding(
         padding: EdgeInsets.all(dimens.paddingScreenAll),

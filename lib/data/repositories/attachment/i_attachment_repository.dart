@@ -4,7 +4,7 @@ import 'package:prontu_ai/utils/result.dart';
 abstract interface class IAttachmentRepository {
   List<AttachmentModel> get attachments;
 
-  Future<Result<void>> initialize();
+  Future<Result<void>> initialize(String sessionId);
 
   Future<Result<AttachmentModel>> insert(AttachmentModel user);
 

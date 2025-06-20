@@ -8,14 +8,13 @@ import '/data/repositories/session/i_session_repository.dart';
 import '/utils/result.dart';
 
 class SessionRepository implements ISessionRepository {
-  final String _episodeId;
   final DatabaseService _databaseService;
 
   SessionRepository({
-    required String episodeId,
     required DatabaseService databaseService,
-  }) : _episodeId = episodeId,
-       _databaseService = databaseService;
+  }) : _databaseService = databaseService;
+
+  String? _episodeId;
 
   bool _started = false;
 
@@ -25,10 +24,13 @@ class SessionRepository implements ISessionRepository {
   List<SessionModel> get sessions => _cache.values.toList();
 
   @override
-  Future<Result<void>> initialize() async {
+  Future<Result<void>> initialize(String episodeId) async {
     try {
-      if (_started) return const Result.success(null);
+      if (_episodeId != null && episodeId == _episodeId) {
+        return const Result.success(null);
+      }
 
+      _episodeId = episodeId;
       _started = true;
 
       return const Result.success(null);

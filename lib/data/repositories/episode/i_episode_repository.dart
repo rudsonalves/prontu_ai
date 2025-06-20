@@ -4,7 +4,7 @@ import 'package:prontu_ai/utils/result.dart';
 abstract interface class IEpisodeRepository {
   List<EpisodeModel> get episodes;
 
-  Future<Result<void>> initialize();
+  Future<Result<void>> initialize(String userId);
 
   Future<Result<EpisodeModel>> insert(EpisodeModel episode);
 

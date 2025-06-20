@@ -71,6 +71,10 @@ class _FormAttachmentViewState extends State<FormAttachmentView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditing ? 'Editar Anexo' : 'Criar Anexo'),
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Symbols.arrow_back_ios_new_rounded),
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(dimens.paddingScreenAll),

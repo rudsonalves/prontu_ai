@@ -77,6 +77,10 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
         title: Text(
           _isEditing ? 'Editar Evento' : 'Criar Evento',
         ),
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Symbols.arrow_back_ios_new_rounded),
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(dimens.paddingScreenAll),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:prontu_ai/domain/models/episode_model.dart';
+import 'package:prontu_ai/ui/core/ui/buttons/icon_back_button.dart';
 import 'package:prontu_ai/ui/core/ui/dialogs/app_snack_bar.dart';
 import 'package:prontu_ai/ui/core/ui/dialogs/botton_sheet_message.dart.dart';
 import 'package:prontu_ai/ui/core/ui/dismissibles/dismissible_card.dart';
@@ -32,6 +32,8 @@ class _EpisodeViewState extends State<EpisodeView> {
   void initState() {
     viewModel = widget.viewModel;
 
+    viewModel.load.execute(widget.user.id!);
+
     viewModel.delete.addListener(_isDeleted);
 
     super.initState();
@@ -51,10 +53,7 @@ class _EpisodeViewState extends State<EpisodeView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Eventos de ${widget.user.name}'),
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Symbols.arrow_back_ios_new_rounded),
-        ),
+        leading: const IconBackButton(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navFormEpisodeView,

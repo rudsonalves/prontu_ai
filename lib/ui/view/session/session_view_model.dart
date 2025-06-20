@@ -9,11 +9,11 @@ class SessionViewModel {
   SessionViewModel(
     ISessionRepository sessionRepository,
   ) : _sessionRepository = sessionRepository {
-    load = Command0<void>(_sessionRepository.initialize)..execute();
+    load = Command1<void, String>(_sessionRepository.initialize);
     delete = Command1<void, String>(_sessionRepository.delete);
   }
 
-  late final Command0<void> load;
+  late final Command1<void, String> load;
   late final Command1<void, String> delete;
 
   List<SessionModel> get sessions => _sessionRepository.sessions;

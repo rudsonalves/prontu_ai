@@ -8,11 +8,11 @@ class EpisodeViewModel extends ChangeNotifier {
   final IEpisodeRepository _episodeRepository;
 
   EpisodeViewModel(this._episodeRepository) {
-    load = Command0<void>(_episodeRepository.initialize)..execute();
+    load = Command1<void, String>(_episodeRepository.initialize);
     delete = Command1<void, String>(_episodeRepository.delete);
   }
 
-  late final Command0<void> load;
+  late final Command1<void, String> load;
   late final Command1<void, String> delete;
 
   List<EpisodeModel> get episodes => _episodeRepository.episodes;

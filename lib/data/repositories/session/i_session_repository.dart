@@ -4,7 +4,7 @@ import '/utils/result.dart';
 abstract interface class ISessionRepository {
   List<SessionModel> get sessions;
 
-  Future<Result<void>> initialize();
+  Future<Result<void>> initialize(String episodeId);
 
   Future<Result<SessionModel>> insert(SessionModel session);
 

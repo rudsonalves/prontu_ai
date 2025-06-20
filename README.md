@@ -4,6 +4,92 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/20 make_a_simple_routing - by rudsonalves
+
+### Standardize repository initialization, simplify routing, and add back-button component
+
+This commit refactors dependency injection and routing to use provider-scoped repositories with parameterized `initialize` methods, replaces nested `ShellRoute` blocks with flat `GoRoute` definitions, and introduces a reusable `IconBackButton` widget. ViewModels now expose `load` commands accepting IDs, ensuring data fetches occur only when needed.
+
+### Modified Files
+
+* **lib/config/composition\_root.dart**
+
+  * Registered `IEpisodeRepository`, `ISessionRepository`, and `IAttachmentRepository` in the provider list without requiring ID parameters at construction.
+  * Consolidated provider `create` closures to use consistent `ctx` naming.
+
+* **lib/data/repositories/attachment/attachment\_repository.dart**
+
+  * Removed constructor `sessionId` parameter and introduced a nullable `_sessionId` field.
+  * Updated `initialize` signature to `initialize(String sessionId)`, guarding against redundant initializations.
+
+* **lib/data/repositories/attachment/i\_attachment\_repository.dart**
+
+  * Changed `initialize()` to `initialize(String sessionId)` in the interface.
+
+* **lib/data/repositories/episode/episode\_repository.dart**
+
+  * Removed `userId` constructor argument in favor of an internal nullable `_userId`.
+  * Updated `initialize` to accept `String userId` and fetch all episodes only on first call per user.
+
+* **lib/data/repositories/episode/i\_episode\_repository.dart**
+
+  * Updated interface to `initialize(String userId)`.
+
+* **lib/data/repositories/session/session\_repository.dart**
+
+  * Removed `episodeId` constructor argument; added nullable `_episodeId` field.
+  * Changed `initialize()` to `initialize(String episodeId)` with single-call guard.
+
+* **lib/data/repositories/session/i\_session\_repository.dart**
+
+  * Updated interface to `initialize(String episodeId)`.
+
+* **lib/routing/router.dart**
+
+  * Flattened route hierarchy by replacing `ShellRoute` sections with top-level `GoRoute` entries for Episodes, Sessions, and Attachments.
+  * Injected repositories via `context.read<…>()` and unpacked `state.extra` maps directly in each route builder.
+  * Removed legacy `repository_scope` imports and manual repository instantiations.
+
+* **lib/ui/core/ui/buttons/icon\_back\_button.dart**
+
+  * Added new `IconBackButton` widget for consistent back-navigation in AppBars.
+
+* **lib/ui/view/attachment/attachment\_view\.dart**
+
+  * Replaced manual back-button icon with `IconBackButton`, and invoked `viewModel.load.execute(sessionId)` in `initState`.
+
+* **lib/ui/view/attachment/attachment\_view\_model.dart**
+
+  * Changed `load` command from `Command0` to `Command1<void, String>` to pass the session ID.
+
+* **lib/ui/view/episode/episode\_view\.dart**
+
+  * Swapped manual back-icon for `IconBackButton`, triggered `viewModel.load.execute(userId)` in `initState`, and updated the AppBar title.
+  * Adjusted delete listener placement to `initState`/`dispose`.
+
+* **lib/ui/view/episode/episode\_view\_model.dart**
+
+  * Converted `load` from `Command0` to `Command1<void, String>`.
+
+* **lib/ui/view/session/session\_view\.dart**
+
+  * Added `viewModel.load.execute(episodeId)` in `initState`, swapped manual back button for `IconBackButton`, and updated the AppBar title to "Consultas".
+  * Adjusted `_navFormSessionView` to pass extra `episode` ID.
+
+* **lib/ui/view/session/session\_view\_model.dart**
+
+  * Changed `load` from `Command0` to `Command1<void, String>`.
+
+### New Files
+
+* **lib/ui/core/ui/buttons/icon\_back\_button.dart**
+  Provides a reusable `IconBackButton` for consistent AppBar back navigation across views.
+
+### Conclusion
+
+Dependency injection and routing are now streamlined, form and view models support parameterized data loading, and navigation components are unified for a cleaner codebase.
+
+
 ## 2025/06/20 merge_and_bug_fix-01 - by rudsonalves
 
 ### Refine routing sections and streamline episode editing logic
