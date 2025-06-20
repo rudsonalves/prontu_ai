@@ -4,6 +4,35 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/20 merge_and_bug_fix-01 - by rudsonalves
+
+### Refine routing sections and streamline episode editing logic
+
+These changes enhance the router definition by adding clear separation between route groups, improve the `EpisodeView` UI and navigation handlers, and optimize the episode form to use preformatted values and the `CurrencyEditingController`’s `currencyValue`.
+
+### Modified Files
+
+* **lib/routing/router.dart**
+
+  * Inserted blank lines before each `ShellRoute` block for Episodes, Sessions, and Attachments to visually separate route groups.
+
+* **lib/ui/view/episode/episode\_view\.dart**
+
+  * Updated the subtitle to display weight in kilograms (`kg`) and height in meters (`m`).
+  * Renamed `editAttachment`/`_removeAttachment` methods to `editEpisode`/`removeEpisode` and updated their handlers to push the `formEpisode` route with the correct `extra` map.
+  * Added `delete` listener in `initState`/`dispose`, and integrated success/error snackbars for episode removal.
+
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\.dart**
+
+  * Pre-calculated formatted `weight` and `height` strings in `_initializeForm()` using `toStringAsFixed(2)` before setting controller text.
+  * Revised `_saveForm()` to derive integer `weight` and `height` by multiplying `currencyValue` from the `CurrencyEditingController`.
+  * Ensured focus is unfocused before save and consolidated parsing logic for clarity.
+
+### Conclusion
+
+Routing clarity, episode view consistency, and form value handling are now fully refined and functional.
+
+
 ## 2025/06/20 merge_and_bug_fix - by rudsonalves
 
 ### Update application ID, refactor table definitions, and enhance form controllers

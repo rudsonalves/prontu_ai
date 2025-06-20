@@ -91,10 +91,11 @@ class _EpisodeViewState extends State<EpisodeView> {
                 return DismissibleCard<EpisodeModel>(
                   title: episode.title,
                   subtitle:
-                      'Peso: ${episode.weight / 1000}g | Altura: ${episode.height / 100}cm',
+                      'Peso: ${episode.weight / 1000} kg |'
+                      ' Altura: ${episode.height / 100} m',
                   value: episode,
-                  editFunction: _editAttachment,
-                  removeFunction: _removeAttachment,
+                  editFunction: _editEpisode,
+                  removeFunction: _removeEpisode,
                   onTap: () => _navToSessionView(episode),
                 );
               },
@@ -135,9 +136,9 @@ class _EpisodeViewState extends State<EpisodeView> {
     setState(() {});
   }
 
-  void _editAttachment(EpisodeModel episode) {
+  void _editEpisode(EpisodeModel episode) {
     context.push(
-      Routes.formAttachment.path,
+      Routes.formEpisode.path,
       extra: {
         'user': widget.user,
         'episode': episode,
@@ -145,7 +146,7 @@ class _EpisodeViewState extends State<EpisodeView> {
     );
   }
 
-  Future<bool> _removeAttachment(EpisodeModel episode) async {
+  Future<bool> _removeEpisode(EpisodeModel episode) async {
     final response =
         await BottonSheetMessage.show<bool?>(
           context,

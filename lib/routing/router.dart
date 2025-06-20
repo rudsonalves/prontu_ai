@@ -57,6 +57,7 @@ GoRouter router() => GoRouter(
         ),
       ),
     ),
+
     // Episodes pages
     ShellRoute(
       builder: (context, state, child) {
@@ -110,6 +111,7 @@ GoRouter router() => GoRouter(
             );
           },
         ),
+
         // Sessions pages
         ShellRoute(
           builder: (context, state, child) {
@@ -161,6 +163,7 @@ GoRouter router() => GoRouter(
                 );
               },
             ),
+
             // Attachments pages
             ShellRoute(
               builder: (context, state, child) {

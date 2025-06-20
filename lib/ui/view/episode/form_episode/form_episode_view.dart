@@ -190,9 +190,12 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
   void _initializeForm() {
     final episode = widget.episode!;
 
+    final weight = (episode.weight / 1000).toStringAsFixed(2);
+    final height = (episode.height / 100).toStringAsFixed(2);
+
     _titleController.text = episode.title;
-    _weightController.text = (episode.weight / 1000).toStringAsFixed(2);
-    _heightController.text = (episode.height / 100).toStringAsFixed(2);
+    _weightController.text = weight;
+    _heightController.text = height;
     _mainComplaintController.text = episode.mainComplaint;
     _historyController.text = episode.history;
     _anamnesisController.text = episode.anamnesis;
@@ -211,10 +214,8 @@ class _FormEpisodeViewState extends State<FormEpisodeView> {
 
     FocusScope.of(context).unfocus();
 
-    final weight =
-        (1000 * (double.tryParse(_weightController.text.trim()) ?? 0)).round();
-    final height = (100 * (double.tryParse(_heightController.text.trim()) ?? 0))
-        .round();
+    final int weight = (1000 * _weightController.currencyValue).round();
+    final int height = (100 * _heightController.currencyValue).round();
 
     final newEpisode = EpisodeModel(
       id: widget.episode?.id,
