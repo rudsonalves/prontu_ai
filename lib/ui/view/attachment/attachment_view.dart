@@ -89,6 +89,7 @@ class _AttachmentViewState extends State<AttachmentView> {
                 ),
               );
             }
+
             return ListView.builder(
               itemCount: attachments.length,
               itemBuilder: (_, index) {
@@ -100,7 +101,6 @@ class _AttachmentViewState extends State<AttachmentView> {
                   value: attachment,
                   editFunction: _editAttachment,
                   removeFunction: _removeAttachment,
-                  // onTap: () => _navToAttachment(user),
                 );
               },
             );
@@ -111,7 +111,10 @@ class _AttachmentViewState extends State<AttachmentView> {
   }
 
   void _navFormAttachmentView() {
-    context.push(Routes.formAttachment.path);
+    context.push(
+      Routes.formAttachment.path,
+      extra: {'session': widget.session},
+    );
   }
 
   void _isDeleted() {

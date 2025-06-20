@@ -4,6 +4,79 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/20 merge_and_bug_fix - by rudsonalves
+
+### Update application ID, refactor table definitions, and enhance form controllers
+
+This commit updates the Android application namespace and package path to `br.dev.rralves.prontu_ai`, refines local database table ordering, reverts vertical spacing to its original value, and introduces a new `CurrencyEditingController` for formatted numeric inputs. Forms across episodes, sessions, and attachments have been adjusted to leverage this controller, improve spacing, and wire up save/delete listeners for a smoother UX.
+
+### Modified Files
+
+* **android/app/build.gradle.kts**
+
+  * Changed `namespace` and `applicationId` from `com.example.prontu_ai` to `br.dev.rralves.prontu_ai` to match project convention.
+
+* **android/app/src/main/kotlin/.../MainActivity.kt**
+
+  * Renamed package path and updated `package` declaration to `br.dev.rralves.prontu_ai` after directory relocation.
+
+* **lib/data/repositories/episode/episode\_repository.dart**
+
+  * Invoked `await fetchAll()` immediately after initialization to preload all episodes.
+
+* **lib/data/services/database/tables/sql\_tables.dart**
+
+  * Re-ordered the `sessions` table definition below `episodes` for consistency.
+
+* **lib/ui/core/theme/dimens.dart**
+
+  * Reverted `spacingVertical` from `24.0` back to `6.0` in `_DimensMobile` to restore original vertical gaps.
+
+* **lib/ui/view/attachment/attachment\_view\.dart**
+
+  * Added a blank line for readability before `ListView.builder`.
+  * Updated `_navFormAttachmentView` to push `extra: {'session': widget.session}`.
+
+* **lib/ui/view/attachment/form\_attachment/form\_attachment\_view\.dart**
+
+  * Introduced a `_formKey` and wrapped form in a `Form` widget.
+  * Increased column spacing by multiplying `spacingVertical` by 3.
+  * Removed unused `user`/`episode` imports and parameters.
+
+* **lib/ui/view/episode/episode\_view\.dart**
+
+  * Restructured imports and replaced `ListTile` with `DismissibleCard<EpisodeModel>`.
+  * Added `delete` listener in `initState`/`dispose`, snackbars for removal outcomes, and renamed “Episódios” to “Eventos.”
+  * Implemented `_navToSessionView` passing both `user` and `episode` in `extra`.
+
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\.dart**
+
+  * Swapped plain `TextFormField` controllers for `CurrencyEditingController` on weight and height.
+  * Added validation helpers, prefix icons, and updated button section to use listeners on `viewModel.insert`/`update`.
+  * Adjusted form spacing (`spacingVertical * 3`) and moved save logic into `_saveForm`.
+
+* **lib/ui/view/episode/form\_episode/form\_episode\_view\_model.dart**
+
+  * Removed commented-out delay stubs and streamlined `insert`/`update` commands.
+
+* **lib/utils/validates/generic\_validations.dart**
+
+  * Introduced `isDouble` validator to enforce numeric input with optional decimal.
+
+* **pubspec.yaml**
+
+  * Added `intl: ^0.20.2` for number formatting support (currency controller).
+
+### New Files
+
+* **lib/ui/core/ui/editing\_controllers/currency\_editing\_controller.dart**
+  Implements `CurrencyEditingController`, formatting input as localized currency without symbol, providing a `currencyValue` getter/setter and automatic mask application.
+
+### Conclusion
+
+Namespace alignment, database definitions, and UI spacing are restored, while the new currency controller and form enhancements deliver a consistent and validated input experience.
+
+
 ## 2025/06/19 ia_service-01 - by rudsonalves
 
 ### Implement masked input controller and refine session & attachment flows

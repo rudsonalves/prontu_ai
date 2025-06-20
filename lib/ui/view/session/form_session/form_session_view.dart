@@ -72,7 +72,7 @@ class _FormSessionViewState extends State<FormSessionView> {
         child: Form(
           key: _formKey,
           child: Column(
-            spacing: dimens.spacingVertical,
+            spacing: dimens.spacingVertical * 3,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -10,17 +10,6 @@ class SqlTables {
   )
   ''';
 
-  static const sessions = '''
-  CREATE TABLE IF NOT EXISTS sessions (
-    id TEXT PRIMARY KEY,
-    episode_id TEXT NOT NULL,
-    doctor TEXT NOT NULL,
-    phone TEXT NOT NULL,
-    notes TEXT NOT NULL,
-    created_at TEXT NOT NULL
-  )
-  ''';
-
   static const episodes = '''
   CREATE TABLE IF NOT EXISTS episodes (
     id TEXT PRIMARY KEY,
@@ -33,6 +22,17 @@ class SqlTables {
     anamnesis TEXT NOT NULL,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
+  )
+  ''';
+
+  static const sessions = '''
+  CREATE TABLE IF NOT EXISTS sessions (
+    id TEXT PRIMARY KEY,
+    episode_id TEXT NOT NULL,
+    doctor TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    notes TEXT NOT NULL,
+    created_at TEXT NOT NULL
   )
   ''';
 

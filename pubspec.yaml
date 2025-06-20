@@ -22,6 +22,7 @@ dependencies:
   file_picker: ^10.2.0
   flutter_dotenv: ^5.2.1
   dart_openai: ^5.1.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

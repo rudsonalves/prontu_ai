@@ -31,6 +31,8 @@ class EpisodeRepository implements IEpisodeRepository {
 
       _started = true;
 
+      await fetchAll();
+
       return const Result.success(null);
     } on Exception catch (err, stack) {
       log('EpisodeRepository.initialize', error: err, stackTrace: stack);

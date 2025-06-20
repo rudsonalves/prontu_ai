@@ -16,16 +16,12 @@ class FormUserViewModel {
   late final Command1<void, UserModel> update;
 
   Future<Result<UserModel>> _insert(UserModel user) async {
-    await Future.delayed(const Duration(seconds: 2));
-
     final result = await _userRepository.insert(user);
 
     return result;
   }
 
   Future<Result<void>> _update(UserModel user) async {
-    await Future.delayed(const Duration(seconds: 2));
-
     final result = await _userRepository.update(user);
 
     return result;

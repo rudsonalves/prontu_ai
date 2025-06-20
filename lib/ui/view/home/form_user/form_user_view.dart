@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:prontu_ai/ui/core/theme/dimens.dart';
 
+import '/ui/core/theme/dimens.dart';
 import '/domain/models/user_model.dart';
 import '/utils/extensions/date_time_extensions.dart';
 import '/utils/validates/generic_validations.dart';
@@ -72,7 +72,7 @@ class _FormUserViewState extends State<FormUserView> {
         child: Form(
           key: _formKey,
           child: Column(
-            spacing: dimens.spacingVertical,
+            spacing: dimens.spacingVertical * 3,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -15,6 +15,19 @@ class GenericValidations {
     return null;
   }
 
+  static String? isDouble(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Este campo é obrigatório';
+    }
+
+    final regExp = RegExp(r'^\d+(\,\d+)?$');
+    if (!regExp.hasMatch(value.trim())) {
+      return 'Este campo deve ser um número.';
+    }
+
+    return null;
+  }
+
   static String? notEmpty(String? value) {
     if (value == null || value.isEmpty) {
       return 'Este campo é obrigatório';

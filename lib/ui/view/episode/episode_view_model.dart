@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
-import 'package:prontu_ai/domain/models/episode_model.dart';
-import 'package:prontu_ai/utils/result.dart';
 
+import '/domain/models/episode_model.dart';
 import '/data/repositories/episode/i_episode_repository.dart';
 import '/utils/command.dart';
 
@@ -18,18 +16,4 @@ class EpisodeViewModel extends ChangeNotifier {
   late final Command1<void, String> delete;
 
   List<EpisodeModel> get episodes => _episodeRepository.episodes;
-
-  Future<Result<void>> _load() async {
-    await Future.delayed(const Duration(seconds: 2));
-
-    final result = await _episodeRepository.initialize();
-
-    return result;
-  }
-
-  Future<Result<void>> _delete(String userId) async {
-    final result = await _episodeRepository.delete(userId);
-
-    return result;
-  }
 }
