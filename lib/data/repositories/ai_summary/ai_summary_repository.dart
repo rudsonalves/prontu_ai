@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import '/domain/models/episode_model.dart';
+import '/domain/dtos/medical_record.dart';
 import '/data/services/open_ia/open_ia_service.dart';
 import '/domain/models/ai_summary_model.dart';
 import '../../common/table_names.dart';
@@ -45,23 +45,25 @@ class AiSummaryRepository implements IAiSummaryRepository {
   }
 
   @override
-  Future<Result<AiSummaryModel>> analiseEpisode(EpisodeModel episode) async {
+  Future<Result<AiSummaryModel>> analiseEpisode(MedicalRecord record) async {
     if (!_started) return throw Exception('Repository not initialized');
 
     try {
-      if (_cache.containsKey(episode.id!)) {
-        return Result.success(_cache[episode.id!]!);
-      }
+      final episode = record.episode;
 
-      final result = await _openIaService.analyze(episode);
+      // if (_cache.containsKey(episode.id!)) {
+      //   return Result.success(_cache[episode.id!]!);
+      // }
+
+      final result = await _openIaService.analyze(record);
       if (result.isFailure) return Result.failure(result.error!);
 
       final analyse = result.value!;
 
       final aiSummary = AiSummaryModel(
         id: episode.id!,
-        summary: analyse.clinicalSummary,
-        specialist: analyse.recommendedSpecialist,
+        summary: analyse.clinicalSummary ?? '',
+        specialist: analyse.recommendedSpecialist ?? '',
       );
 
       _cache[aiSummary.id] = aiSummary;

@@ -165,7 +165,11 @@ class DatabaseService {
         throw Exception('ID should be provided for set');
       }
 
-      await _db!.insert(table, map);
+      await _db!.insert(
+        table,
+        map,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
       return const Result.success(null);
     } on Exception catch (err, stack) {
       log(

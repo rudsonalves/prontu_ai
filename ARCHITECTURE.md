@@ -1,8 +1,8 @@
 # Prontuário médico.
 
-- Cadastro do Paciente.
-- Cadastro das sessões.
-- Resumo das sessões feita por inteligência artificial. 
+- ✅ Cadastro do Paciente.
+- ✅ Cadastro das sessões.
+- ✅ Resumo das sessões feita por inteligência artificial. 
 
 ## Objetivo
 

@@ -52,6 +52,7 @@ class _SessionViewState extends State<SessionView> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final dimens = Dimens.of(context);
 
     return Scaffold(
@@ -95,7 +96,11 @@ class _SessionViewState extends State<SessionView> {
 
                 return DismissibleCard<SessionModel>(
                   title: '${session.doctor} - ${session.phone}',
-                  subtitle: session.createdAt.toDDMMYYYY(),
+                  leading: Icon(
+                    Symbols.stethoscope_rounded,
+                    color: colorScheme.primary,
+                  ),
+                  subtitle: session.createdAt.toBrDateTime(),
                   value: session,
                   editFunction: _editSession,
                   removeFunction: _removeSession,

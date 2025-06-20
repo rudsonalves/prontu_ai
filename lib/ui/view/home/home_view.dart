@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:prontu_ai/ui/core/ui/dialogs/simple_dialog.dart';
 
+import '/ui/core/ui/dialogs/simple_dialog.dart';
 import '/ui/core/ui/dialogs/botton_sheet_message.dart.dart';
 import '/domain/enums/enums_declarations.dart';
 import '/ui/core/ui/dialogs/app_snack_bar.dart';
@@ -10,7 +10,6 @@ import '/domain/models/user_model.dart';
 import '/routing/routes.dart';
 import '/ui/core/theme/dimens.dart';
 import '/ui/core/ui/dismissibles/dismissible_card.dart';
-import '/utils/extensions/date_time_extensions.dart';
 import '/ui/view/home/home_view_model.dart';
 
 class HomeView extends StatefulWidget {
@@ -99,7 +98,10 @@ class _HomeViewState extends State<HomeView> {
 
                 return DismissibleCard<UserModel>(
                   title: user.name,
-                  subtitle: user.birthDate.toDDMMYYYY(),
+                  leading: user.sex == Sex.male
+                      ? const Icon(Symbols.male_rounded)
+                      : const Icon(Symbols.female_rounded),
+                  subtitle: 'Idade: ${user.age} anos',
                   value: user,
                   editFunction: _editUser,
                   removeFunction: _removeUser,

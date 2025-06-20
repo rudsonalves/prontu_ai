@@ -50,7 +50,6 @@ class SqlTables {
   static const aiSummaries = '''
   CREATE TABLE IF NOT EXISTS ai_summaries (
     id TEXT PRIMARY KEY,
-    episode_id TEXT NOT NULL,
     summary TEXT NOT NULL,
     specialist TEXT NOT NULL,
     created_at TEXT NOT NULL

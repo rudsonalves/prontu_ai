@@ -4,6 +4,108 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/20 ia_service-04 - by rudsonalves
+
+### Refactor AI summary workflow, add MedicalRecord DTO, upsert support, and UI polish
+
+This set of changes restructures the AI-driven summarization to consume a unified `MedicalRecord` DTO, enhances database support with a `set` (upsert) operation, makes clinical fields nullable to reflect optional inputs, and polishes the UI with icons, age display, and improved date formatting. The AI prompt now includes episode details, sessions, and attachments for richer context.
+
+### Modified Files
+
+* **ARCHITECTURE.md**
+
+  * Fixed checklist formatting by replacing raw hyphens with checked bullets for patient and session registration.
+
+* **lib/data/services/database/database\_service.dart**
+
+  * Added `set<T>(table, map)` method with `ConflictAlgorithm.replace` to upsert records requiring a known `id`.
+
+* **lib/data/services/database/tables/sql\_tables.dart**
+
+  * Made `history` and `anamnesis` columns in `episodes` nullable.
+  * Removed redundant `episode_id` from `ai_summaries` table, retaining only `id`, `summary`, `specialist`, and timestamps.
+
+* **lib/data/services/open\_ia/open\_ia\_service.dart**
+
+  * Changed `analyze` to accept `MedicalRecord` instead of `EpisodeModel`.
+  * Generated a detailed, multi-section prompt listing episode info, sessions, attachments, and formatting instructions.
+  * Preserved JSON parsing logic but now handles optional fields and alternative keys.
+
+* **lib/domain/dtos/episode\_analysis.dart**
+
+  * Made `recommendedSpecialist` and `clinicalSummary` nullable to handle partial or missing AI outputs.
+
+* **lib/domain/dtos/medical\_record.dart** *(new)*
+
+  * Defines `MedicalRecord` containing an `EpisodeModel`, its `SessionModel` list, and its `AttachmentModel` list.
+
+* **lib/domain/models/ai\_summary\_model.dart**
+
+  * Switched `id` to non-nullable, removed `episodeId` (now embedded in the key), and simplified `toMap`/`fromMap`.
+
+* **lib/domain/models/episode\_model.dart**
+
+  * Updated `fromMap` to load `history` and `anamnesis` as nullable strings.
+
+* **lib/domain/models/user\_model.dart**
+
+  * Added `age` getter calculating the user’s age from their birth date.
+
+* **lib/domain/user\_cases/episode\_ai\_summary\_user\_case.dart**
+
+  * Injected `ISessionRepository` and `IAttachmentRepository` to assemble a `MedicalRecord` by loading sessions and attachments before calling AI analysis.
+  * Changed `analiseEpisode` signature to accept an `EpisodeModel` and return a tuple `(AiSummaryModel, EpisodeModel)`.
+
+* **lib/data/repositories/ai\_summary/ai\_summary\_repository.dart**
+
+  * Adapted `analiseEpisode` to take a `MedicalRecord`, guard initialization, cache by record ID, and use `DatabaseService.set` for upserts.
+
+* **lib/data/repositories/ai\_summary/i\_ai\_summary\_repository.dart**
+
+  * Updated `analiseEpisode` to accept `MedicalRecord` parameter.
+
+* **lib/routing/router.dart**
+
+  * Expanded `EpisodeAiSummaryUserCase` instantiation with `sessionRepository` and `attachmentRepository`.
+
+* **lib/ui/core/ui/texts/parse\_rich\_text.dart**
+
+  * Added trim and empty-string guard before switching on leading characters to avoid index errors.
+
+* **lib/ui/view/home/home\_view\.dart**
+
+  * Cleaned imports, replaced raw date subtitle with `user.age` and gender icon, and ensured `simple_dialog` uses root-relative imports.
+
+* **lib/ui/view/session/session\_view\.dart**
+
+  * Added leading stethoscope icon to each session card, used `toBrDateTime()` extension for timestamp display, and cleaned route navigation.
+
+* **lib/utils/extensions/date\_time\_extensions.dart**
+
+  * Introduced `toBrDateTime()` to render `"DD/MM/YYYY - HH:MMh"` format.
+
+* **Various form views**
+
+  * In **FormEpisodeView**, trimmed and conditionally assigned nullable `history`/`anamnesis`, and commented out now-redundant validators.
+  * In **FormSessionView** and **FormAttachmentView**, ensured `SingleChildScrollView` wraps body, removed premature `super.dispose()`, and updated save logic to trim inputs.
+
+### New Files
+
+* **docs/mvvm.png**
+  Added MVVM architecture diagram to the `docs` folder.
+
+* **lib/domain/dtos/medical\_record.dart**
+  Defines the composite DTO passed to AI analysis.
+
+### Assets and Test Data
+
+*None beyond the MVVM diagram.*
+
+### Conclusion
+
+The AI assistant now leverages full episode context, database operations support reliable upserts, domain models reflect optional data, and the UI offers clearer icons, age display, and localized timestamps—delivering a robust, end-to-end medical record summarization feature.
+
+
 ## 2025/06/20 ia_service-03 - by rudsonalves
 
 ### Implement AI summary caching, database set operation, and UI integration

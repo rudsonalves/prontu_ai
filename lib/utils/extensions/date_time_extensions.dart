@@ -3,6 +3,10 @@ extension DateTimeExtensions on DateTime {
       '${day.toString().padLeft(2, '0')}/'
       '${month.toString().padLeft(2, '0')}/'
       '$year';
+
+  String toBrDateTime() =>
+      '${toDDMMYYYY()} - '
+      '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}h';
 }
 
 final class DateTimeMapper {

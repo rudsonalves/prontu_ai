@@ -69,6 +69,8 @@ GoRouter router() => GoRouter(
             viewModel: EpisodeViewModel(
               EpisodeAiSummaryUserCase(
                 episodeRepository: context.read<IEpisodeRepository>(),
+                sessionRepository: context.read<ISessionRepository>(),
+                attachmentRepository: context.read<IAttachmentRepository>(),
                 aiSummaryRepository: context.read<IAiSummaryRepository>(),
               ),
             ),

@@ -57,16 +57,19 @@ Widget parseRichText(BuildContext context, String text) {
   );
 
   Widget? icon;
-  switch (text.trim()[0]) {
-    case '-':
-      icon = const Icon(Symbols.check_rounded, color: Colors.green, size: 18);
-      break;
-    case '>':
-      icon = const Icon(Symbols.east_rounded, color: Colors.green, size: 18);
-      break;
-    case '<':
-      icon = const Icon(Symbols.west_rounded, color: Colors.red, size: 18);
-      break;
+  final trimText = text.trim();
+  if (trimText.isNotEmpty) {
+    switch (trimText[0]) {
+      case '-':
+        icon = const Icon(Symbols.check_rounded, color: Colors.green, size: 18);
+        break;
+      case '>':
+        icon = const Icon(Symbols.east_rounded, color: Colors.green, size: 18);
+        break;
+      case '<':
+        icon = const Icon(Symbols.west_rounded, color: Colors.red, size: 18);
+        break;
+    }
   }
 
   return (icon != null)

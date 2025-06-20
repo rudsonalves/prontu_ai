@@ -3,10 +3,10 @@ import 'dart:developer';
 
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:prontu_ai/utils/result.dart';
 
+import '/domain/dtos/medical_record.dart';
+import '/utils/result.dart';
 import '/domain/dtos/episode_analysis.dart';
-import '/domain/models/episode_model.dart';
 
 class OpenIaService {
   OpenIaService();
@@ -42,9 +42,9 @@ class OpenIaService {
     }
   }
 
-  Future<Result<EpisodeAnalysis>> analyze(EpisodeModel episode) async {
+  Future<Result<EpisodeAnalysis>> analyze(MedicalRecord record) async {
     try {
-      final prompt = _createPrompt(episode);
+      final prompt = _createPrompt(record);
 
       final systemMessage = OpenAIChatCompletionChoiceMessageModel(
         content: [
@@ -80,8 +80,10 @@ class OpenIaService {
       final fullJsonString = fragments.map((item) => item.text ?? '').join('');
 
       final Map<String, dynamic> parsed = jsonDecode(fullJsonString);
-      final specialist = parsed['especialista_medico'] as String;
-      final summary = parsed['situacao_clinica'] as String;
+      final specialist = parsed['especialista_medico'] as String?;
+      final summary = parsed['situacao_clinica'] != null
+          ? parsed['situacao_clinica'] as String
+          : parsed['resumo_tecnico'] as String?;
 
       // final specialist = 'Gastro';
       // final summary = 'Paciente com dor de barriga';
@@ -98,8 +100,14 @@ class OpenIaService {
     }
   }
 
-  String _createPrompt(EpisodeModel episode) {
-    return '''
+  String _createPrompt(MedicalRecord record) {
+    final episode = record.episode;
+
+    final sessions = record.sessions;
+    final attachments = record.attachments;
+
+    if (record.sessions.isEmpty) {
+      return '''
 Você é um assistente médico virtual. Receberá as seguintes informações de um paciente:
 - Peso (kg): ${episode.weight / 1000}
 - Altura (m): ${episode.height / 100}
@@ -112,5 +120,58 @@ Você é um assistente médico virtual. Receberá as seguintes informações de 
 
 Responda em linguagem técnica e concisa.
 ''';
+    }
+
+    final buffer = StringBuffer();
+
+    buffer.writeln('Você é um assistente médico virtual.');
+    buffer.writeln(
+      'Receberá informações clínicas de um paciente e deve gerar um resumo '
+      'técnico da sessão.',
+    );
+    buffer.writeln('');
+    buffer.writeln('📌 Episódio clínico:');
+    buffer.writeln('- Título: ${episode.title}');
+    buffer.writeln('- Peso (kg): ${episode.weight / 1000}');
+    buffer.writeln('- Altura (m): ${episode.height / 100}');
+    buffer.writeln('- Queixa principal: ${episode.mainComplaint}');
+    buffer.writeln('- Histórico atual: ${episode.history ?? "Não informado"}');
+    buffer.writeln('- Anamnese geral: ${episode.anamnesis ?? "Não informado"}');
+    buffer.writeln('');
+
+    buffer.writeln('📅 Sessões clínicas realizadas:');
+    for (final session in sessions) {
+      buffer.writeln('- Médico: ${session.doctor}');
+      buffer.writeln('  Telefone: ${session.phone}');
+      buffer.writeln('  Notas da sessão: ${session.notes}');
+      buffer.writeln('  Data: ${session.createdAt.toIso8601String()}');
+      buffer.writeln('');
+    }
+
+    if (attachments.isNotEmpty) {
+      buffer.writeln('📎 Anexos recebidos:');
+      for (final attachment in attachments) {
+        buffer.writeln('- Nome: ${attachment.name}');
+        buffer.writeln('  Caminho: ${attachment.path}');
+        buffer.writeln('  Tipo: ${attachment.type.name}');
+        buffer.writeln('  Data: ${attachment.createdAt.toIso8601String()}');
+        buffer.writeln('');
+      }
+    } else {
+      buffer.writeln('📎 Anexos: Nenhum anexo disponível.');
+      buffer.writeln('');
+    }
+
+    buffer.writeln('---');
+    buffer.writeln(
+      'Com base nas informações acima, gere um **resumo técnico da situação '
+      'do paciente**.',
+    );
+    buffer.writeln(
+      'Não repita os dados. Apresente sua análise clínica em linguagem'
+      ' natural.',
+    );
+
+    return buffer.toString();
   }
 }

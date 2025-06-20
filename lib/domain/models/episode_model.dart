@@ -76,8 +76,8 @@ class EpisodeModel {
       weight: map['weight']?.toInt() as int,
       height: map['height']?.toInt() as int,
       mainComplaint: map['main_complaint'] as String,
-      history: map['history'] as String,
-      anamnesis: map['anamnesis'] as String,
+      history: map['history'] as String?,
+      anamnesis: map['anamnesis'] as String?,
       createdAt: DateTime.parse(map['created_at'] as String),
       updatedAt: DateTime.parse(map['updated_at'] as String),
     );
