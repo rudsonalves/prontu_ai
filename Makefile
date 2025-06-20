@@ -35,3 +35,6 @@ test_serial:
 
 update_splash:
 	dart run flutter_native_splash:create --path=flutter_native_splash.yaml
+
+update_launcher_icons:
+	flutter pub run flutter_launcher_icons
