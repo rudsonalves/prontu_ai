@@ -4,6 +4,52 @@ A new Flutter project.
 
 # ChangeLog
 
+## 2025/06/20 splash-suh - by Suelen
+
+### Add animated splash screen and update initial routing
+
+Implemented a new animated splash screen to enhance the app’s startup experience. Updated routing to launch the splash view first, registered the splash view and its ViewModel, and included new assets for icons. Adjusted asset declarations in `pubspec.yaml` to ensure proper bundling.
+
+### Modified Files
+
+* **lib/routing/router.dart**
+
+  * Switched `initialLocation` from `Routes.home.path` to `Routes.splash.path`.
+  * Refactored imports for internal packages to use absolute paths (`/data/...`, `/domain/...`).
+  * Added imports for `SplashLogoView` and `SplashViewModel`.
+  * Inserted a `GoRoute` entry for the splash screen before the home route.
+
+* **lib/routing/routes.dart**
+
+  * Introduced `static const splash = Route('splash', '/splash');` to define the splash route.
+
+* **pubspec.yaml**
+
+  * Expanded the `assets` section to include the new `assets/icons/` directory alongside existing images.
+
+### New Files
+
+* **lib/ui/view/splash/splash\_view\.dart**
+  Implements `SplashLogoView`, a stateful widget that:
+
+  * Controls a 3-second `AnimationController` with a `Tween` scaling from 0.30 to 1.6.
+  * Uses `ScaleTransition` to animate the logo asset based on current theme.
+  * Waits 500 ms after the animation and then navigates to the home route.
+
+* **lib/ui/view/splash/splash\_view\_model.dart**
+  Defines `SplashViewModel`, wrapping `AppThemeMode` to expose an `isDark` flag for asset selection.
+
+### Assets and Test Data
+
+* **assets/icons/**
+
+  * New directory registered for application icons.
+
+### Conclusion
+
+All changes complete—splash screen flow is now integrated and the app starts with the animated view successfully.
+
+
 ## 2025/06/20 ia_service-04 - by rudsonalves
 
 ### Refactor AI summary workflow, add MedicalRecord DTO, upsert support, and UI polish

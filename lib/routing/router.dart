@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:prontu_ai/data/repositories/ai_summary/i_ai_summary_repository.dart';
-import 'package:prontu_ai/domain/user_cases/episode_ai_summary_user_case.dart';
 import 'package:provider/provider.dart';
 
+import '/data/repositories/ai_summary/i_ai_summary_repository.dart';
+import '/domain/user_cases/episode_ai_summary_user_case.dart';
+import '/ui/view/splash/splash_view.dart';
+import '/ui/view/splash/splash_view_model.dart';
 import '/data/repositories/attachment/i_attachment_repository.dart';
 import '/data/repositories/episode/i_episode_repository.dart';
 import '/data/repositories/session/i_session_repository.dart';
@@ -32,8 +34,17 @@ import '/routing/routes.dart';
 import '/ui/view/home/home_view.dart';
 
 GoRouter router() => GoRouter(
-  initialLocation: Routes.home.path,
+  initialLocation: Routes.splash.path,
   routes: [
+    GoRoute(
+      path: Routes.splash.path,
+      name: Routes.splash.name,
+      builder: (context, state) => SplashLogoView(
+        viewModel: SplashViewModel(
+          themeMode: context.read<AppThemeMode>(),
+        ),
+      ),
+    ),
     GoRoute(
       path: Routes.home.path,
       name: Routes.home.name,

@@ -6,6 +6,8 @@ class Route {
 }
 
 abstract final class Routes {
+  static const splash = Route('splash', '/splash');
+
   static const home = Route('home', '/');
   static const formUser = Route('form_user', '/form_user');
 
