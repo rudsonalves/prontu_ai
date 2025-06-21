@@ -82,8 +82,8 @@ class OpenIaService {
       final Map<String, dynamic> parsed = jsonDecode(fullJsonString);
       final specialist = parsed['especialista_medico'] as String?;
       final summary = parsed['situacao_clinica'] != null
-          ? parsed['situacao_clinica'] as String
-          : parsed['resumo_tecnico'] as String?;
+          ? _parseSummary(parsed['situacao_clinica'])
+          : _parseSummary(parsed['resumo_tecnico']);
 
       // final specialist = 'Gastro';
       // final summary = 'Paciente com dor de barriga';
@@ -98,6 +98,26 @@ class OpenIaService {
       log('OpenIaService.analyze', error: err, stackTrace: stack);
       return Result.failure(err);
     }
+  }
+
+  String _parseSummary(dynamic summary) {
+    if (summary == null) return '';
+
+    if (summary is String) {
+      return summary;
+    }
+
+    if (summary is Map<String, dynamic>) {
+      // Tenta acessar o campo mais comum para resumos
+      if (summary.containsKey('summary') && summary['summary'] is String) {
+        return summary['summary'] as String;
+      }
+
+      // Se não houver campo específico, tenta converter todo o Map para uma string formatada
+      return summary.entries.map((e) => '${e.key}: ${e.value}').join('\n');
+    }
+
+    return summary.toString();
   }
 
   String _createPrompt(MedicalRecord record) {
