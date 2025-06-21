@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:prontu_ai/ui/core/ui/dialogs/simple_dialog.dart';
 
+import '/ui/core/ui/dialogs/simple_dialog.dart';
 import '/ui/core/ui/buttons/icon_back_button.dart';
 import '/domain/models/episode_model.dart';
 import '/domain/models/user_model.dart';
@@ -57,6 +57,7 @@ class _AttachmentViewState extends State<AttachmentView> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final dimens = Dimens.of(context);
 
     return Scaffold(
@@ -103,8 +104,12 @@ class _AttachmentViewState extends State<AttachmentView> {
                 final attachment = attachments[index];
 
                 return DismissibleCard<AttachmentModel>(
-                  title: attachment.path,
-                  subtitle: attachment.createdAt.toDDMMYYYY(),
+                  title: attachment.name,
+                  subtitle: attachment.createdAt.toBrDateTime(),
+                  leading: Icon(
+                    attachment.type.iconData,
+                    color: colorScheme.primary,
+                  ),
                   value: attachment,
                   editFunction: _editAttachment,
                   removeFunction: _removeAttachment,
