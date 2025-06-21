@@ -77,7 +77,7 @@ class AttachmentRepository implements IAttachmentRepository {
       }
 
       final result = await _databaseService.fetch<AttachmentModel>(
-        TableNames.users,
+        TableNames.attachments,
         id: uid,
         fromMap: AttachmentModel.fromMap,
       );
@@ -98,7 +98,7 @@ class AttachmentRepository implements IAttachmentRepository {
       if (!_started) throw Exception('Repository not initialized');
 
       final result = await _databaseService.fetchAll<AttachmentModel>(
-        TableNames.users,
+        TableNames.attachments,
         filter: {TableAttachments.sessionId: _sessionId},
         fromMap: AttachmentModel.fromMap,
       );
@@ -124,7 +124,7 @@ class AttachmentRepository implements IAttachmentRepository {
       }
 
       final result = await _databaseService.update<AttachmentModel>(
-        TableNames.users,
+        TableNames.attachments,
         map: user.toMap(),
       );
 

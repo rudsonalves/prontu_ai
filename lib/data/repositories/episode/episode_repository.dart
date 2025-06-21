@@ -146,7 +146,7 @@ class EpisodeRepository implements IEpisodeRepository {
       if (!_started) throw Exception('Repository not initialized');
 
       final result = await _databaseService.delete(
-        TableNames.sessions,
+        TableNames.episodes,
         id: uid,
       );
 
